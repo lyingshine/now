@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>集成测试</title>
+</head>
+<body>
+    <h1>NOW 应用集成测试</h1>
+    <div id="results"></div>
+
+    <script src="hangzhou-data-config.js"></script>
+    <script src="rank-system.js"></script>
+    <script src="lifestyle-data.js"></script>
+    <script>
+        const results = document.getElementById('results');
+        let testsPassed = 0;
+        let testsFailed = 0;
+
+        function test(name, fn) {
+            try {
+                fn();
+                results.innerHTML += `<p style="color: green;">✓ ${name}</p>`;
+                testsPassed++;
+            } catch (error) {
+                results.innerHTML += `<p style="color: red;">✗ ${name}: ${error.message}</p>`;
+                testsFailed++;
+            }
+        }
+
+        // 测试配置文件
+        test('配置文件已加载', () => {
+            if (typeof hangzhouDataConfig === 'undefined') {
+                throw new Error('hangzhouDataConfig 未定义');
+            }
+        });
+
+        test('配置文件包含薪资参考数据', () => {
+            if (!hangzhouDataConfig.salaryReference) {
+                throw new Error('缺少 salaryReference');
+            }
+            if (hangzhouDataConfig.salaryReference.average !== 11000) {
+                throw new Error('平均工资数据不正确');
+            }
+        });
+
+        test('配置文件包含8个段位', () => {
+            if (hangzhouDataConfig.rankTiers.length !== 8) {
+                throw new Error(`段位数量错误: ${hangzhouDataConfig.rankTiers.length}`);
+            }
+        });
+
+        // 测试段位系统
+        test('段位系统已加载', () => {
+            if (typeof rankSystem === 'undefined') {
+                throw new Error('rankSystem 未定义');
+            }
+        });
+
+        test('getRank 函数正常工作', () => {
+            const rank = rankSystem.getRank(10000);
+            if (!rank || !rank.name) {
+                throw new Error('getRank 返回值无效');
+            }
+            if (rank.name !== '黄金') {
+                throw new Error(`10000元应该是黄金段位，实际是: ${rank.name}`);
+            }
+        });
+
+        test('getRankInfo 函数正常工作', () => {
+            const info = rankSystem.getRankInfo(10000);
+            if (!info || !info.current) {
+                throw new Error('getRankInfo 返回值无效');
+            }
+        });
+
+        test('getSavingsRateRecommendation 函数正常工作', () => {
+            const recommendation = rankSystem.getSavingsRateRecommendation(10000);
+            if (!recommendation || typeof recommendation.recommended !== 'number') {
+                throw new Error('getSavingsRateRecommendation 返回值无效');
+            }
+        });
+
+        // 测试生活水平计算
+        test('生活水平计算已加载', () => {
+            if (typeof lifestyleData === 'undefined') {
+                throw new Error('lifestyleData 未定义');
+            }
+        });
+
+        test('calculate 函数正常工作', () => {
+            const result = lifestyleData.calculate(10000, 1, null, null, 30);
+            if (!result || !Array.isArray(result)) {
+                throw new Error('calculate 返回值无效');
+            }
+            if (result.length === 0) {
+                throw new Error('calculate 返回空数组');
+            }
+        });
+
+        test('输入验证正常工作', () => {
+            try {
+                lifestyleData.validateSalary(-1000);
+                throw new Error('应该抛出错误');
+            } catch (error) {
+                if (!error.message.includes('负数')) {
+                    throw new Error('错误消息不正确');
+                }
+            }
+        });
+
+        test('getLifestyle 函数正常工作', () => {
+            const result = lifestyleData.getLifestyle(10000);
+            if (!result || !Array.isArray(result)) {
+                throw new Error('getLifestyle 返回值无效');
+            }
+        });
+
+        // 显示测试结果
+        results.innerHTML += `<hr><h2>测试结果</h2>`;
+        results.innerHTML += `<p><strong>通过: ${testsPassed}</strong></p>`;
+        results.innerHTML += `<p><strong>失败: ${testsFailed}</strong></p>`;
+        
+        if (testsFailed === 0) {
+            results.innerHTML += `<p style="color: green; font-size: 20px;">🎉 所有测试通过！</p>`;
+        } else {
+            results.innerHTML += `<p style="color: red; font-size: 20px;">❌ 有测试失败</p>`;
+        }
+    </script>
+</body>
+</html>
