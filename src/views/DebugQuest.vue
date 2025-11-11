@@ -4,7 +4,28 @@
       <h1>🔍 任务系统调试</h1>
       
       <div class="debug-section">
-        <h2>当前任务状态</h2>
+        <h2>Store 状态</h2>
+        <ul>
+          <li>hasActiveQuest: {{ questStore.hasActiveQuest }}</li>
+          <li>currentQuest 是否为 null: {{ questStore.currentQuest === null }}</li>
+          <li>历史任务数量: {{ questStore.questHistory.length }}</li>
+        </ul>
+      </div>
+
+      <div class="debug-section">
+        <h2>LocalStorage 数据</h2>
+        <div>
+          <h3>questStore:</h3>
+          <pre>{{ localStorageQuestStore }}</pre>
+        </div>
+        <div>
+          <h3>jobsStore:</h3>
+          <pre>{{ localStorageJobsStore }}</pre>
+        </div>
+      </div>
+
+      <div class="debug-section">
+        <h2>当前任务详情</h2>
         <pre>{{ JSON.stringify(questStore.currentQuest, null, 2) }}</pre>
       </div>
 
@@ -36,10 +57,13 @@
 
       <div class="debug-section">
         <h2>测试操作</h2>
-        <button @click="testCompleteTask" class="btn-test">
+        <button @click="testAcceptQuest" class="btn-test" v-if="!questStore.currentQuest">
+          接取测试任务
+        </button>
+        <button @click="testCompleteTask" class="btn-test" v-if="questStore.currentQuest">
           完成第一个学习任务
         </button>
-        <button @click="testCompleteSubQuest" class="btn-test">
+        <button @click="testCompleteSubQuest" class="btn-test" v-if="questStore.currentQuest">
           完成第一个子任务
         </button>
         <button @click="clearData" class="btn-danger">
@@ -51,7 +75,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useQuestStore } from '../stores/quest'
 import { getCurrentLevelExp } from '../utils/expCalculator'
 
@@ -61,6 +85,50 @@ const currentLevelExp = computed(() => {
   if (!questStore.currentQuest) return 0
   return getCurrentLevelExp(questStore.currentQuest.totalExp)
 })
+
+const localStorageQuestStore = computed(() => {
+  const data = localStorage.getItem('questStore')
+  return data ? JSON.parse(data) : null
+})
+
+const localStorageJobsStore = computed(() => {
+  const data = localStorage.getItem('jobsStore')
+  return data ? JSON.parse(data) : null
+})
+
+onMounted(() => {
+  questStore.loadFromStorage()
+  console.log('调试页面加载，questStore 状态:', {
+    hasActiveQuest: questStore.hasActiveQuest,
+    currentQuest: questStore.currentQuest,
+    questHistory: questStore.questHistory
+  })
+})
+
+const testAcceptQuest = () => {
+  // 模拟接取第一个职位
+  const jobsData = [
+    {
+      id: 1,
+      title: '前端开发工程师',
+      salary: 15000,
+      requirements: [
+        { skill: 'HTML/CSS', text: 'HTML/CSS' },
+        { skill: 'JavaScript', text: 'JavaScript' },
+        { skill: 'Vue.js', text: 'Vue.js' }
+      ]
+    }
+  ]
+  
+  const job = jobsData[0]
+  const success = questStore.acceptQuest(job.id, job)
+  
+  if (success) {
+    alert('成功接取任务：' + job.title)
+  } else {
+    alert('接取任务失败')
+  }
+}
 
 const testCompleteTask = () => {
   if (!questStore.currentQuest || questStore.currentQuest.subQuests.length === 0) {
