@@ -1,58 +1,109 @@
 <template>
-  <Transition name="modal">
-    <div v-if="show" class="modal-overlay" @click="$emit('close')">
-      <div class="level-up-modal" @click.stop>
-        <div class="level-up-animation">
-          <div class="level-up-rays"></div>
-          <div class="level-up-icon">⭐</div>
-          <h2 class="level-up-title">升级了！</h2>
-          <div class="new-level">Lv.{{ newLevel }}</div>
-          <p class="level-up-message">恭喜你达到新的等级！</p>
-          
-          <div class="rewards">
-            <div class="reward-title">🎁 升级奖励</div>
-            <div class="reward-items">
-              <div class="reward-item">
-                <span class="reward-icon">💰</span>
-                <span class="reward-text">+{{ goldReward }} 金币</span>
-              </div>
-              <div class="reward-item">
-                <span class="reward-icon">🎯</span>
-                <span class="reward-text">解锁新任务</span>
+  <Teleport to="body">
+    <Transition name="modal">
+      <div v-if="isOpen" class="level-up-modal-overlay" @click="handleClose">
+        <div class="level-up-modal" @click.stop>
+          <div class="level-up-content">
+            <!-- 光芒效果 -->
+            <div class="rays-container">
+              <div class="ray" v-for="i in 12" :key="i" :style="{ transform: `rotate(${i * 30}deg)` }"></div>
+            </div>
+            
+            <!-- 等级数字 -->
+            <div class="level-number-container">
+              <div class="level-up-text">LEVEL UP!</div>
+              <div class="level-number">{{ newLevel }}</div>
+              <div class="level-subtitle">恭喜升级！</div>
+            </div>
+            
+            <!-- 经验值信息 -->
+            <div class="exp-info">
+              <div class="exp-gained">
+                <span class="exp-icon">⚡</span>
+                <span>+{{ expGained }} EXP</span>
               </div>
             </div>
+            
+            <!-- 里程碑提示 -->
+            <div v-if="milestone" class="milestone-badge">
+              <div class="milestone-icon">{{ getMilestoneIcon(newLevel) }}</div>
+              <div class="milestone-text">{{ milestone }}</div>
+            </div>
+            
+            <!-- 关闭按钮 -->
+            <button class="close-button" @click="handleClose">
+              继续前进 →
+            </button>
           </div>
           
-          <button class="btn-continue" @click="$emit('close')">
-            继续冒险
-          </button>
+          <!-- 粒子效果 -->
+          <div class="particles">
+            <div 
+              v-for="i in 30" 
+              :key="i" 
+              class="particle"
+              :style="getParticleStyle(i)"
+            ></div>
+          </div>
         </div>
       </div>
-    </div>
-  </Transition>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup>
-defineProps({
-  show: {
+import { computed } from 'vue'
+
+const props = defineProps({
+  isOpen: {
     type: Boolean,
-    default: false
+    required: true
   },
   newLevel: {
     type: Number,
     required: true
   },
-  goldReward: {
+  expGained: {
     type: Number,
-    default: 1000
+    required: true
+  },
+  milestone: {
+    type: String,
+    default: null
   }
 })
 
-defineEmits(['close'])
+const emit = defineEmits(['close'])
+
+const handleClose = () => {
+  emit('close')
+}
+
+const getMilestoneIcon = (level) => {
+  if (level === 25) return '🎉'
+  if (level === 50) return '🌟'
+  if (level === 75) return '🏆'
+  if (level === 100) return '👑'
+  return '⭐'
+}
+
+const getParticleStyle = (index) => {
+  const angle = (index / 30) * 360
+  const distance = 100 + Math.random() * 100
+  const duration = 1 + Math.random() * 2
+  const delay = Math.random() * 0.5
+  
+  return {
+    '--angle': `${angle}deg`,
+    '--distance': `${distance}px`,
+    '--duration': `${duration}s`,
+    '--delay': `${delay}s`
+  }
+}
 </script>
 
 <style scoped>
-.modal-overlay {
+.level-up-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -63,45 +114,46 @@ defineEmits(['close'])
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
 }
 
 .level-up-modal {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border-radius: var(--radius-3xl);
-  padding: 3rem;
-  max-width: 500px;
+  position: relative;
   width: 90%;
-  border: 2px solid #fbbf24;
-  box-shadow: 0 0 60px rgba(251, 191, 36, 0.6);
-  position: relative;
-  overflow: hidden;
+  max-width: 500px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border-radius: var(--radius-3xl);
+  padding: 3rem 2rem;
+  box-shadow: 0 20px 60px rgba(251, 191, 36, 0.5);
+  animation: modalEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.level-up-animation {
+@keyframes modalEnter {
+  0% {
+    transform: scale(0.5) rotate(-10deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.level-up-content {
+  position: relative;
+  z-index: 2;
   text-align: center;
-  position: relative;
-  z-index: 1;
 }
 
-.level-up-rays {
+/* 光芒效果 */
+.rays-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
   height: 300px;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    #fbbf24 45deg,
-    transparent 90deg,
-    transparent 180deg,
-    #fbbf24 225deg,
-    transparent 270deg
-  );
-  animation: rotate 4s linear infinite;
-  opacity: 0.3;
+  animation: rotate 10s linear infinite;
 }
 
 @keyframes rotate {
@@ -113,98 +165,197 @@ defineEmits(['close'])
   }
 }
 
-.level-up-icon {
-  font-size: 5rem;
-  animation: bounce 1s ease infinite;
-  filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8));
+.ray {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 150px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
+  transform-origin: top center;
+  opacity: 0.6;
+  animation: rayPulse 2s ease-in-out infinite;
+}
+
+@keyframes rayPulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* 等级数字 */
+.level-number-container {
+  margin-bottom: 2rem;
+}
+
+.level-up-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #78350f;
+  margin-bottom: 1rem;
+  animation: bounce 0.6s ease-out;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes bounce {
   0%, 100% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-20px) scale(1.1);
+    transform: translateY(-20px);
   }
 }
 
-.level-up-title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin: 1rem 0;
-  text-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
-}
-
-.new-level {
-  font-size: 3rem;
+.level-number {
+  font-size: 6rem;
   font-weight: 900;
-  color: #fbbf24;
-  text-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
-  margin: 1rem 0;
+  color: white;
+  line-height: 1;
+  text-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 40px rgba(251, 191, 36, 0.6),
+    4px 4px 8px rgba(0, 0, 0, 0.3);
+  animation: numberGrow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.level-up-message {
-  color: #94a3b8;
+@keyframes numberGrow {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.level-subtitle {
   font-size: 1.125rem;
+  color: #78350f;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+/* 经验值信息 */
+.exp-info {
   margin-bottom: 2rem;
 }
 
-.rewards {
-  background: rgba(251, 191, 36, 0.1);
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  border-radius: var(--radius-xl);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.reward-title {
+.exp-gained {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-full);
   font-size: 1.125rem;
   font-weight: 700;
-  color: #fbbf24;
-  margin-bottom: 1rem;
+  color: #78350f;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
 }
 
-.reward-items {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.reward-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1rem;
-  color: white;
-  font-weight: 600;
-}
-
-.reward-icon {
+.exp-icon {
   font-size: 1.5rem;
 }
 
-.btn-continue {
-  width: 100%;
-  padding: 1.25rem;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+/* 里程碑徽章 */
+.milestone-badge {
+  margin-bottom: 2rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-2xl);
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.milestone-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.milestone-text {
+  font-size: 1rem;
+  font-weight: 600;
   color: #78350f;
+}
+
+/* 关闭按钮 */
+.close-button {
+  padding: 1rem 2rem;
+  background: white;
+  color: #f59e0b;
   border: none;
   border-radius: var(--radius-xl);
   font-size: 1.125rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.6s ease-out 0.7s both;
 }
 
-.btn-continue:hover {
+.close-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(251, 191, 36, 0.6);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
+/* 粒子效果 */
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: var(--radius-3xl);
+}
+
+.particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat var(--duration) ease-out var(--delay) forwards;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: 
+      translate(
+        calc(cos(var(--angle)) * var(--distance)),
+        calc(sin(var(--angle)) * var(--distance))
+      )
+      scale(0);
+    opacity: 0;
+  }
+}
+
+/* 模态框过渡 */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.3s ease;
@@ -216,17 +367,21 @@ defineEmits(['close'])
 }
 
 .modal-enter-active .level-up-modal {
-  animation: modalZoom 0.5s ease;
+  animation: modalEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes modalZoom {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  100% {
+.modal-leave-active .level-up-modal {
+  animation: modalExit 0.3s ease-out;
+}
+
+@keyframes modalExit {
+  from {
     transform: scale(1);
     opacity: 1;
+  }
+  to {
+    transform: scale(0.8);
+    opacity: 0;
   }
 }
 </style>

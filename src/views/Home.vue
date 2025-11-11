@@ -7,7 +7,13 @@
           <div class="player-avatar">🎮</div>
           <div class="player-details">
             <div class="player-name">职场冒险者</div>
-            <ExpBar :level="playerLevel" :currentExp="currentExp" :maxExp="maxExp" />
+            <LevelDisplay 
+              :level="playerLevel" 
+              :currentExp="currentExp" 
+              :maxLevel="100"
+              :expPerLevel="maxExp"
+              compact
+            />
           </div>
         </div>
         <div class="player-stats">
@@ -26,6 +32,36 @@
             <span class="stat-label">连续天数</span>
             <span class="stat-value">{{ streakDays }}</span>
           </div>
+        </div>
+      </div>
+      
+      <!-- 当前任务快捷入口 -->
+      <div v-if="questStore.hasActiveQuest" class="current-quest-banner">
+        <div class="quest-banner-content">
+          <div class="quest-banner-icon">🎯</div>
+          <div class="quest-banner-info">
+            <div class="quest-banner-title">当前任务：{{ questStore.currentQuest.jobTitle }}</div>
+            <div class="quest-banner-progress">
+              进度：{{ questStore.overallProgress }}% | 
+              已完成 {{ questStore.completedSubQuestsCount }}/{{ questStore.currentQuest.subQuests.length }} 个子任务
+            </div>
+          </div>
+          <button @click="router.push('/growth')" class="btn-continue-quest">
+            继续任务 →
+          </button>
+        </div>
+      </div>
+      
+      <div v-else class="no-quest-banner">
+        <div class="no-quest-content">
+          <div class="no-quest-icon">📋</div>
+          <div class="no-quest-text">
+            <div class="no-quest-title">还没有进行中的任务</div>
+            <div class="no-quest-subtitle">开始你的职业冒险，接取第一个任务吧！</div>
+          </div>
+          <button @click="router.push('/jobs')" class="btn-start-quest">
+            前往任务大厅 →
+          </button>
         </div>
       </div>
       
@@ -70,6 +106,8 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLifestyle } from '../composables/useLifestyle'
 import { useEarnings } from '../composables/useEarnings'
+import { useQuestStore } from '../stores/quest'
+import { getCurrentLevelExp } from '../utils/expCalculator'
 import RankCard from '../components/RankCard.vue'
 import EarningsCard from '../components/EarningsCard.vue'
 import StatsCards from '../components/StatsCards.vue'
@@ -77,17 +115,23 @@ import LifestyleSection from '../components/LifestyleSection.vue'
 import JobRecommendations from '../components/JobRecommendations.vue'
 import UpgradeTips from '../components/UpgradeTips.vue'
 import SettingsModal from '../components/SettingsModal.vue'
-import ExpBar from '../components/game/ExpBar.vue'
+import LevelDisplay from '../components/game/LevelDisplay.vue'
 import jobsData from '../data/jobs-data.js'
 
 const router = useRouter()
+const questStore = useQuestStore()
 const { calculateLifestyle, getRankInfo, getRank } = useLifestyle()
 
-// 游戏化数据
-const playerLevel = ref(1)
-const currentExp = ref(0)
-const maxExp = ref(1000)
-const completedQuests = ref(0)
+// 游戏化数据 - 从 questStore 获取
+const playerLevel = computed(() => questStore.currentLevel || 1)
+const currentExp = computed(() => {
+  if (!questStore.currentQuest) return 0
+  return getCurrentLevelExp(questStore.currentQuest.totalExp)
+})
+const maxExp = computed(() => 100)
+const completedQuests = computed(() => {
+  return questStore.questHistory.filter(h => h.completionType === 'completed').length
+})
 const achievements = ref(0)
 const streakDays = ref(0)
 
@@ -261,6 +305,7 @@ const goToJobs = () => {
 onMounted(() => {
   loadData()
   calculateEarnings()
+  questStore.loadFromStorage()
   timer = setInterval(calculateEarnings, 1000) // 每秒更新一次，实时显示
   
   // 监听设置按钮点击（从 Navbar）
@@ -403,6 +448,137 @@ body.dark-mode .game-header {
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--growth-primary);
+}
+
+/* 当前任务横幅 */
+.current-quest-banner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-2xl);
+  padding: 1.5rem 2rem;
+  margin-bottom: 16px;
+  animation: slideDown 0.3s ease-out;
+}
+
+body.dark-mode .current-quest-banner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(52, 211, 153, 0.15));
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.quest-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.quest-banner-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.quest-banner-info {
+  flex: 1;
+}
+
+.quest-banner-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.quest-banner-progress {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.btn-continue-quest {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-xl);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  white-space: nowrap;
+}
+
+.btn-continue-quest:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* 无任务横幅 */
+.no-quest-banner {
+  background: var(--glass-bg);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-2xl);
+  padding: 1.5rem 2rem;
+  margin-bottom: 16px;
+}
+
+body.dark-mode .no-quest-banner {
+  background: rgba(30, 41, 59, 0.5);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.no-quest-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.no-quest-icon {
+  font-size: 2.5rem;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.no-quest-text {
+  flex: 1;
+}
+
+.no-quest-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.no-quest-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.btn-start-quest {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-xl);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  white-space: nowrap;
+}
+
+.btn-start-quest:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .container {
