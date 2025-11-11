@@ -166,24 +166,24 @@ watch(() => props.isOpen, (newVal) => {
   border: 1px solid var(--color-gray-200);
 }
 
-/* 美化滚动条 */
+/* 美化滚动条 - 内嵌样式 */
 .modal-content::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 .modal-content::-webkit-scrollbar-track {
-  background: var(--color-gray-100);
-  border-radius: 10px;
+  background: transparent;
+  margin: 20px 0;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-primary) 100%);
-  border-radius: 10px;
-  border: 2px solid var(--color-gray-100);
+  background: var(--color-gray-300);
+  border-radius: 4px;
+  transition: background 0.3s ease;
 }
 
 .modal-content::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--color-accent-hover) 0%, var(--color-primary-hover) 100%);
+  background: var(--color-gray-400);
 }
 
 body.dark-mode .modal-content {
@@ -191,12 +191,12 @@ body.dark-mode .modal-content {
   border-color: var(--color-gray-700);
 }
 
-body.dark-mode .modal-content::-webkit-scrollbar-track {
-  background: var(--color-gray-700);
+body.dark-mode .modal-content::-webkit-scrollbar-thumb {
+  background: var(--color-gray-600);
 }
 
-body.dark-mode .modal-content::-webkit-scrollbar-thumb {
-  border-color: var(--color-gray-700);
+body.dark-mode .modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-500);
 }
 
 @keyframes slideUp {
