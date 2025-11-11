@@ -5,10 +5,18 @@
       <p class="page-subtitle">选择你的职业目标，开启成长之旅</p>
       
       <div class="jobs-grid">
-        <div v-for="job in jobsStore.jobs" :key="job.id" class="job-card">
+        <div 
+          v-for="job in jobsStore.jobs" 
+          :key="job.id" 
+          class="job-card"
+          @click="openJobModal(job)"
+        >
           <div class="job-header">
             <div class="job-title">{{ job.title }}</div>
             <div class="job-salary">¥{{ job.salary.toLocaleString() }}/月</div>
+          </div>
+          <div class="job-rank" :style="{ borderColor: getRank(job.salary).color, color: getRank(job.salary).color }">
+            {{ getRank(job.salary).icon }} {{ getRank(job.salary).name }}段位
           </div>
           <div class="job-info">
             <span class="info-item">📚 {{ job.education }}</span>
@@ -20,45 +28,56 @@
           <div class="job-requirements">
             <div class="req-count">{{ job.requirements.length }} 项技能要求</div>
           </div>
-          <button 
-            v-if="!isJobAccepted(job.id)"
-            class="btn-primary" 
-            @click="handleAcceptJob(job.id)"
-          >
-            接取任务
-          </button>
-          <button 
-            v-else
-            class="btn-success" 
-            @click="goToGrowth"
-          >
-            ✓ 已接取 - 查看学习计划
-          </button>
+          <div class="job-status" v-if="isJobAccepted(job.id)">
+            <span class="status-badge">✓ 已接取</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- 职位详情弹窗 -->
+    <JobModal 
+      :job="selectedJob"
+      :isOpen="isModalOpen"
+      @close="closeJobModal"
+      @accept="handleAcceptJob"
+    />
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
+import { useLifestyle } from '../composables/useLifestyle'
+import JobModal from '../components/JobModal.vue'
 import jobsData from '../data/jobs-data.js'
 
 const router = useRouter()
 const jobsStore = useJobsStore()
+const { getRank } = useLifestyle()
+
+const selectedJob = ref(null)
+const isModalOpen = ref(false)
 
 const isJobAccepted = (jobId) => {
   return jobsStore.userProgress[jobId]?.accepted || false
 }
 
-const handleAcceptJob = (jobId) => {
-  jobsStore.acceptJob(jobId)
+const openJobModal = (job) => {
+  selectedJob.value = job
+  isModalOpen.value = true
 }
 
-const goToGrowth = () => {
-  router.push('/growth')
+const closeJobModal = () => {
+  isModalOpen.value = false
+  setTimeout(() => {
+    selectedJob.value = null
+  }, 300)
+}
+
+const handleAcceptJob = (jobId) => {
+  jobsStore.acceptJob(jobId)
 }
 
 onMounted(() => {
@@ -97,24 +116,56 @@ onMounted(() => {
 }
 
 .job-card {
-  background: var(--bg-secondary);
+  background: white;
   padding: 2rem;
   border-radius: 1.5rem;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-gray-200);
   transition: all 0.2s;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
 }
 
 .job-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--growth-primary);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+  border: 2px solid transparent;
+  background-image: 
+    linear-gradient(white, white),
+    linear-gradient(90deg, var(--color-accent), var(--color-primary));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+body.dark-mode .job-card {
+  background: var(--color-gray-800);
+  border-color: var(--color-gray-700);
+}
+
+body.dark-mode .job-card:hover {
+  background-image: 
+    linear-gradient(var(--color-gray-800), var(--color-gray-800)),
+    linear-gradient(90deg, var(--color-accent), var(--color-primary));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .job-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.job-rank {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
   margin-bottom: 1rem;
+  border: 1px solid;
 }
 
 .job-title {
@@ -194,5 +245,32 @@ onMounted(() => {
 .btn-success:hover {
   background: #059669;
   transform: translateY(-2px);
+}
+
+.job-status {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-gray-200);
+}
+
+body.dark-mode .job-status {
+  border-top-color: var(--color-gray-700);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+body.dark-mode .status-badge {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--growth-primary);
 }
 </style>
