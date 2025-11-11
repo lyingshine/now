@@ -298,33 +298,163 @@ const getTodayWorkMinutes = () => {
   }
 }
 
+const isWorkDay = (date, weekNumber) => {
+  const day = date.getDay() // 0=周日, 6=周六
+  const schedule = salaryData.value.workSchedule
+  
+  switch(schedule) {
+    case 'double': // 双休
+      return day !== 0 && day !== 6
+    case 'single': // 单休（周日休息）
+      return day !== 0
+    case 'alternate': // 大小休（隔周单休）
+      if (weekNumber % 2 === 0) {
+        return day !== 0 && day !== 6 // 双休
+      } else {
+        return day !== 0 // 单休
+      }
+    case 'full': // 全勤
+      return true
+    case 'custom': // 自定义
+      return true
+    default:
+      return day !== 0 && day !== 6
+  }
+}
+
+const getWeekNumber = (date) => {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+  const dayNum = d.getUTCDay() || 7
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum)
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
+}
+
+const getWorkDays = (startDate, endDate) => {
+  const schedule = salaryData.value.workSchedule
+  
+  // 如果是自定义模式，按日历天数计算
+  if (schedule === 'custom') {
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+    const diffTime = Math.abs(end - start)
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
+    return diffDays
+  }
+  
+  // 否则根据工作制度计算实际工作日
+  let count = 0
+  const current = new Date(startDate)
+  
+  while (current <= endDate) {
+    const weekNum = getWeekNumber(current)
+    if (isWorkDay(current, weekNum)) {
+      count++
+    }
+    current.setDate(current.getDate() + 1)
+  }
+  
+  return count
+}
+
+const isTodayAfterJoinDate = () => {
+  if (!salaryData.value.joinDate) return false
+  
+  const now = new Date()
+  const joinDate = new Date(salaryData.value.joinDate)
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const joinDay = new Date(joinDate.getFullYear(), joinDate.getMonth(), joinDate.getDate())
+  
+  return today >= joinDay
+}
+
+const getMonthWorkDays = () => {
+  if (!salaryData.value.joinDate) return 0
+  
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const joinDate = new Date(salaryData.value.joinDate)
+  const joinDay = new Date(joinDate.getFullYear(), joinDate.getMonth(), joinDate.getDate())
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+  
+  if (joinDay > today) return 0
+  
+  const startDate = joinDay > monthStart ? joinDay : monthStart
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+  
+  if (startDate > yesterday) return 0
+  
+  return getWorkDays(startDate, yesterday)
+}
+
+const getYearWorkDays = () => {
+  if (!salaryData.value.joinDate) return 0
+  
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const joinDate = new Date(salaryData.value.joinDate)
+  const joinDay = new Date(joinDate.getFullYear(), joinDate.getMonth(), joinDate.getDate())
+  const yearStart = new Date(now.getFullYear(), 0, 1)
+  
+  if (joinDay > today) return 0
+  
+  const startDate = joinDay > yearStart ? joinDay : yearStart
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+  
+  if (startDate > yesterday) return 0
+  
+  return getWorkDays(startDate, yesterday)
+}
+
+const getTotalWorkDays = () => {
+  if (!salaryData.value.joinDate) return 0
+  
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const joinDate = new Date(salaryData.value.joinDate)
+  const joinDay = new Date(joinDate.getFullYear(), joinDate.getMonth(), joinDate.getDate())
+  
+  if (joinDay > today) return 0
+  
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+  
+  if (joinDay > yesterday) return 0
+  
+  return getWorkDays(joinDay, yesterday)
+}
+
 const calculateEarnings = () => {
   perMinute.value = getPerMinuteRate()
-  workMinutes.value = Math.floor(getTodayWorkMinutes())
-  todayEarnings.value = perMinute.value * workMinutes.value
   
-  // 简化的月度和年度计算
   const workDays = salaryData.value.workDays || 22
-  const dailyEarnings = salaryData.value.salary / workDays
+  const perDay = salaryData.value.salary / workDays
   
-  const today = new Date()
-  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1)
-  const yearStart = new Date(today.getFullYear(), 0, 1)
-  
-  const daysThisMonth = Math.floor((today - monthStart) / (1000 * 60 * 60 * 24)) + 1
-  const daysThisYear = Math.floor((today - yearStart) / (1000 * 60 * 60 * 24)) + 1
-  
-  monthEarnings.value = dailyEarnings * Math.min(daysThisMonth, workDays)
-  yearEarnings.value = (salaryData.value.salary * 12) * (daysThisYear / 365)
-  
-  // 入职以来
-  if (salaryData.value.joinDate) {
-    const joinDate = new Date(salaryData.value.joinDate)
-    const daysSinceJoin = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24))
-    totalEarnings.value = dailyEarnings * Math.min(daysSinceJoin, daysSinceJoin * (workDays / 30))
+  // 今日收入 - 只有入职后才计算
+  let todayEarning = 0
+  if (isTodayAfterJoinDate()) {
+    const todayMinutes = getTodayWorkMinutes()
+    workMinutes.value = Math.floor(todayMinutes)
+    todayEarning = perMinute.value * todayMinutes
+    todayEarnings.value = todayEarning
   } else {
-    totalEarnings.value = 0
+    workMinutes.value = 0
+    todayEarnings.value = 0
   }
+  
+  // 本月收入 = 昨天之前的完整天数 × 日薪 + 今天实时收入
+  const monthDays = getMonthWorkDays()
+  monthEarnings.value = perDay * monthDays + todayEarning
+  
+  // 今年收入 = 昨天之前的完整天数 × 日薪 + 今天实时收入
+  const yearDays = getYearWorkDays()
+  yearEarnings.value = perDay * yearDays + todayEarning
+  
+  // 入职以来收入 = 昨天之前的完整天数 × 日薪 + 今天实时收入
+  const totalDays = getTotalWorkDays()
+  totalEarnings.value = perDay * totalDays + todayEarning
 }
 
 const goToJobs = () => {
