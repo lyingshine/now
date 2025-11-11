@@ -73,16 +73,26 @@ const { calculateLifestyle } = useLifestyle()
 
 // 计算当前和未来的生活水平
 const currentLifestyle = computed(() => {
-  return calculateLifestyle(props.currentSalary)
+  const items = calculateLifestyle(props.currentSalary)
+  const summaryItem = items.find(i => i.category === 'summary')
+  return {
+    items: items,
+    satisfaction: summaryItem ? { emoji: summaryItem.icon } : { emoji: '😐' }
+  }
 })
 
 const futureLifestyle = computed(() => {
-  return calculateLifestyle(props.futureSalary)
+  const items = calculateLifestyle(props.futureSalary)
+  const summaryItem = items.find(i => i.category === 'summary')
+  return {
+    items: items,
+    satisfaction: summaryItem ? { emoji: summaryItem.icon } : { emoji: '😊' }
+  }
 })
 
 // 提取关键生活项目
 const currentLifestyleItems = computed(() => {
-  const items = currentLifestyle.value
+  const items = currentLifestyle.value.items
   return [
     { icon: '🏠', desc: items.find(i => i.title.includes('住房'))?.desc.split('，')[1] || '住房' },
     { icon: '🍚', desc: items.find(i => i.title.includes('三餐'))?.desc.split('，')[0] || '饮食' },
@@ -91,7 +101,7 @@ const currentLifestyleItems = computed(() => {
 })
 
 const futureLifestyleItems = computed(() => {
-  const items = futureLifestyle.value
+  const items = futureLifestyle.value.items
   return [
     { icon: '🏠', desc: items.find(i => i.title.includes('住房'))?.desc.split('，')[1] || '住房' },
     { icon: '🍚', desc: items.find(i => i.title.includes('三餐'))?.desc.split('，')[0] || '饮食' },
