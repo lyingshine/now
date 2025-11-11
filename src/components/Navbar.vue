@@ -15,6 +15,10 @@
           <span>🌱</span>
           <span>成长中心</span>
         </router-link>
+        <button class="nav-btn" @click="openSettings" v-if="$route.path === '/'">
+          <span>⚙️</span>
+          <span>设置</span>
+        </button>
         <button class="theme-toggle" @click="toggleTheme">
           <span>{{ isDark ? '🌙' : '☀️' }}</span>
         </button>
@@ -37,6 +41,10 @@ const toggleTheme = () => {
   isDark.value = !isDark.value
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
   document.documentElement.classList.toggle('dark', isDark.value)
+}
+
+const openSettings = () => {
+  window.dispatchEvent(new Event('openSettings'))
 }
 </script>
 
