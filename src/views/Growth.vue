@@ -27,6 +27,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
+import { useQuestStore } from '../stores/quest'
 import { useGrowthStats } from '../composables/useGrowthStats'
 import StatsGrid from '../components/growth/StatsGrid.vue'
 import EmptyState from '../components/growth/EmptyState.vue'
@@ -35,6 +36,7 @@ import SettingsModal from '../components/SettingsModal.vue'
 
 const router = useRouter()
 const jobsStore = useJobsStore()
+const questStore = useQuestStore()
 const { stats } = useGrowthStats(jobsStore)
 const isSettingsOpen = ref(false)
 
@@ -44,7 +46,9 @@ const goToDetail = (jobId) => {
 
 const handleAbandon = (jobId) => {
   if (confirm('确定要放弃这个任务吗？所有学习进度将被清除。')) {
+    // 同时更新两个 store 以保持兼容性
     jobsStore.abandonJob(jobId)
+    questStore.abandonQuest()
   }
 }
 
@@ -54,6 +58,7 @@ const handleSettingsSave = () => {
 
 onMounted(() => {
   jobsStore.loadFromStorage()
+  questStore.loadFromStorage()
   
   window.addEventListener('openSettings', () => {
     isSettingsOpen.value = true

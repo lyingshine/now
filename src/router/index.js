@@ -14,7 +14,7 @@ const routes = [
     component: () => import('../views/Jobs.vue'),
     meta: { 
       requiresNoActiveQuest: false,
-      redirectIfActiveQuest: true 
+      redirectIfActiveQuest: false  // 允许访问，但显示警告
     }
   },
   {

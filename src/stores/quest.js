@@ -41,8 +41,14 @@ export const useQuestStore = defineStore('quest', () => {
    * 是否有活跃的任务
    */
   const hasActiveQuest = computed(() => {
-    return currentQuest.value !== null && 
-           currentQuest.value.status === QUEST_STATUS.IN_PROGRESS
+    const result = currentQuest.value !== null && 
+                   currentQuest.value !== undefined &&
+                   currentQuest.value.status === QUEST_STATUS.IN_PROGRESS
+    console.log('hasActiveQuest 计算:', {
+      currentQuest: currentQuest.value,
+      result
+    })
+    return result
   })
 
   /**
@@ -182,6 +188,10 @@ export const useQuestStore = defineStore('quest', () => {
     }
 
     currentQuest.value = quest
+    console.log('任务已接取:', quest.jobTitle)
+    console.log('currentQuest.value:', currentQuest.value)
+    console.log('hasActiveQuest:', hasActiveQuest.value)
+    
     saveToStorage()
     return true
   }
@@ -451,7 +461,12 @@ export const useQuestStore = defineStore('quest', () => {
    * @returns {boolean} 是否成功放弃
    */
   function abandonQuest() {
-    if (!currentQuest.value) return false
+    if (!currentQuest.value) {
+      console.log('没有当前任务可以放弃')
+      return false
+    }
+
+    console.log('放弃任务:', currentQuest.value.jobTitle)
 
     // 标记任务放弃
     currentQuest.value.status = QUEST_STATUS.ABANDONED
@@ -464,6 +479,8 @@ export const useQuestStore = defineStore('quest', () => {
     currentQuest.value = null
 
     saveToStorage()
+    
+    console.log('任务已放弃，currentQuest 已清空')
     return true
   }
 
@@ -530,13 +547,23 @@ export const useQuestStore = defineStore('quest', () => {
   function loadFromStorage() {
     try {
       const stored = localStorage.getItem('questStore')
+      console.log('从 localStorage 加载 questStore:', stored)
+      
       if (stored) {
         const data = JSON.parse(stored)
         currentQuest.value = data.currentQuest || null
         questHistory.value = data.questHistory || []
+        console.log('加载的 currentQuest:', currentQuest.value)
+        console.log('加载的 questHistory:', questHistory.value)
+      } else {
+        console.log('localStorage 中没有 questStore 数据')
+        currentQuest.value = null
+        questHistory.value = []
       }
     } catch (error) {
       console.error('加载数据失败:', error)
+      currentQuest.value = null
+      questHistory.value = []
     }
   }
 
