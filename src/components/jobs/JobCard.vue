@@ -1,7 +1,8 @@
 <template>
   <div 
     class="job-card"
-    @click="$emit('click', job)"
+    :class="{ 'disabled': disabled }"
+    @click="!disabled && $emit('click', job)"
   >
     <div class="quest-badge-corner">🎯</div>
     
@@ -58,6 +59,10 @@ const props = defineProps({
     required: true
   },
   isAccepted: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
     type: Boolean,
     default: false
   }
@@ -257,5 +262,20 @@ body.dark-mode .job-status {
 body.dark-mode .status-badge {
   background: rgba(76, 175, 80, 0.2);
   color: var(--growth-primary);
+}
+
+.job-card.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.job-card.disabled:hover {
+  transform: none;
+  box-shadow: var(--shadow-lg);
+  border-color: var(--glass-border);
+}
+
+.job-card.disabled::before {
+  display: none;
 }
 </style>

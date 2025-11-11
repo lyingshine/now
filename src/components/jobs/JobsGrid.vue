@@ -1,11 +1,12 @@
 <template>
-  <div class="jobs-grid">
+  <div class="jobs-grid" :class="{ 'disabled': disabled }">
     <JobCard
       v-for="job in jobs"
       :key="job.id"
       :job="job"
       :isAccepted="isJobAccepted(job.id)"
-      @click="$emit('job-click', job)"
+      :disabled="disabled"
+      @click="!disabled && $emit('job-click', job)"
     />
   </div>
 </template>
@@ -21,6 +22,10 @@ defineProps({
   isJobAccepted: {
     type: Function,
     required: true
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -32,5 +37,11 @@ defineEmits(['job-click'])
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
+}
+
+.jobs-grid.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(0.5);
 }
 </style>
