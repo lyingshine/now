@@ -15,7 +15,7 @@
           <span>🌱</span>
           <span>成长中心</span>
         </router-link>
-        <button class="nav-btn" @click="openSettings" v-if="$route.path === '/'">
+        <button class="nav-btn" @click="openSettings">
           <span>⚙️</span>
           <span>设置</span>
         </button>

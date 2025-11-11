@@ -138,19 +138,28 @@
         </div>
       </div>
     </div>
+
+    <!-- 设置弹窗 -->
+    <SettingsModal 
+      :isOpen="isSettingsOpen"
+      @close="isSettingsOpen = false"
+      @save="handleSettingsSave"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
+import SettingsModal from '../components/SettingsModal.vue'
 
 const route = useRoute()
 const router = useRouter()
 const jobsStore = useJobsStore()
 
 const expandedSkills = ref({})
+const isSettingsOpen = ref(false)
 const circumference = 2 * Math.PI * 54
 
 const plan = computed(() => {
@@ -171,12 +180,25 @@ const goBack = () => {
   router.push('/growth')
 }
 
+const handleSettingsSave = () => {
+  location.reload()
+}
+
 onMounted(() => {
   jobsStore.loadFromStorage()
   // 默认展开第一个技能
   if (plan.value && plan.value.skills.length > 0) {
     expandedSkills.value[0] = true
   }
+  
+  // 监听设置按钮点击
+  window.addEventListener('openSettings', () => {
+    isSettingsOpen.value = true
+  })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('openSettings', () => {})
 })
 </script>
 

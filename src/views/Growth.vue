@@ -69,15 +69,24 @@
         </div>
       </div>
     </div>
+
+    <!-- 设置弹窗 -->
+    <SettingsModal 
+      :isOpen="isSettingsOpen"
+      @close="isSettingsOpen = false"
+      @save="handleSettingsSave"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
+import SettingsModal from '../components/SettingsModal.vue'
 
 const router = useRouter()
+const isSettingsOpen = ref(false)
 const jobsStore = useJobsStore()
 
 const consecutiveDays = computed(() => {
@@ -100,8 +109,22 @@ const goToDetail = (jobId) => {
   router.push(`/growth/${jobId}`)
 }
 
+const handleSettingsSave = () => {
+  // 设置保存后刷新页面数据
+  location.reload()
+}
+
 onMounted(() => {
   jobsStore.loadFromStorage()
+  
+  // 监听设置按钮点击
+  window.addEventListener('openSettings', () => {
+    isSettingsOpen.value = true
+  })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('openSettings', () => {})
 })
 </script>
 

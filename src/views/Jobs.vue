@@ -42,15 +42,23 @@
       @close="closeJobModal"
       @accept="handleAcceptJob"
     />
+
+    <!-- 设置弹窗 -->
+    <SettingsModal 
+      :isOpen="isSettingsOpen"
+      @close="isSettingsOpen = false"
+      @save="handleSettingsSave"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
 import { useLifestyle } from '../composables/useLifestyle'
 import JobModal from '../components/JobModal.vue'
+import SettingsModal from '../components/SettingsModal.vue'
 import jobsData from '../data/jobs-data.js'
 
 const router = useRouter()
@@ -58,6 +66,7 @@ const jobsStore = useJobsStore()
 const { getRank } = useLifestyle()
 
 const selectedJob = ref(null)
+const isSettingsOpen = ref(false)
 const isModalOpen = ref(false)
 
 const isJobAccepted = (jobId) => {
@@ -80,9 +89,23 @@ const handleAcceptJob = (jobId) => {
   jobsStore.acceptJob(jobId)
 }
 
+const handleSettingsSave = () => {
+  // 设置保存后刷新页面数据
+  location.reload()
+}
+
 onMounted(() => {
   jobsStore.loadFromStorage()
   jobsStore.loadJobs(jobsData)
+  
+  // 监听设置按钮点击
+  window.addEventListener('openSettings', () => {
+    isSettingsOpen.value = true
+  })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('openSettings', () => {})
 })
 </script>
 
