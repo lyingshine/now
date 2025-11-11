@@ -22,27 +22,8 @@
 
         <!-- 右侧面板：岗位推荐和升级建议 -->
         <div class="right-panel">
-          <div class="section-title">💼 岗位推荐</div>
-          <div class="job-recommend-content">
-            <div 
-              v-for="job in recommendedJobs" 
-              :key="job.id" 
-              class="job-recommend"
-              @click="goToJobs"
-            >
-              <div class="job-recommend-title">{{ job.title }}</div>
-              <div class="job-recommend-salary">¥{{ job.salary.toLocaleString() }}/月</div>
-              <div class="job-recommend-reason">{{ job.reason }}</div>
-            </div>
-          </div>
-
-          <div class="section-title" style="margin-top: 20px;">🚀 升级建议</div>
-          <div class="upgrade-tips-content">
-            <div v-for="(tip, index) in upgradeTips" :key="index" class="upgrade-tip">
-              <div class="upgrade-tip-title">{{ tip.title }}</div>
-              <div class="upgrade-tip-content">{{ tip.content }}</div>
-            </div>
-          </div>
+          <JobRecommendations :jobs="recommendedJobs" @jobClick="goToJobs" />
+          <UpgradeTips :tips="upgradeTips" />
         </div>
       </div>
     </div>
@@ -65,6 +46,8 @@ import RankCard from '../components/RankCard.vue'
 import EarningsCard from '../components/EarningsCard.vue'
 import StatsCards from '../components/StatsCards.vue'
 import LifestyleSection from '../components/LifestyleSection.vue'
+import JobRecommendations from '../components/JobRecommendations.vue'
+import UpgradeTips from '../components/UpgradeTips.vue'
 import SettingsModal from '../components/SettingsModal.vue'
 import jobsData from '../data/jobs-data.js'
 
@@ -351,104 +334,7 @@ body.dark-mode .section-title {
 
 /* 生活水平样式已移至 LifestyleSection.vue 组件中 */
 
-/* 岗位推荐 */
-.job-recommend {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
-  backdrop-filter: blur(10px);
-  padding: var(--space-4);
-  border-radius: var(--radius-xl);
-  margin-bottom: var(--space-3);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
-}
-
-
-
-.job-recommend:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-xl);
-}
-
-body.dark-mode .job-recommend {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.job-recommend-title {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  margin-bottom: 6px;
-}
-
-.job-recommend-salary {
-  font-size: 1.75rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
-  letter-spacing: -0.025em;
-}
-
-.job-recommend-reason {
-  font-size: 0.8125rem;
-  color: var(--color-gray-600);
-}
-
-body.dark-mode .job-recommend-title {
-  color: var(--color-accent);
-}
-
-/* 升级建议 */
-.upgrade-tip {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-  backdrop-filter: blur(10px);
-  padding: var(--space-4);
-  border-radius: var(--radius-xl);
-  margin-bottom: var(--space-3);
-  border: 1px solid var(--glass-border);
-  border-left: 4px solid var(--color-primary);
-  box-shadow: var(--shadow-md);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.upgrade-tip:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateX(4px);
-}
-
-body.dark-mode .upgrade-tip {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.upgrade-tip-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  margin-bottom: 6px;
-}
-
-.upgrade-tip-content {
-  font-size: 0.8125rem;
-  color: var(--color-gray-600);
-  line-height: 1.6;
-}
-
-body.dark-mode .upgrade-tip-title {
-  color: var(--color-accent);
-}
-
-body.dark-mode .upgrade-tip-content {
-  color: var(--color-gray-400);
-}
+/* 岗位推荐和升级建议样式已移至各自的组件中 */
 
 /* 响应式 */
 @media (max-width: 1200px) {
