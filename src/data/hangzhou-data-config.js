@@ -420,3 +420,5 @@ const hangzhouDataConfig = {
         return threshold || thresholds[thresholds.length - 1];
     }
 };
+
+export default hangzhouDataConfig

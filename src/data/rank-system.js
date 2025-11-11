@@ -103,3 +103,5 @@ const rankSystem = {
         };
     }
 };
+
+export default { rankSystem }

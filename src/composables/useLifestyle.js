@@ -1,23 +1,31 @@
 // 生活水平计算 Composable
 import hangzhouDataConfig from '../data/hangzhou-data-config.js'
-import rankSystemData from '../data/rank-system.js'
-import lifestyleDataModule from '../data/lifestyle-data.js'
+import rankSystemModule from '../data/rank-system.js'
+import lifestyleModule from '../data/lifestyle-data.js'
+
+// 将 hangzhouDataConfig 设置为全局变量，供其他模块使用
+if (typeof window !== 'undefined') {
+  window.hangzhouDataConfig = hangzhouDataConfig
+}
+
+const rankSystem = rankSystemModule.rankSystem
+const lifestyleData = lifestyleModule.lifestyleData
 
 export function useLifestyle() {
   const calculateLifestyle = (salary, peopleCount = 1, rent = null, utilities = null, savingsRate = null) => {
-    return lifestyleDataModule.lifestyleData.calculate(salary, peopleCount, rent, utilities, savingsRate)
+    return lifestyleData.calculate(salary, peopleCount, rent, utilities, savingsRate)
   }
 
   const getRank = (salary) => {
-    return rankSystemData.rankSystem.getRank(salary)
+    return rankSystem.getRank(salary)
   }
 
   const getProgress = (salary) => {
-    return rankSystemData.rankSystem.getProgress(salary)
+    return rankSystem.getProgress(salary)
   }
 
   const getRankInfo = (salary) => {
-    return rankSystemData.rankSystem.getRankInfo(salary)
+    return rankSystem.getRankInfo(salary)
   }
 
   return {
@@ -26,6 +34,6 @@ export function useLifestyle() {
     getProgress,
     getRankInfo,
     hangzhouDataConfig,
-    rankSystem: rankSystemData.rankSystem
+    rankSystem
   }
 }

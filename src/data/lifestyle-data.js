@@ -377,3 +377,5 @@ const upgradeTips = {
         return tips;
     }
 };
+
+export default { lifestyleData, upgradeTips }
