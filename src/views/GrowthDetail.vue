@@ -38,6 +38,15 @@
       </div>
     </div>
 
+    <!-- 升级动画 -->
+    <LevelUpModal 
+      :isOpen="showLevelUp"
+      :newLevel="levelUpData.newLevel"
+      :expGained="levelUpData.expGained"
+      :milestone="levelUpData.milestone"
+      @close="showLevelUp = false"
+    />
+
     <SettingsModal 
       :isOpen="isSettingsOpen"
       @close="isSettingsOpen = false"
@@ -52,9 +61,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
 import { useQuestStore } from '../stores/quest'
 import { useSkillExpansion } from '../composables/useSkillExpansion'
+import { getLevelMilestone } from '../utils/expCalculator'
 import ProgressHeader from '../components/growth-detail/ProgressHeader.vue'
 import PlanInfoCards from '../components/growth-detail/PlanInfoCards.vue'
 import SkillCard from '../components/growth-detail/SkillCard.vue'
+import LevelUpModal from '../components/game/LevelUpModal.vue'
 import SettingsModal from '../components/SettingsModal.vue'
 
 const route = useRoute()
@@ -63,6 +74,12 @@ const jobsStore = useJobsStore()
 const questStore = useQuestStore()
 const { expandedSkills, toggleSkill, initializeExpansion } = useSkillExpansion()
 const isSettingsOpen = ref(false)
+const showLevelUp = ref(false)
+const levelUpData = ref({
+  newLevel: 1,
+  expGained: 0,
+  milestone: null
+})
 
 // 使用 questStore 的当前任务
 const plan = computed(() => {
@@ -162,6 +179,21 @@ watch(() => questStore.currentQuest, (newQuest) => {
     initializeExpansion()
   }
 }, { deep: true })
+
+// 监听等级变化，显示升级动画
+let previousLevel = questStore.currentLevel
+watch(() => questStore.currentLevel, (newLevel) => {
+  if (newLevel > previousLevel) {
+    const milestone = getLevelMilestone(newLevel)
+    levelUpData.value = {
+      newLevel,
+      expGained: 100, // 每级固定100经验
+      milestone: milestone.message
+    }
+    showLevelUp.value = true
+    previousLevel = newLevel
+  }
+})
 </script>
 
 <style scoped>
