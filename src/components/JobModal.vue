@@ -1,8 +1,20 @@
 <template>
   <div v-if="isOpen" class="modal" @click.self="close">
-    <div class="modal-content">
+    <div class="modal-content" :class="{ 'wide': showRewardSetup }">
       <button class="close-btn" @click="close">×</button>
       
+      <!-- 奖励设置界面 -->
+      <div v-if="showRewardSetup" class="reward-setup-container">
+        <RewardSetup 
+          :subtasks="tempSubtasks"
+          :jobSalary="job.salary"
+          @save="handleRewardSave"
+          @cancel="handleRewardCancel"
+        />
+      </div>
+      
+      <!-- 任务详情界面 -->
+      <div v-else class="job-details">
       <div class="modal-header">
         <div class="quest-badge">⚔️ 任务详情</div>
         <div class="modal-title">
@@ -77,8 +89,9 @@
         @click="handleAccept"
         :disabled="isAccepting"
       >
-        {{ isAccepted ? '重新接取任务' : '接取任务' }}
+        {{ isAccepted ? '重新接取任务' : '下一步：设置奖励' }}
       </button>
+      </div>
     </div>
   </div>
 </template>
@@ -86,10 +99,12 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useJobsStore } from '../stores/jobs'
+import { useQuestStore } from '../stores/quest'
 import { useLifestyle } from '../composables/useLifestyle'
 import LifestyleComparison from './LifestyleComparison.vue'
 import GoldCoin from './game/GoldCoin.vue'
 import QuestReward from './game/QuestReward.vue'
+import RewardSetup from './quest/RewardSetup.vue'
 
 const props = defineProps({
   job: {
@@ -105,10 +120,14 @@ const props = defineProps({
 const emit = defineEmits(['close', 'accept'])
 
 const jobsStore = useJobsStore()
+const questStore = useQuestStore()
 const { getRankInfo, getProgress } = useLifestyle()
 
 const isAccepting = ref(false)
 const checkedRequirements = ref({})
+const showRewardSetup = ref(false)
+const tempSubtasks = ref([])
+const customRewards = ref(null)
 
 // 计算属性
 const isAccepted = computed(() => {
@@ -170,13 +189,57 @@ const loadProgress = () => {
 
 const handleAccept = () => {
   if (!props.job) return
+  
+  // 生成临时子任务用于奖励设置
+  tempSubtasks.value = generateTempSubtasks()
+  
+  // 显示奖励设置界面
+  showRewardSetup.value = true
+}
+
+const generateTempSubtasks = () => {
+  if (!props.job.requirements) return []
+  
+  const totalReqs = props.job.requirements.length
+  return props.job.requirements.map((req, index) => {
+    let difficulty
+    if (index < totalReqs / 3) {
+      difficulty = 'basic'
+    } else if (index < (totalReqs * 2) / 3) {
+      difficulty = 'intermediate'
+    } else {
+      difficulty = 'advanced'
+    }
+    
+    return {
+      id: `${props.job.id}-${index}`,
+      title: req.skill || req.text,
+      difficulty,
+      expReward: 0, // 将由经验值分配算法计算
+      goldReward: Math.floor(props.job.salary * 0.05),
+      customGoldReward: null,
+      customReward: null
+    }
+  })
+}
+
+const handleRewardSave = (rewardData) => {
+  customRewards.value = rewardData.globalRewards
+  tempSubtasks.value = rewardData.subtasks
+  
+  // 关闭奖励设置，执行接取任务
+  showRewardSetup.value = false
   isAccepting.value = true
   
   setTimeout(() => {
-    emit('accept', props.job.id)
+    emit('accept', props.job.id, customRewards.value)
     isAccepting.value = false
     close()
   }, 300)
+}
+
+const handleRewardCancel = () => {
+  showRewardSetup.value = false
 }
 
 // 监听 job 变化，加载进度
@@ -221,6 +284,11 @@ watch(() => props.job, (newJob) => {
   position: relative;
   animation: slideUp 0.4s ease;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  transition: max-width 0.3s ease;
+}
+
+.modal-content.wide {
+  max-width: 900px;
 }
 
 /* 美化滚动条 - 内嵌样式 */
@@ -515,6 +583,10 @@ body.dark-mode .requirement-text {
 .accept-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.reward-setup-container {
+  margin: -20px;
 }
 
 @media (max-width: 600px) {

@@ -88,12 +88,12 @@ const handleJobClick = (job) => {
   openJobModal(job)
 }
 
-const handleAcceptJob = (jobId) => {
+const handleAcceptJob = (jobId, customRewards = null) => {
   const job = jobsStore.jobs.find(j => j.id === jobId)
   if (!job) return
 
-  // 使用新的 quest store 接取任务
-  const success = questStore.acceptQuest(jobId, job)
+  // 使用新的 quest store 接取任务，传入自定义奖励
+  const success = questStore.acceptQuest(jobId, job, customRewards)
   
   if (success) {
     // 同时更新旧的 jobs store 以保持兼容性
