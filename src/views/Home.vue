@@ -107,6 +107,7 @@ import { useRouter } from 'vue-router'
 import { useLifestyle } from '../composables/useLifestyle'
 import { useEarnings } from '../composables/useEarnings'
 import { useQuestStore } from '../stores/quest'
+import { useUserStore } from '../stores/user'
 import { getCurrentLevelExp } from '../utils/expCalculator'
 import RankCard from '../components/RankCard.vue'
 import EarningsCard from '../components/EarningsCard.vue'
@@ -120,20 +121,21 @@ import jobsData from '../data/jobs-data.js'
 
 const router = useRouter()
 const questStore = useQuestStore()
+const userStore = useUserStore()
 const { calculateLifestyle, getRankInfo, getRank } = useLifestyle()
 
-// 游戏化数据 - 从 questStore 获取
-const playerLevel = computed(() => questStore.currentLevel || 1)
+// 游戏化数据 - 从 userStore 和 questStore 获取
+const playerLevel = computed(() => userStore.userInfo.level || 1)
 const currentExp = computed(() => {
-  if (!questStore.currentQuest) return 0
-  return getCurrentLevelExp(questStore.currentQuest.totalExp)
+  const totalExp = userStore.userInfo.totalExp || 0
+  return getCurrentLevelExp(totalExp)
 })
 const maxExp = computed(() => 100)
 const completedQuests = computed(() => {
   return questStore.questHistory.filter(h => h.completionType === 'completed').length
 })
-const achievements = ref(0)
-const streakDays = ref(0)
+const achievements = computed(() => userStore.userInfo.achievements.length)
+const streakDays = computed(() => userStore.userInfo.streakDays)
 
 const isSettingsOpen = ref(false)
 const salaryData = ref({
@@ -148,6 +150,16 @@ const salaryData = ref({
   workSchedule: 'double',
   workDays: 22
 })
+
+// 从 userStore 同步薪资数据
+const syncSalaryFromUser = () => {
+  if (userStore.userInfo.currentSalary) {
+    salaryData.value.salary = userStore.userInfo.currentSalary
+  }
+  if (userStore.userInfo.joinDate) {
+    salaryData.value.joinDate = userStore.userInfo.joinDate
+  }
+}
 
 // 使用收入计算 composable
 const {
@@ -304,14 +316,22 @@ const goToJobs = () => {
 // 生命周期
 onMounted(() => {
   loadData()
-  calculateEarnings()
   questStore.loadFromStorage()
+  userStore.loadFromStorage()
+  
+  // 从 userStore 同步薪资
+  syncSalaryFromUser()
+  
+  calculateEarnings()
   timer = setInterval(calculateEarnings, 1000) // 每秒更新一次，实时显示
   
   // 监听设置按钮点击（从 Navbar）
   window.addEventListener('openSettings', () => {
     isSettingsOpen.value = true
   })
+  
+  // 更新连续学习天数
+  userStore.updateStreakDays()
 })
 
 onUnmounted(() => {

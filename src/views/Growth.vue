@@ -54,6 +54,19 @@
       @close="showAbandonModal = false"
     />
 
+    <!-- 岗位完成弹窗 -->
+    <JobCompletionModal 
+      v-if="jobCompletionData"
+      :isOpen="showJobCompletionModal"
+      :jobData="jobCompletionData.jobData"
+      :oldSalary="jobCompletionData.oldSalary"
+      :newSalary="jobCompletionData.newSalary"
+      :learningDuration="jobCompletionData.learningDuration"
+      :completedTasks="jobCompletionData.completedTasks"
+      :totalSkills="jobCompletionData.totalSkills"
+      @close="handleJobCompletionClose"
+    />
+
     <SettingsModal 
       :isOpen="isSettingsOpen"
       @close="isSettingsOpen = false"
@@ -67,19 +80,25 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
 import { useQuestStore } from '../stores/quest'
+import { useUserStore } from '../stores/user'
 import { checkAchievements } from '../utils/achievements'
 import EmptyState from '../components/growth/EmptyState.vue'
 import QuestProgressCard from '../components/quest/QuestProgressCard.vue'
 import QuestCompletionModal from '../components/quest/QuestCompletionModal.vue'
 import AbandonQuestModal from '../components/quest/AbandonQuestModal.vue'
 import SettingsModal from '../components/SettingsModal.vue'
+import JobCompletionModal from '../components/JobCompletionModal.vue'
+import jobsData from '../data/jobs-data.js'
 
 const router = useRouter()
 const jobsStore = useJobsStore()
 const questStore = useQuestStore()
+const userStore = useUserStore()
 const isSettingsOpen = ref(false)
 const showCompletionModal = ref(false)
 const showAbandonModal = ref(false)
+const showJobCompletionModal = ref(false)
+const jobCompletionData = ref(null)
 
 // 检查是否可以完成任务
 const canComplete = computed(() => {
@@ -101,10 +120,45 @@ const goToDetail = () => {
 
 const handleCompleteQuest = () => {
   const success = questStore.confirmQuestCompletion()
-  if (success) {
+  if (success && questStore.currentQuest) {
     showCompletionModal.value = false
-    // 跳转到首页或任务大厅
-    router.push('/')
+    
+    // 获取岗位数据
+    const jobData = jobsData.find(j => j.id === questStore.currentQuest.jobId)
+    if (jobData) {
+      // 计算学习时长
+      const startDate = new Date(questStore.currentQuest.acceptedDate)
+      const endDate = new Date()
+      const days = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24))
+      
+      // 更新用户职业信息
+      const oldSalary = userStore.userInfo.currentSalary
+      const result = userStore.updateCareer(jobData, endDate)
+      
+      // 增加经验值
+      if (jobData.expReward) {
+        userStore.addExp(jobData.expReward)
+      }
+      
+      // 更新连续学习天数
+      userStore.updateStreakDays()
+      
+      // 准备完成弹窗数据
+      jobCompletionData.value = {
+        jobData,
+        oldSalary,
+        newSalary: result.newSalary,
+        learningDuration: days > 0 ? `${days}天` : '不足1天',
+        completedTasks: questStore.completedSubQuestsCount,
+        totalSkills: questStore.currentQuest.subQuests.length
+      }
+      
+      // 显示任务完成弹窗
+      showJobCompletionModal.value = true
+    } else {
+      // 如果找不到岗位数据，直接跳转
+      router.push('/')
+    }
   }
 }
 
@@ -125,12 +179,40 @@ const handleSettingsSave = () => {
   location.reload()
 }
 
+const handleJobCompletionClose = () => {
+  showJobCompletionModal.value = false
+  jobCompletionData.value = null
+  // 跳转到首页
+  router.push('/')
+}
+
 onMounted(() => {
   jobsStore.loadFromStorage()
   questStore.loadFromStorage()
+  userStore.loadFromStorage()
   
   window.addEventListener('openSettings', () => {
     isSettingsOpen.value = true
+  })
+  
+  // 监听任务完成事件（从 jobs store 触发）
+  window.addEventListener('job-completed', (event) => {
+    const { jobData, completedDate } = event.detail
+    
+    // 更新用户职业信息
+    const oldSalary = userStore.userInfo.currentSalary
+    const result = userStore.updateCareer(jobData, new Date(completedDate))
+    
+    // 增加经验值
+    if (jobData.expReward) {
+      userStore.addExp(jobData.expReward)
+    }
+    
+    // 更新连续学习天数
+    userStore.updateStreakDays()
+    
+    // 显示完成提示
+    console.log('职业更新成功:', result.message)
   })
 })
 

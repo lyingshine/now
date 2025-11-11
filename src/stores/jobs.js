@@ -211,6 +211,38 @@ export const useJobsStore = defineStore('jobs', () => {
     // 更新整体进度
     const avgProgress = plan.skills.reduce((sum, skill) => sum + skill.progress, 0) / plan.skills.length
     plan.overallProgress = Math.round(avgProgress)
+
+    // 检查是否完成所有任务
+    if (plan.overallProgress === 100 && !plan.completed) {
+      completeJob(plan)
+    }
+  }
+
+  const completeJob = (plan) => {
+    // 标记计划为已完成
+    plan.completed = true
+    plan.completedDate = new Date().toISOString().split('T')[0]
+
+    // 更新用户进度
+    if (userProgress.value[plan.jobId]) {
+      userProgress.value[plan.jobId].completed = true
+      userProgress.value[plan.jobId].completedDate = plan.completedDate
+    }
+
+    // 触发职业更新事件（通过自定义事件通知其他组件）
+    const jobData = jobs.value.find(j => j.id === plan.jobId)
+    if (jobData) {
+      // 派发自定义事件
+      window.dispatchEvent(new CustomEvent('job-completed', {
+        detail: {
+          jobId: plan.jobId,
+          jobData: jobData,
+          completedDate: plan.completedDate
+        }
+      }))
+    }
+
+    saveToStorage()
   }
 
   const abandonJob = (jobId) => {
