@@ -465,7 +465,7 @@ const goToJobs = () => {
 onMounted(() => {
   loadData()
   calculateEarnings()
-  timer = setInterval(calculateEarnings, 60000) // 每分钟更新一次
+  timer = setInterval(calculateEarnings, 1000) // 每秒更新一次，实时显示
   
   // 监听设置按钮点击（从 Navbar）
   window.addEventListener('openSettings', () => {
