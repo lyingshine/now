@@ -213,6 +213,22 @@ export const useJobsStore = defineStore('jobs', () => {
     plan.overallProgress = Math.round(avgProgress)
   }
 
+  const abandonJob = (jobId) => {
+    // 删除用户进度
+    if (userProgress.value[jobId]) {
+      delete userProgress.value[jobId]
+    }
+
+    // 删除学习计划
+    const planIndex = learningPlans.value.findIndex(p => p.jobId === jobId)
+    if (planIndex >= 0) {
+      learningPlans.value.splice(planIndex, 1)
+    }
+
+    // 保存到 localStorage
+    saveToStorage()
+  }
+
   const saveToStorage = () => {
     localStorage.setItem('jobsStore', JSON.stringify({
       userProgress: userProgress.value,
@@ -240,6 +256,7 @@ export const useJobsStore = defineStore('jobs', () => {
     // 方法
     loadJobs,
     acceptJob,
+    abandonJob,
     toggleTask,
     saveToStorage,
     loadFromStorage

@@ -27,9 +27,14 @@
       </div>
     </div>
     
-    <button class="btn-primary" @click="$emit('continue', plan.jobId)">
-      继续学习
-    </button>
+    <div class="task-actions">
+      <button class="btn-primary" @click="$emit('continue', plan.jobId)">
+        继续学习
+      </button>
+      <button class="btn-abandon" @click="$emit('abandon', plan.jobId)">
+        放弃任务
+      </button>
+    </div>
   </div>
 </template>
 
@@ -41,7 +46,7 @@ defineProps({
   }
 })
 
-defineEmits(['continue'])
+defineEmits(['continue', 'abandon'])
 </script>
 
 <style scoped>
@@ -138,8 +143,13 @@ body.dark-mode .task-card {
   font-weight: 600;
 }
 
+.task-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+}
+
 .btn-primary {
-  width: 100%;
   padding: 1.25rem 2.5rem;
   background: linear-gradient(135deg, var(--growth-primary) 0%, var(--growth-secondary) 100%);
   color: white;
@@ -155,6 +165,35 @@ body.dark-mode .task-card {
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-xl);
+}
+
+.btn-abandon {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-xl);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-abandon:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: translateY(-2px);
+}
+
+body.dark-mode .btn-abandon {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+body.dark-mode .btn-abandon:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.25) 100%);
+  border-color: rgba(239, 68, 68, 0.6);
 }
 
 @media (max-width: 768px) {

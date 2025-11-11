@@ -7,6 +7,7 @@
         :key="plan.jobId"
         :plan="plan"
         @continue="$emit('continue', $event)"
+        @abandon="$emit('abandon', $event)"
       />
     </div>
   </div>
@@ -22,7 +23,7 @@ defineProps({
   }
 })
 
-defineEmits(['continue'])
+defineEmits(['continue', 'abandon'])
 </script>
 
 <style scoped>

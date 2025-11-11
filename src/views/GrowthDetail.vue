@@ -7,7 +7,7 @@
       </div>
 
       <div v-else>
-        <ProgressHeader :plan="plan" @back="goBack" />
+        <ProgressHeader :plan="plan" @back="goBack" @abandon="handleAbandon" />
         <PlanInfoCards :plan="plan" />
 
         <div class="skills-section">
@@ -62,6 +62,13 @@ const toggleTask = (skillIndex, stepIndex, taskIndex) => {
 
 const goBack = () => {
   router.push('/growth')
+}
+
+const handleAbandon = () => {
+  if (confirm('确定要放弃这个任务吗？所有学习进度将被清除。')) {
+    jobsStore.abandonJob(plan.value.jobId)
+    router.push('/growth')
+  }
 }
 
 const handleSettingsSave = () => {

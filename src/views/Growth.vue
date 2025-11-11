@@ -7,7 +7,12 @@
       <StatsGrid :stats="stats" />
 
       <EmptyState v-if="jobsStore.learningPlans.length === 0" />
-      <TasksList v-else :plans="jobsStore.learningPlans" @continue="goToDetail" />
+      <TasksList 
+        v-else 
+        :plans="jobsStore.learningPlans" 
+        @continue="goToDetail"
+        @abandon="handleAbandon"
+      />
     </div>
 
     <SettingsModal 
@@ -35,6 +40,12 @@ const isSettingsOpen = ref(false)
 
 const goToDetail = (jobId) => {
   router.push(`/growth/${jobId}`)
+}
+
+const handleAbandon = (jobId) => {
+  if (confirm('确定要放弃这个任务吗？所有学习进度将被清除。')) {
+    jobsStore.abandonJob(jobId)
+  }
 }
 
 const handleSettingsSave = () => {

@@ -1,6 +1,9 @@
 <template>
   <div class="detail-header">
-    <button class="btn-back" @click="$emit('back')">← 返回</button>
+    <div class="header-left">
+      <button class="btn-back" @click="$emit('back')">← 返回</button>
+      <button class="btn-abandon" @click="$emit('abandon')">放弃任务</button>
+    </div>
     <div class="header-content">
       <h1 class="job-title">{{ plan.jobTitle }}</h1>
       <div class="job-salary">目标薪资：¥{{ plan.salary.toLocaleString() }}/月</div>
@@ -39,7 +42,7 @@ defineProps({
   }
 })
 
-defineEmits(['back'])
+defineEmits(['back', 'abandon'])
 
 const circumference = 2 * Math.PI * 54
 </script>
@@ -100,6 +103,41 @@ body.dark-mode .detail-header {
 body.dark-mode .btn-back {
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
   color: var(--text-primary);
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-abandon {
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-xl);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-abandon:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: translateX(-2px);
+}
+
+body.dark-mode .btn-abandon {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+body.dark-mode .btn-abandon:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.25) 100%);
+  border-color: rgba(239, 68, 68, 0.6);
 }
 
 .header-content {
