@@ -1,8 +1,12 @@
 <template>
   <div class="task-card">
+    <div class="quest-badge-corner">⚔️</div>
     <div class="task-header">
-      <h3 class="task-title">{{ plan.jobTitle }}</h3>
-      <div class="task-salary">¥{{ plan.salary.toLocaleString() }}/月</div>
+      <h3 class="task-title">
+        <span class="quest-icon">📜</span>
+        {{ plan.jobTitle }}
+      </h3>
+      <GoldCoin :amount="plan.salary" />
     </div>
     
     <div class="task-progress">
@@ -39,6 +43,8 @@
 </template>
 
 <script setup>
+import GoldCoin from '../game/GoldCoin.vue'
+
 defineProps({
   plan: {
     type: Object,
@@ -56,16 +62,51 @@ defineEmits(['continue', 'abandon'])
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 2.5rem;
   border-radius: var(--radius-3xl);
-  border: 1px solid var(--glass-border);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid var(--glass-border);
+  transition: all 0.3s ease;
   box-shadow: var(--shadow-lg);
   position: relative;
   overflow: hidden;
 }
 
+.task-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.task-card:hover::before {
+  opacity: 1;
+}
+
 .task-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--shadow-2xl), 0 0 30px rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.quest-badge-corner {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  opacity: 0.6;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(10deg);
+  }
 }
 
 body.dark-mode .task-card {
@@ -83,6 +124,14 @@ body.dark-mode .task-card {
 .task-title {
   font-size: 1.25rem;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quest-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .task-salary {

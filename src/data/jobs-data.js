@@ -7,6 +7,9 @@ const jobsData = [
         experience: '1-3年',
         education: '本科',
         tags: ['互联网', '技术'],
+        difficulty: '⭐⭐⭐', // 任务难度
+        rewardGold: 18000, // 金币奖励（月薪）
+        expReward: 3600, // 经验值奖励
         requirements: [
             { 
                 id: 'r1', 

@@ -4,12 +4,25 @@
       <button class="close-btn" @click="close">×</button>
       
       <div class="modal-header">
-        <div class="modal-title">{{ job.title }}</div>
-        <div class="modal-salary">¥{{ job.salary.toLocaleString() }}/月</div>
+        <div class="quest-badge">⚔️ 任务详情</div>
+        <div class="modal-title">
+          <span class="quest-icon">📜</span>
+          {{ job.title }}
+        </div>
+        <div class="modal-salary">
+          <GoldCoin :amount="job.salary" />
+        </div>
         <div class="job-rank" :style="{ borderColor: rankInfo.current.color, color: rankInfo.current.color }">
           {{ rankInfo.current.icon }} {{ rankInfo.current.name }}段位 · {{ rankInfo.current.percentage }}
         </div>
       </div>
+      
+      <!-- 任务奖励 -->
+      <QuestReward 
+        :gold="job.salary"
+        :exp="job.salary * 0.2"
+        :items="['技能提升', '职业晋升']"
+      />
 
       <!-- 进度信息 -->
       <div class="progress-info">
@@ -75,6 +88,8 @@ import { ref, computed, watch } from 'vue'
 import { useJobsStore } from '../stores/jobs'
 import { useLifestyle } from '../composables/useLifestyle'
 import LifestyleComparison from './LifestyleComparison.vue'
+import GoldCoin from './game/GoldCoin.vue'
+import QuestReward from './game/QuestReward.vue'
 
 const props = defineProps({
   job: {

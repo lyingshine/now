@@ -3,16 +3,28 @@
     class="skill-card"
     :class="{ 'skill-completed': skill.status === 'completed' }"
   >
+    <div class="quest-badge-corner">
+      <span v-if="skill.status === 'completed'">✅</span>
+      <span v-else-if="skill.status === 'in_progress'">⚡</span>
+      <span v-else>🎯</span>
+    </div>
+    
     <div class="skill-header" @click="$emit('toggle')">
       <div class="skill-info">
-        <div class="skill-status">
+        <div class="skill-status" :class="`status-${skill.status}`">
           <span v-if="skill.status === 'completed'" class="status-icon">✓</span>
           <span v-else-if="skill.status === 'in_progress'" class="status-icon">⏳</span>
-          <span v-else class="status-icon">○</span>
+          <span v-else class="status-icon">🎯</span>
         </div>
         <div>
-          <h3 class="skill-name">{{ skill.skillName }}</h3>
-          <div class="skill-reward">+{{ skill.reward }}元</div>
+          <h3 class="skill-name">
+            <span class="quest-icon">⚔️</span>
+            {{ skill.skillName }}
+          </h3>
+          <div class="skill-reward">
+            <span class="reward-icon">💰</span>
+            +{{ skill.reward }} 金币
+          </div>
         </div>
       </div>
       <div class="skill-progress-info">
@@ -60,16 +72,49 @@ defineEmits(['toggle', 'toggle-task'])
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 2rem;
   border-radius: var(--radius-2xl);
-  border: 1px solid var(--glass-border);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid var(--glass-border);
+  transition: all 0.3s ease;
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
 }
 
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.skill-card:hover::before {
+  left: 100%;
+}
+
 .skill-card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateX(2px);
+  box-shadow: var(--shadow-xl), 0 0 30px rgba(16, 185, 129, 0.2);
+  transform: translateX(4px);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.quest-badge-corner {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 body.dark-mode .skill-card {
@@ -96,26 +141,63 @@ body.dark-mode .skill-card {
 }
 
 .skill-status {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--bg-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  border: 2px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.status-completed {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  border-color: #10b981;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.status-in_progress {
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  border-color: #3b82f6;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
 }
 
 .skill-name {
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quest-icon {
+  font-size: 1.25rem;
 }
 
 .skill-reward {
   font-size: 0.875rem;
   color: var(--growth-primary);
-  font-weight: 600;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.reward-icon {
+  font-size: 1rem;
 }
 
 .skill-progress-info {

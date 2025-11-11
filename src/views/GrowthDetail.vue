@@ -11,7 +11,19 @@
         <PlanInfoCards :plan="plan" />
 
         <div class="skills-section">
-          <h2 class="section-title">📚 学习技能</h2>
+          <div class="quest-progress-header">
+            <h2 class="section-title">⚔️ 技能任务树</h2>
+            <div class="quest-stats">
+              <div class="stat-badge">
+                <span class="stat-icon">✅</span>
+                <span>{{ completedSkills }}/{{ plan.skills.length }} 完成</span>
+              </div>
+              <div class="stat-badge">
+                <span class="stat-icon">💰</span>
+                <span>{{ totalReward }} 金币奖励</span>
+              </div>
+            </div>
+          </div>
           <div class="skills-list">
             <SkillCard
               v-for="(skill, skillIndex) in plan.skills"
@@ -53,6 +65,16 @@ const isSettingsOpen = ref(false)
 const plan = computed(() => {
   const jobId = parseInt(route.params.id)
   return jobsStore.learningPlans.find(p => p.jobId === jobId)
+})
+
+const completedSkills = computed(() => {
+  if (!plan.value) return 0
+  return plan.value.skills.filter(s => s.status === 'completed').length
+})
+
+const totalReward = computed(() => {
+  if (!plan.value) return 0
+  return plan.value.skills.reduce((sum, skill) => sum + skill.reward, 0)
 })
 
 const toggleTask = (skillIndex, stepIndex, taskIndex) => {
@@ -129,10 +151,49 @@ body.dark-mode .growth-detail {
   margin-top: 2rem;
 }
 
+.quest-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+}
+
+body.dark-mode .quest-progress-header {
+  background: rgba(30, 41, 59, 0.5);
+}
+
 .section-title {
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quest-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-primary);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.875rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-icon {
+  font-size: 1.125rem;
 }
 
 .skills-list {

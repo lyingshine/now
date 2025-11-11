@@ -3,13 +3,29 @@
     class="job-card"
     @click="$emit('click', job)"
   >
+    <div class="quest-badge-corner">🎯</div>
+    
     <div class="job-header">
-      <div class="job-title">{{ job.title }}</div>
-      <div class="job-salary">¥{{ job.salary.toLocaleString() }}/月</div>
+      <div class="job-title">
+        <span class="quest-icon">⚔️</span>
+        {{ job.title }}
+      </div>
+      <GoldCoin :amount="job.salary" />
     </div>
     
     <div class="job-rank" :style="{ borderColor: rank.color, color: rank.color }">
       {{ rank.icon }} {{ rank.name }}段位
+    </div>
+    
+    <div class="quest-rewards">
+      <div class="reward-item">
+        <span class="reward-icon">💰</span>
+        <span>{{ job.salary.toLocaleString() }} 金币/月</span>
+      </div>
+      <div class="reward-item">
+        <span class="reward-icon">⚡</span>
+        <span>{{ job.salary * 0.2 }} 经验值</span>
+      </div>
     </div>
     
     <div class="job-info">
@@ -34,6 +50,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useLifestyle } from '../../composables/useLifestyle'
+import GoldCoin from '../game/GoldCoin.vue'
 
 const props = defineProps({
   job: {
@@ -59,17 +76,52 @@ const rank = computed(() => getRank(props.job.salary))
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 2rem;
   border-radius: var(--radius-3xl);
-  border: 1px solid var(--glass-border);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid var(--glass-border);
+  transition: all 0.3s ease;
   cursor: pointer;
   box-shadow: var(--shadow-lg);
   position: relative;
   overflow: hidden;
 }
 
+.job-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.job-card:hover::before {
+  opacity: 1;
+}
+
 .job-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-2xl), 0 0 30px rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.quest-badge-corner {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  opacity: 0.6;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 body.dark-mode .job-card {
@@ -111,15 +163,35 @@ body.dark-mode .job-rank {
 .job-title {
   font-size: 1.25rem;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.job-salary {
+.quest-icon {
   font-size: 1.5rem;
-  background: linear-gradient(135deg, var(--growth-primary) 0%, var(--color-accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 800;
-  letter-spacing: -0.025em;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.quest-rewards {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+.reward-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.reward-icon {
+  font-size: 1.125rem;
 }
 
 .job-info {

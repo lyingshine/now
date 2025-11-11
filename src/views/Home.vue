@@ -1,6 +1,34 @@
 <template>
   <div class="home">
     <div class="main-wrapper">
+      <!-- 游戏化顶部栏 -->
+      <div class="game-header">
+        <div class="player-info">
+          <div class="player-avatar">🎮</div>
+          <div class="player-details">
+            <div class="player-name">职场冒险者</div>
+            <ExpBar :level="playerLevel" :currentExp="currentExp" :maxExp="maxExp" />
+          </div>
+        </div>
+        <div class="player-stats">
+          <div class="stat-item">
+            <span class="stat-icon">⚔️</span>
+            <span class="stat-label">已完成任务</span>
+            <span class="stat-value">{{ completedQuests }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">🏆</span>
+            <span class="stat-label">成就</span>
+            <span class="stat-value">{{ achievements }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">🔥</span>
+            <span class="stat-label">连续天数</span>
+            <span class="stat-value">{{ streakDays }}</span>
+          </div>
+        </div>
+      </div>
+      
       <div class="container">
         <!-- 左侧面板：段位和收入 -->
         <div class="left-panel">
@@ -49,10 +77,19 @@ import LifestyleSection from '../components/LifestyleSection.vue'
 import JobRecommendations from '../components/JobRecommendations.vue'
 import UpgradeTips from '../components/UpgradeTips.vue'
 import SettingsModal from '../components/SettingsModal.vue'
+import ExpBar from '../components/game/ExpBar.vue'
 import jobsData from '../data/jobs-data.js'
 
 const router = useRouter()
 const { calculateLifestyle, getRankInfo, getRank } = useLifestyle()
+
+// 游戏化数据
+const playerLevel = ref(1)
+const currentExp = ref(0)
+const maxExp = ref(1000)
+const completedQuests = ref(0)
+const achievements = ref(0)
+const streakDays = ref(0)
 
 const isSettingsOpen = ref(false)
 const salaryData = ref({
@@ -276,6 +313,96 @@ body.dark-mode .home::before {
   padding: 12px 20px;
   position: relative;
   z-index: 1;
+}
+
+.game-header {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: var(--radius-3xl);
+  padding: 1.5rem 2rem;
+  margin-bottom: 16px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+body.dark-mode .game-header {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  max-width: 500px;
+}
+
+.player-avatar {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  animation: avatarPulse 2s ease-in-out infinite;
+}
+
+@keyframes avatarPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.player-details {
+  flex: 1;
+}
+
+.player-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.player-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stat-icon {
+  font-size: 1.5rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--growth-primary);
 }
 
 .container {

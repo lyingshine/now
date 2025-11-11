@@ -1,8 +1,20 @@
 <template>
   <div class="jobs">
     <div class="container">
-      <h1 class="page-title">💼 任务大厅</h1>
-      <p class="page-subtitle">选择你的职业目标，开启成长之旅</p>
+      <div class="quest-hall-header">
+        <h1 class="page-title">⚔️ 任务大厅</h1>
+        <p class="page-subtitle">接取任务，获得奖励，升级你的职业生涯！</p>
+        <div class="quest-stats">
+          <div class="quest-stat">
+            <span class="stat-icon">📋</span>
+            <span class="stat-text">{{ jobsStore.jobs.length }} 个可用任务</span>
+          </div>
+          <div class="quest-stat">
+            <span class="stat-icon">✅</span>
+            <span class="stat-text">{{ acceptedCount }} 个已接取</span>
+          </div>
+        </div>
+      </div>
       
       <JobsGrid
         :jobs="jobsStore.jobs"
@@ -29,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useJobsStore } from '../stores/jobs'
 import { useJobModal } from '../composables/useJobModal'
 import JobsGrid from '../components/jobs/JobsGrid.vue'
@@ -40,6 +52,10 @@ import jobsData from '../data/jobs-data.js'
 const jobsStore = useJobsStore()
 const { selectedJob, isModalOpen, openJobModal, closeJobModal } = useJobModal()
 const isSettingsOpen = ref(false)
+
+const acceptedCount = computed(() => {
+  return Object.values(jobsStore.userProgress).filter(p => p.accepted).length
+})
 
 const isJobAccepted = (jobId) => {
   return jobsStore.userProgress[jobId]?.accepted || false
@@ -111,11 +127,43 @@ body.dark-mode .jobs {
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
-.page-subtitle {
+.quest-hall-header {
   text-align: center;
-  color: var(--text-secondary);
   margin-bottom: 3rem;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
   font-size: 1.125rem;
   font-weight: 500;
+}
+
+.quest-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.quest-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--glass-bg);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  font-weight: 600;
+}
+
+.stat-icon {
+  font-size: 1.25rem;
+}
+
+body.dark-mode .quest-stat {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 </style>

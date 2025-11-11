@@ -1,8 +1,8 @@
 <template>
   <div class="growth">
     <div class="container">
-      <h1 class="page-title">🌱 成长中心</h1>
-      <p class="page-subtitle">你的职业成长之旅</p>
+      <h1 class="page-title">🎮 冒险进度</h1>
+      <p class="page-subtitle">查看你的任务进度，继续你的职业冒险！</p>
       
       <StatsGrid :stats="stats" />
 
