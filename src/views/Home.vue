@@ -32,19 +32,19 @@
           <div class="stats">
             <div class="stat-card">
               <div class="stat-label">今日已赚</div>
-              <div class="stat-value">¥{{ todayEarnings.toFixed(2) }}</div>
+              <div class="stat-value">¥{{ formatMoney(todayEarnings) }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">本月已赚</div>
-              <div class="stat-value">¥{{ monthEarnings.toFixed(2) }}</div>
+              <div class="stat-value">¥{{ formatMoney(monthEarnings) }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">今年已赚</div>
-              <div class="stat-value">¥{{ yearEarnings.toFixed(2) }}</div>
+              <div class="stat-value">¥{{ formatMoney(yearEarnings) }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">入职以来</div>
-              <div class="stat-value">¥{{ totalEarnings.toFixed(2) }}</div>
+              <div class="stat-value">¥{{ formatMoney(totalEarnings) }}</div>
             </div>
           </div>
         </div>
@@ -169,17 +169,21 @@ const lifestyleItems = computed(() => {
 
 const lifestyleCategories = computed(() => {
   const categories = {
-    rank: { title: '💎 段位信息', items: [], class: 'rank' },
     income: { title: '💰 收入与储蓄', items: [], class: 'income' },
-    basic: { title: '🏠 基础开销（必需）', items: [], class: 'basic' },
-    food: { title: '🍚 日常饮食（必需）', items: [], class: 'food' },
-    daily: { title: '👕 日常消费（半必需）', items: [], class: 'daily' },
-    optional: { title: '📱 大件消费（可选）', items: [], class: 'optional' },
-    summary: { title: '😊 整体评价', items: [], class: 'summary' }
+    basic: { title: '🏠 基础开销', items: [], class: 'basic' },
+    daily: { title: '🍽️ 日常消费', items: [], class: 'daily' },
+    optional: { title: '📱 大件消费', items: [], class: 'optional' },
+    summary: { title: '😊 整体满意度', items: [], class: 'summary' }
   }
 
   lifestyleItems.value.forEach(item => {
-    const category = categories[item.category]
+    // 跳过段位信息类别
+    if (item.category === 'rank') {
+      return
+    }
+    // 将 food 类别合并到 daily 类别
+    const categoryKey = item.category === 'food' ? 'daily' : item.category
+    const category = categories[categoryKey]
     if (category) {
       category.items.push(item)
     }
@@ -264,6 +268,13 @@ const loadData = () => {
 const handleSettingsSave = (data) => {
   salaryData.value = { ...salaryData.value, ...data }
   calculateEarnings()
+}
+
+const formatMoney = (value) => {
+  if (value >= 10000) {
+    return (value / 10000).toFixed(2) + '万'
+  }
+  return value.toFixed(2)
 }
 
 const getPerMinuteRate = () => {
@@ -482,96 +493,129 @@ onUnmounted(() => {
 <style scoped>
 .home {
   min-height: 100vh;
-  background: var(--bg-primary);
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #fef3c7 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.home::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.dark-mode .home {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);
+}
+
+body.dark-mode .home::before {
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.12) 0%, transparent 50%);
 }
 
 .main-wrapper {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 16px 24px;
+  padding: 12px 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .container {
   display: grid;
-  grid-template-columns: 0.9fr 2fr 0.9fr;
-  gap: 12px;
+  grid-template-columns: 0.75fr 2.5fr 0.75fr;
+  gap: 16px;
 }
 
 .left-panel, .middle-panel, .right-panel {
-  background: white;
-  backdrop-filter: blur(8px);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-radius: var(--radius-3xl);
   padding: var(--space-5);
-  border: 2px solid var(--color-gray-200);
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-md);
+  border: 1px solid var(--glass-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.left-panel:hover, .middle-panel:hover, .right-panel:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2xl);
 }
 
 body.dark-mode .left-panel,
 body.dark-mode .middle-panel,
 body.dark-mode .right-panel {
-  background: var(--color-gray-800);
-  border: 2px solid var(--color-gray-700);
-  box-shadow: var(--shadow-lg);
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-xl), 0 0 40px rgba(99, 102, 241, 0.1);
 }
 
 /* 段位显示 */
 .rank-display {
   text-align: center;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-4);
   padding: var(--space-5) var(--space-4);
-  background: white;
-  border-radius: var(--radius-xl);
-  border: 3px solid;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-2xl);
+  border: 2px solid;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
 }
 
 .rank-display:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
-  border-width: 4px;
 }
 
 body.dark-mode .rank-display {
-  background: var(--color-gray-800);
-  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+  box-shadow: var(--shadow-xl);
 }
 
 .rank-icon {
   font-size: 40px;
   margin-bottom: 8px;
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .rank-name {
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: 700;
-  margin-bottom: var(--space-2);
+  margin-bottom: 6px;
   letter-spacing: 0.05em;
 }
 
 .rank-desc {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: var(--color-gray-600);
-  margin-bottom: var(--space-2);
+  margin-bottom: 6px;
 }
 
 .rank-percentage {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--color-gray-500);
   font-weight: 500;
 }
 
 .rank-lifestyle {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--color-gray-500);
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .lifestyle-level {
@@ -612,36 +656,37 @@ body.dark-mode .rank-progress-bar {
 /* 收入展示 */
 .earnings-display {
   background: white;
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   background-image: 
     linear-gradient(white, white),
-    linear-gradient(90deg, var(--color-accent), var(--color-primary));
+    linear-gradient(135deg, var(--color-accent), var(--color-primary), var(--growth-primary));
   background-origin: border-box;
   background-clip: padding-box, border-box;
   padding: var(--space-6) var(--space-5);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
   text-align: center;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-lg);
   margin-bottom: var(--space-4);
+  position: relative;
+  overflow: hidden;
 }
 
 .earnings-display:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
-  border-width: 4px;
 }
 
 body.dark-mode .earnings-display {
   background-image: 
     linear-gradient(var(--color-gray-800), var(--color-gray-800)),
-    linear-gradient(90deg, var(--color-accent), var(--color-primary));
+    linear-gradient(135deg, var(--color-accent), var(--color-primary), var(--growth-primary));
 }
 
 .earnings-label {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: var(--color-gray-600);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -649,16 +694,17 @@ body.dark-mode .earnings-display {
 
 .earnings-amount {
   font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: var(--space-3);
+  font-weight: 800;
+  margin-bottom: var(--space-2);
   letter-spacing: -0.05em;
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--growth-primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .time-info {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: var(--color-gray-600);
   font-weight: 500;
 }
@@ -671,59 +717,67 @@ body.dark-mode .earnings-display {
 }
 
 .stat-card {
-  background: white;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  backdrop-filter: blur(10px);
   padding: var(--space-4) var(--space-3);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   text-align: center;
-  transition: all var(--transition-fast);
-  border: 2px solid var(--color-gray-200);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: visible;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .stat-card:hover {
-  transform: translateY(-8px) scale(1.05);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
-  border: 3px solid transparent;
-  background-image: 
-    linear-gradient(white, white),
-    linear-gradient(90deg, var(--color-accent), var(--color-primary));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
 }
 
 body.dark-mode .stat-card {
-  background: var(--color-gray-800);
-  border: 2px solid var(--color-gray-700);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: var(--shadow-lg);
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   color: var(--color-gray-600);
   margin-bottom: var(--space-2);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .stat-value {
   font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-primary);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   letter-spacing: -0.025em;
+  word-break: break-all;
+  line-height: 1.3;
 }
 
 body.dark-mode .stat-value {
-  color: var(--color-accent);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Section 标题 */
 .section-title {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-gray-700);
-  margin-bottom: var(--space-4);
-  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
   border-bottom: 2px solid var(--color-gray-200);
   display: flex;
   align-items: center;
@@ -741,38 +795,94 @@ body.dark-mode .section-title {
 .lifestyle-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
+}
+
+/* 第1行：收入储蓄 */
+.lifestyle-category.income {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%);
+}
+
+/* 第2行：基础开销 */
+.lifestyle-category.basic {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(99, 102, 241, 0.05) 100%);
+}
+
+/* 第3行：日常消费（含饮食）和大件消费 */
+.lifestyle-category.daily,
+.lifestyle-category.optional {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.05) 100%);
+}
+
+/* 第4行：整体满意度 */
+.lifestyle-category.summary {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
 }
 
 .lifestyle-category {
-  background: white;
+  backdrop-filter: blur(10px);
   border-radius: var(--radius-xl);
-  padding: var(--space-3);
-  border: 2px solid var(--color-gray-200);
-  box-shadow: var(--shadow-md);
-  transition: all var(--transition-fast);
+  padding: var(--space-5);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: visible;
 }
 
 .lifestyle-category:hover {
-  box-shadow: var(--shadow-lg);
-  border-color: var(--color-gray-300);
+  box-shadow: var(--shadow-md);
+  transform: translateX(2px);
 }
 
 body.dark-mode .lifestyle-category {
-  background: var(--color-gray-800);
-  border: 2px solid var(--color-gray-700);
-  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-md);
+}
+
+body.dark-mode .lifestyle-category.income {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
+}
+
+body.dark-mode .lifestyle-category.basic {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%);
+}
+
+body.dark-mode .lifestyle-category.daily,
+body.dark-mode .lifestyle-category.optional {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.08) 100%);
+}
+
+body.dark-mode .lifestyle-category.summary {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
 }
 
 .lifestyle-category-title {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-gray-900);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
   padding-bottom: var(--space-2);
   padding-left: var(--space-2);
-  border-bottom: 2px solid var(--color-gray-200);
-  border-left: 3px solid var(--color-primary);
+  border-bottom: 1px solid var(--color-gray-200);
+  border-left: 3px solid;
+}
+
+.lifestyle-category.income .lifestyle-category-title {
+  border-left-color: #10b981;
+}
+
+.lifestyle-category.basic .lifestyle-category-title {
+  border-left-color: #6366f1;
+}
+
+.lifestyle-category.daily .lifestyle-category-title,
+.lifestyle-category.optional .lifestyle-category-title {
+  border-left-color: #f59e0b;
+}
+
+.lifestyle-category.summary .lifestyle-category-title {
+  border-left-color: #ec4899;
 }
 
 body.dark-mode .lifestyle-category-title {
@@ -782,53 +892,82 @@ body.dark-mode .lifestyle-category-title {
 
 .lifestyle-category-items {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: var(--space-2);
 }
 
-.lifestyle-category.income .lifestyle-category-items,
+/* 第1行：收入储蓄 - 1列 */
+.lifestyle-category.income .lifestyle-category-items {
+  grid-template-columns: 1fr;
+}
+
+/* 第2行：基础开销 - 4列 */
+.lifestyle-category.basic .lifestyle-category-items {
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+/* 第3行：日常消费（含饮食） + 大件消费 - 4列 */
+.lifestyle-category.daily .lifestyle-category-items,
+.lifestyle-category.optional .lifestyle-category-items {
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+/* 第4行：整体评价 - 1列 */
 .lifestyle-category.summary .lifestyle-category-items {
   grid-template-columns: 1fr;
 }
 
 .lifestyle-item {
-  background: var(--color-gray-50);
-  padding: var(--space-3);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(5px);
+  padding: var(--space-4);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-gray-200);
-  transition: all var(--transition-fast);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  position: relative;
+  overflow: visible;
+  min-height: 80px;
 }
 
 .lifestyle-item:hover {
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
   transform: translateX(4px);
-  border-left-width: 4px;
-  border-left-color: var(--color-accent);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 body.dark-mode .lifestyle-item {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .lifestyle-item:hover {
+  background: rgba(30, 41, 59, 0.9);
 }
 
 .lifestyle-icon {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  flex-shrink: 0;
 }
 
 .lifestyle-title {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-gray-900);
-  margin-bottom: var(--space-1);
+  margin-bottom: 4px;
+  line-height: 1.3;
+  word-break: keep-all;
+  white-space: nowrap;
 }
 
 .lifestyle-desc {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: var(--color-gray-600);
   line-height: 1.5;
+  word-break: break-word;
 }
 
 body.dark-mode .lifestyle-title {
@@ -841,45 +980,50 @@ body.dark-mode .lifestyle-desc {
 
 /* 岗位推荐 */
 .job-recommend {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+  backdrop-filter: blur(10px);
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   margin-bottom: var(--space-3);
   cursor: pointer;
-  transition: all var(--transition-fast);
-  border: 2px solid var(--color-gray-200);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
 }
 
+
+
 .job-recommend:hover {
-  transform: translateY(-6px);
-  border-color: var(--color-accent);
-  border-width: 3px;
+  transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
 }
 
 body.dark-mode .job-recommend {
-  background: var(--color-gray-800);
-  border-color: var(--color-gray-700);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .job-recommend-title {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-primary);
-  margin-bottom: var(--space-2);
+  margin-bottom: 6px;
 }
 
 .job-recommend-salary {
   font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--color-accent);
-  margin-bottom: var(--space-2);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
   letter-spacing: -0.025em;
 }
 
 .job-recommend-reason {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--color-gray-600);
 }
 
@@ -889,38 +1033,40 @@ body.dark-mode .job-recommend-title {
 
 /* 升级建议 */
 .upgrade-tip {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+  backdrop-filter: blur(10px);
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   margin-bottom: var(--space-3);
-  border: 2px solid var(--color-gray-200);
+  border: 1px solid var(--glass-border);
   border-left: 4px solid var(--color-primary);
   box-shadow: var(--shadow-md);
-  transition: all var(--transition-fast);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .upgrade-tip:hover {
-  border-left-width: 6px;
   box-shadow: var(--shadow-lg);
   transform: translateX(4px);
 }
 
 body.dark-mode .upgrade-tip {
-  background: var(--color-gray-800);
-  border-color: var(--color-gray-700);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .upgrade-tip-title {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-primary);
-  margin-bottom: var(--space-2);
+  margin-bottom: 6px;
 }
 
 .upgrade-tip-content {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--color-gray-600);
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 body.dark-mode .upgrade-tip-title {

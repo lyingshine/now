@@ -111,25 +111,54 @@ onUnmounted(() => {
 
 <style scoped>
 .jobs {
-  padding: 2rem;
+  padding: 3rem 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #fef3c7 100%);
+  position: relative;
+}
+
+.jobs::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.dark-mode .jobs {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .page-title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 3.5rem;
+  font-weight: 800;
   text-align: center;
   margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--growth-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .page-subtitle {
   text-align: center;
   color: var(--text-secondary);
   margin-bottom: 3rem;
+  font-size: 1.125rem;
+  font-weight: 500;
 }
 
 .jobs-grid {
@@ -139,37 +168,32 @@ onUnmounted(() => {
 }
 
 .job-card {
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 2rem;
-  border-radius: 1.5rem;
-  border: 2px solid var(--color-gray-200);
-  transition: all 0.2s;
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--glass-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
 }
 
 .job-card:hover {
-  transform: translateY(-6px) scale(1.02);
+  transform: translateY(-6px);
   box-shadow: var(--shadow-xl);
-  border: 2px solid transparent;
-  background-image: 
-    linear-gradient(white, white),
-    linear-gradient(90deg, var(--color-accent), var(--color-primary));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
 }
 
 body.dark-mode .job-card {
-  background: var(--color-gray-800);
-  border-color: var(--color-gray-700);
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-xl);
 }
 
 body.dark-mode .job-card:hover {
-  background-image: 
-    linear-gradient(var(--color-gray-800), var(--color-gray-800)),
-    linear-gradient(90deg, var(--color-accent), var(--color-primary));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
+  box-shadow: var(--shadow-2xl), var(--shadow-glow);
 }
 
 .job-header {
@@ -182,13 +206,20 @@ body.dark-mode .job-card:hover {
 .job-rank {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 700;
   margin-bottom: 1rem;
-  border: 1px solid;
+  border: 2px solid;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+}
+
+body.dark-mode .job-rank {
+  background: rgba(30, 41, 59, 0.5);
 }
 
 .job-title {
@@ -197,9 +228,12 @@ body.dark-mode .job-card:hover {
 }
 
 .job-salary {
-  font-size: 1.125rem;
-  color: var(--growth-primary);
-  font-weight: 700;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--growth-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  letter-spacing: -0.025em;
 }
 
 .job-info {
@@ -242,32 +276,36 @@ body.dark-mode .job-card:hover {
 
 .btn-primary, .btn-success {
   width: 100%;
-  padding: 0.75rem;
+  padding: 1rem;
   color: white;
   border: none;
-  border-radius: 1rem;
-  font-weight: 600;
+  border-radius: var(--radius-xl);
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
-  font-size: 0.875rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-size: 1rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-primary {
-  background: var(--growth-primary);
+  background: linear-gradient(135deg, var(--growth-primary) 0%, var(--growth-secondary) 100%);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
-  background: #45a049;
   transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .btn-success {
-  background: #10b981;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-success:hover {
-  background: #059669;
   transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .job-status {

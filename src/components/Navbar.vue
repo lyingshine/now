@@ -50,23 +50,26 @@ const openSettings = () => {
 
 <style scoped>
 .navbar {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--glass-border);
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  transition: all var(--transition-base);
 }
 
 .dark .navbar {
-  background: rgba(30, 41, 59, 0.95);
+  background: rgba(15, 23, 42, 0.8);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
 }
 
 .navbar-content {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -74,36 +77,51 @@ const openSettings = () => {
 
 .navbar-logo {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.navbar-logo:hover {
+  transform: scale(1.03);
 }
 
 .navbar-menu {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.375rem;
   align-items: center;
   background: var(--bg-secondary);
-  border-radius: 1.5rem;
-  padding: 0.5rem;
+  border-radius: var(--radius-full);
+  padding: 0.375rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.dark .navbar-menu {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
 }
 
 .nav-btn {
   background: transparent;
   border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 1rem;
+  padding: 0.625rem 1rem;
+  border-radius: var(--radius-full);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: background 0.2s ease, color 0.2s ease;
   color: var(--text-secondary);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .nav-btn:hover {
@@ -112,23 +130,51 @@ const openSettings = () => {
 }
 
 .nav-btn.active {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  box-shadow: var(--shadow-sm);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.nav-btn.active:hover {
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
 }
 
 .theme-toggle {
   background: transparent;
   border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 1rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-full);
   font-size: 1.125rem;
   cursor: pointer;
-  transition: all 0.15s;
-  margin-left: 0.5rem;
+  transition: background 0.2s ease, transform 0.3s ease;
+  margin-left: 0.375rem;
+  position: relative;
 }
 
 .theme-toggle:hover {
   background: var(--bg-primary);
+  transform: rotate(180deg);
+}
+
+.theme-toggle:active {
+  transform: rotate(180deg) scale(0.9);
+}
+
+@media (max-width: 768px) {
+  .navbar-content {
+    padding: 0.75rem 1rem;
+  }
+  
+  .navbar-logo {
+    font-size: 1.25rem;
+  }
+  
+  .nav-btn span:last-child {
+    display: none;
+  }
+  
+  .nav-btn {
+    padding: 0.75rem;
+  }
 }
 </style>
