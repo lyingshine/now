@@ -531,23 +531,13 @@ export const useQuestStore = defineStore('quest', () => {
   function loadFromStorage() {
     try {
       const stored = localStorage.getItem('questStore')
-      console.log('从 localStorage 加载 questStore:', stored)
-      
       if (stored) {
         const data = JSON.parse(stored)
         currentQuest.value = data.currentQuest || null
         questHistory.value = data.questHistory || []
-        console.log('加载的 currentQuest:', currentQuest.value)
-        console.log('加载的 questHistory:', questHistory.value)
-      } else {
-        console.log('localStorage 中没有 questStore 数据')
-        currentQuest.value = null
-        questHistory.value = []
       }
     } catch (error) {
       console.error('加载数据失败:', error)
-      currentQuest.value = null
-      questHistory.value = []
     }
   }
 

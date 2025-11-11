@@ -1,19 +1,58 @@
 <template>
   <div class="growth">
     <div class="container">
-      <h1 class="page-title">🎮 冒险进度</h1>
+      <h1 class="page-title">🎮 职业冒险</h1>
       <p class="page-subtitle">查看你的任务进度，继续你的职业冒险！</p>
       
-      <StatsGrid :stats="stats" />
+      <!-- 当前任务进度卡片 -->
+      <div v-if="questStore.hasActiveQuest">
+        <QuestProgressCard 
+          :quest="questStore.currentQuest"
+          @continue="goToDetail"
+        />
+        
+        <!-- 任务完成确认按钮 -->
+        <div v-if="canComplete" class="completion-section">
+          <div class="completion-banner">
+            <div class="banner-icon">🎉</div>
+            <div class="banner-content">
+              <h3>恭喜！你已完成所有子任务！</h3>
+              <p>达到 {{ questStore.currentLevel }} 级，可以确认完成任务了</p>
+            </div>
+          </div>
+          <button @click="showCompletionModal = true" class="btn-complete-quest">
+            🏆 确认完成任务
+          </button>
+        </div>
+        
+        <!-- 放弃任务按钮 -->
+        <button @click="showAbandonModal = true" class="btn-abandon-quest">
+          放弃任务
+        </button>
+      </div>
 
-      <EmptyState v-if="jobsStore.learningPlans.length === 0" />
-      <TasksList 
-        v-else 
-        :plans="jobsStore.learningPlans" 
-        @continue="goToDetail"
-        @abandon="handleAbandon"
-      />
+      <!-- 无任务状态 -->
+      <EmptyState v-else />
     </div>
+
+    <!-- 任务完成确认弹窗 -->
+    <QuestCompletionModal 
+      v-if="questStore.currentQuest"
+      :isOpen="showCompletionModal"
+      :quest="questStore.currentQuest"
+      :achievements="currentAchievements"
+      @confirm="handleCompleteQuest"
+      @close="showCompletionModal = false"
+    />
+
+    <!-- 任务放弃确认弹窗 -->
+    <AbandonQuestModal 
+      v-if="questStore.currentQuest"
+      :isOpen="showAbandonModal"
+      :quest="questStore.currentQuest"
+      @confirm="handleAbandonQuest"
+      @close="showAbandonModal = false"
+    />
 
     <SettingsModal 
       :isOpen="isSettingsOpen"
@@ -24,31 +63,61 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
 import { useQuestStore } from '../stores/quest'
-import { useGrowthStats } from '../composables/useGrowthStats'
-import StatsGrid from '../components/growth/StatsGrid.vue'
+import { checkAchievements } from '../utils/achievements'
 import EmptyState from '../components/growth/EmptyState.vue'
-import TasksList from '../components/growth/TasksList.vue'
+import QuestProgressCard from '../components/quest/QuestProgressCard.vue'
+import QuestCompletionModal from '../components/quest/QuestCompletionModal.vue'
+import AbandonQuestModal from '../components/quest/AbandonQuestModal.vue'
 import SettingsModal from '../components/SettingsModal.vue'
 
 const router = useRouter()
 const jobsStore = useJobsStore()
 const questStore = useQuestStore()
-const { stats } = useGrowthStats(jobsStore)
 const isSettingsOpen = ref(false)
+const showCompletionModal = ref(false)
+const showAbandonModal = ref(false)
 
-const goToDetail = (jobId) => {
-  router.push(`/growth/${jobId}`)
+// 检查是否可以完成任务
+const canComplete = computed(() => {
+  const result = questStore.canCompleteQuest()
+  return result.canComplete
+})
+
+// 当前成就
+const currentAchievements = computed(() => {
+  if (!questStore.currentQuest) return []
+  return checkAchievements(questStore.currentQuest, questStore.questHistory)
+})
+
+const goToDetail = () => {
+  if (questStore.currentQuest) {
+    router.push(`/growth/${questStore.currentQuest.jobId}`)
+  }
 }
 
-const handleAbandon = (jobId) => {
-  if (confirm('确定要放弃这个任务吗？所有学习进度将被清除。')) {
-    // 同时更新两个 store 以保持兼容性
-    jobsStore.abandonJob(jobId)
-    questStore.abandonQuest()
+const handleCompleteQuest = () => {
+  const success = questStore.confirmQuestCompletion()
+  if (success) {
+    showCompletionModal.value = false
+    // 跳转到首页或任务大厅
+    router.push('/')
+  }
+}
+
+const handleAbandonQuest = () => {
+  const success = questStore.abandonQuest()
+  if (success) {
+    // 同时更新旧的 jobs store 以保持兼容性
+    if (questStore.currentQuest) {
+      jobsStore.abandonJob(questStore.currentQuest.jobId)
+    }
+    showAbandonModal.value = false
+    // 刷新页面
+    location.reload()
   }
 }
 
@@ -120,5 +189,84 @@ body.dark-mode .growth {
   margin-bottom: 3rem;
   font-size: 1.125rem;
   font-weight: 500;
+}
+
+.completion-section {
+  margin-top: 2rem;
+}
+
+.completion-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
+  border: 2px solid rgba(251, 191, 36, 0.3);
+  border-radius: var(--radius-2xl);
+  margin-bottom: 1.5rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.banner-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.banner-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.banner-content p {
+  color: var(--text-secondary);
+}
+
+.btn-complete-quest {
+  width: 100%;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #78350f;
+  border: none;
+  border-radius: var(--radius-xl);
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+  margin-bottom: 1rem;
+}
+
+.btn-complete-quest:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(251, 191, 36, 0.4);
+}
+
+.btn-abandon-quest {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-xl);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 2rem;
+}
+
+.btn-abandon-quest:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
 }
 </style>
