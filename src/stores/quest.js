@@ -423,19 +423,31 @@ export const useQuestStore = defineStore('quest', () => {
 
   /**
    * 确认完成任务
-   * @returns {boolean} 是否成功完成
+   * @returns {{success: boolean, jobData: Object|null, message: string}} 完成结果
    */
   function confirmQuestCompletion() {
     const { canComplete, message } = canCompleteQuest()
     
     if (!canComplete) {
       console.error(message)
-      return false
+      return { success: false, jobData: null, message }
+    }
+
+    // 保存任务数据用于返回
+    const completedQuest = { ...currentQuest.value }
+    const jobData = {
+      id: completedQuest.jobId,
+      title: completedQuest.jobTitle,
+      salary: completedQuest.salary,
+      completedDate: new Date().toISOString(),
+      totalExp: completedQuest.totalExp,
+      level: completedQuest.currentLevel,
+      stats: { ...completedQuest.stats }
     }
 
     // 标记任务完成
     currentQuest.value.status = QUEST_STATUS.COMPLETED
-    currentQuest.value.completedDate = new Date().toISOString()
+    currentQuest.value.completedDate = jobData.completedDate
 
     // 添加到历史记录
     addToHistory(currentQuest.value, 'completed')
@@ -444,7 +456,12 @@ export const useQuestStore = defineStore('quest', () => {
     currentQuest.value = null
 
     saveToStorage()
-    return true
+    
+    return { 
+      success: true, 
+      jobData,
+      message: '恭喜完成任务！'
+    }
   }
 
   /**

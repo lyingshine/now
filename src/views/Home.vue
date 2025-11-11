@@ -151,13 +151,39 @@ const salaryData = ref({
   workDays: 22
 })
 
-// 从 userStore 同步薪资数据
-const syncSalaryFromUser = () => {
-  if (userStore.userInfo.currentSalary) {
-    salaryData.value.salary = userStore.userInfo.currentSalary
+// 从 userStore 同步所有数据
+const syncDataFromUser = () => {
+  const user = userStore.userInfo
+  
+  if (user.currentSalary) {
+    salaryData.value.salary = user.currentSalary
   }
-  if (userStore.userInfo.joinDate) {
-    salaryData.value.joinDate = userStore.userInfo.joinDate
+  if (user.joinDate) {
+    salaryData.value.joinDate = user.joinDate
+  }
+  if (user.workStart) {
+    salaryData.value.workStart = user.workStart
+  }
+  if (user.workEnd) {
+    salaryData.value.workEnd = user.workEnd
+  }
+  if (user.workSchedule) {
+    salaryData.value.workSchedule = user.workSchedule
+  }
+  if (user.workDays) {
+    salaryData.value.workDays = user.workDays
+  }
+  if (user.peopleCount) {
+    salaryData.value.peopleCount = user.peopleCount
+  }
+  if (user.rent !== undefined) {
+    salaryData.value.rent = user.rent
+  }
+  if (user.utilities !== undefined) {
+    salaryData.value.utilities = user.utilities
+  }
+  if (user.savingsRate !== undefined) {
+    salaryData.value.savingsRate = user.savingsRate
   }
 }
 
@@ -304,6 +330,10 @@ const loadData = () => {
 
 const handleSettingsSave = (data) => {
   salaryData.value = { ...salaryData.value, ...data }
+  
+  // 同步到 userStore（确保数据一致性）
+  syncDataFromUser()
+  
   calculateEarnings()
 }
 
@@ -315,12 +345,17 @@ const goToJobs = () => {
 
 // 生命周期
 onMounted(() => {
-  loadData()
+  // 先加载 stores
   questStore.loadFromStorage()
   userStore.loadFromStorage()
   
-  // 从 userStore 同步薪资
-  syncSalaryFromUser()
+  // 从 userStore 同步所有数据（优先级高于 localStorage）
+  syncDataFromUser()
+  
+  // 如果 userStore 没有数据，再从 localStorage 加载
+  if (!userStore.userInfo.currentSalary) {
+    loadData()
+  }
   
   calculateEarnings()
   timer = setInterval(calculateEarnings, 1000) // 每秒更新一次，实时显示

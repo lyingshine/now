@@ -4,16 +4,45 @@ import { ref, computed } from 'vue'
 export const useUserStore = defineStore('user', () => {
   // 用户基本信息
   const userInfo = ref({
+    // 个人信息
     name: '职场冒险者',
     avatar: '🎮',
+    email: '',
+    phone: '',
+    city: '杭州',
+    
+    // 职业信息
     currentJob: null, // 当前职位信息
     currentSalary: 10000, // 当前薪资
     joinDate: '', // 入职日期
+    
+    // 工作设置
+    workStart: '09:00',
+    workEnd: '18:00',
+    workSchedule: 'double', // double/alternate/single/full/custom
+    workDays: 22, // 每月工作天数（自定义时使用）
+    
+    // 生活设置
+    peopleCount: 1, // 几个人生活
+    rent: 2000, // 每月房租
+    utilities: 300, // 每月水电网费
+    savingsRate: 30, // 储蓄率
+    
+    // 游戏数据
     level: 1, // 用户等级
     totalExp: 0, // 总经验值
     achievements: [], // 成就列表
     streakDays: 0, // 连续学习天数
-    lastActiveDate: null // 最后活跃日期
+    lastActiveDate: null, // 最后活跃日期
+    
+    // 偏好设置
+    theme: 'light', // light/dark
+    notifications: true, // 是否开启通知
+    weeklyGoal: 10, // 每周学习目标（小时）
+    
+    // 系统标记
+    isInitialized: false, // 是否已完成初始化
+    createdAt: new Date().toISOString()
   })
 
   // 职业历史记录
@@ -175,20 +204,86 @@ export const useUserStore = defineStore('user', () => {
   }
 
   /**
+   * 更新用户基本信息
+   */
+  const updateUserInfo = (updates) => {
+    userInfo.value = { ...userInfo.value, ...updates }
+    saveToStorage()
+  }
+
+  /**
+   * 更新工作设置
+   */
+  const updateWorkSettings = (settings) => {
+    const { workStart, workEnd, workSchedule, workDays } = settings
+    if (workStart) userInfo.value.workStart = workStart
+    if (workEnd) userInfo.value.workEnd = workEnd
+    if (workSchedule) userInfo.value.workSchedule = workSchedule
+    if (workDays !== undefined) userInfo.value.workDays = workDays
+    saveToStorage()
+  }
+
+  /**
+   * 更新生活设置
+   */
+  const updateLifeSettings = (settings) => {
+    const { salary, peopleCount, rent, utilities, savingsRate } = settings
+    if (salary !== undefined) userInfo.value.currentSalary = salary
+    if (peopleCount !== undefined) userInfo.value.peopleCount = peopleCount
+    if (rent !== undefined) userInfo.value.rent = rent
+    if (utilities !== undefined) userInfo.value.utilities = utilities
+    if (savingsRate !== undefined) userInfo.value.savingsRate = savingsRate
+    saveToStorage()
+  }
+
+  /**
+   * 更新主题设置
+   */
+  const updateTheme = (theme) => {
+    userInfo.value.theme = theme
+    saveToStorage()
+    
+    // 同步到 localStorage 和 DOM
+    localStorage.setItem('theme', theme)
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }
+
+  /**
    * 重置用户数据（用于测试或重新开始）
    */
   const resetUserData = () => {
+    const createdAt = userInfo.value.createdAt
     userInfo.value = {
       name: '职场冒险者',
       avatar: '🎮',
+      email: '',
+      phone: '',
+      city: '杭州',
       currentJob: null,
       currentSalary: 10000,
       joinDate: '',
+      workStart: '09:00',
+      workEnd: '18:00',
+      workSchedule: 'double',
+      workDays: 22,
+      peopleCount: 1,
+      rent: 2000,
+      utilities: 300,
+      savingsRate: 30,
       level: 1,
       totalExp: 0,
       achievements: [],
       streakDays: 0,
-      lastActiveDate: null
+      lastActiveDate: null,
+      theme: 'light',
+      notifications: true,
+      weeklyGoal: 10,
+      isInitialized: false,
+      createdAt: createdAt || new Date().toISOString()
     }
     careerHistory.value = []
     saveToStorage()
@@ -245,6 +340,10 @@ export const useUserStore = defineStore('user', () => {
     getCareerStats,
     // 方法
     updateCareer,
+    updateUserInfo,
+    updateWorkSettings,
+    updateLifeSettings,
+    updateTheme,
     addAchievement,
     updateStreakDays,
     addExp,

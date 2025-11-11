@@ -119,25 +119,31 @@ const goToDetail = () => {
 }
 
 const handleCompleteQuest = () => {
-  const success = questStore.confirmQuestCompletion()
-  if (success && questStore.currentQuest) {
+  // 在确认完成前保存当前任务数据
+  const currentQuestData = questStore.currentQuest
+  if (!currentQuestData) return
+  
+  // 确认完成任务
+  const result = questStore.confirmQuestCompletion()
+  
+  if (result.success) {
     showCompletionModal.value = false
     
     // 获取岗位数据
-    const jobData = jobsData.find(j => j.id === questStore.currentQuest.jobId)
+    const jobData = jobsData.find(j => j.id === result.jobData.id)
     if (jobData) {
       // 计算学习时长
-      const startDate = new Date(questStore.currentQuest.acceptedDate)
+      const startDate = new Date(currentQuestData.startDate)
       const endDate = new Date()
       const days = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24))
       
       // 更新用户职业信息
       const oldSalary = userStore.userInfo.currentSalary
-      const result = userStore.updateCareer(jobData, endDate)
+      const careerResult = userStore.updateCareer(jobData, endDate)
       
       // 增加经验值
-      if (jobData.expReward) {
-        userStore.addExp(jobData.expReward)
+      if (result.jobData.totalExp) {
+        userStore.addExp(result.jobData.totalExp)
       }
       
       // 更新连续学习天数
@@ -147,18 +153,23 @@ const handleCompleteQuest = () => {
       jobCompletionData.value = {
         jobData,
         oldSalary,
-        newSalary: result.newSalary,
+        newSalary: careerResult.newSalary,
         learningDuration: days > 0 ? `${days}天` : '不足1天',
-        completedTasks: questStore.completedSubQuestsCount,
-        totalSkills: questStore.currentQuest.subQuests.length
+        completedTasks: currentQuestData.completedSubQuests,
+        totalSkills: currentQuestData.subQuests.length
       }
       
       // 显示任务完成弹窗
       showJobCompletionModal.value = true
+      
+      console.log('🎉 任务完成！职业已更新:', careerResult.message)
     } else {
       // 如果找不到岗位数据，直接跳转
+      alert('恭喜完成任务！')
       router.push('/')
     }
+  } else {
+    alert(result.message || '无法完成任务')
   }
 }
 

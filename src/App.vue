@@ -1,5 +1,12 @@
 <template>
   <div id="app" :class="{ 'dark': isDark }">
+    <!-- 欢迎向导 -->
+    <WelcomeWizard 
+      :isOpen="showWelcomeWizard" 
+      @close="showWelcomeWizard = false"
+      @complete="handleWizardComplete"
+    />
+    
     <Navbar />
     <router-view />
   </div>
@@ -8,23 +15,78 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Navbar from './components/Navbar.vue'
+import WelcomeWizard from './components/WelcomeWizard.vue'
+import { useUserStore } from './stores/user'
 import { useQuestStore } from './stores/quest'
 import { useJobsStore } from './stores/jobs'
 import { needsMigration, migrateOldData, cleanupOldData } from './utils/dataMigration'
 import jobsData from './data/jobs-data.js'
 
 const isDark = ref(false)
+const showWelcomeWizard = ref(false)
 
 onMounted(() => {
-  const theme = localStorage.getItem('theme') || 'light'
+  // 初始化所有 store
+  initializeStores()
+  
+  // 执行数据迁移
+  performDataMigration()
+  
+  // 检查是否需要显示欢迎向导
+  checkFirstTimeUser()
+})
+
+function initializeStores() {
+  const userStore = useUserStore()
+  const jobsStore = useJobsStore()
+  const questStore = useQuestStore()
+  
+  // 加载用户数据
+  userStore.loadFromStorage()
+  
+  // 加载任务数据
+  jobsStore.loadFromStorage()
+  questStore.loadFromStorage()
+  
+  // 设置主题
+  const theme = userStore.userInfo.theme || localStorage.getItem('theme') || 'light'
   isDark.value = theme === 'dark'
   if (isDark.value) {
     document.documentElement.classList.add('dark')
   }
+  
+  // 更新连续学习天数
+  userStore.updateStreakDays()
+  
+  console.log('✅ 用户数据已加载:', userStore.userInfo.name)
+}
 
-  // 执行数据迁移
-  performDataMigration()
-})
+function checkFirstTimeUser() {
+  const userStore = useUserStore()
+  const user = userStore.userInfo
+  
+  // 检查是否是首次使用或信息不完善
+  const isFirstTime = !user.isInitialized
+  const isIncomplete = !user.name || user.name === '职场冒险者' || !user.currentSalary || user.currentSalary === 10000
+  
+  if (isFirstTime || isIncomplete) {
+    // 延迟显示，让页面先渲染
+    setTimeout(() => {
+      showWelcomeWizard.value = true
+      console.log('👋 首次使用，显示欢迎向导')
+    }, 500)
+  }
+}
+
+function handleWizardComplete() {
+  showWelcomeWizard.value = false
+  console.log('🎉 欢迎向导完成！')
+  
+  // 可以在这里添加一些欢迎提示或引导
+  setTimeout(() => {
+    alert('🎉 欢迎！你已经完成设置，现在可以开始探索职场成长之旅了！')
+  }, 300)
+}
 
 function performDataMigration() {
   try {
