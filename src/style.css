@@ -93,6 +93,47 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 全局滚动条美化 */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  border-radius: 10px;
+  border: 2px solid var(--color-gray-100);
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--color-accent-hover) 0%, var(--color-primary-hover) 100%);
+  border-width: 1px;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-gray-100);
+}
+
+/* 暗黑模式滚动条 */
+body.dark-mode ::-webkit-scrollbar-track {
+  background: var(--color-gray-800);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  border-color: var(--color-gray-800);
+}
+
+body.dark-mode ::-webkit-scrollbar-corner {
+  background: var(--color-gray-800);
+}
+
 #app {
   min-height: 100vh;
 }

@@ -166,8 +166,36 @@ watch(() => props.isOpen, (newVal) => {
   border: 1px solid var(--color-gray-200);
 }
 
+/* 美化滚动条 */
+.modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  border-radius: 10px;
+  border: 2px solid var(--color-gray-100);
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--color-accent-hover) 0%, var(--color-primary-hover) 100%);
+}
+
 body.dark-mode .modal-content {
   background: var(--color-gray-800);
+  border-color: var(--color-gray-700);
+}
+
+body.dark-mode .modal-content::-webkit-scrollbar-track {
+  background: var(--color-gray-700);
+}
+
+body.dark-mode .modal-content::-webkit-scrollbar-thumb {
   border-color: var(--color-gray-700);
 }
 
