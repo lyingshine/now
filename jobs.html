@@ -556,6 +556,10 @@
             font-size: 15px;
             color: #333;
             line-height: 1.6;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .requirement-item.checked {
@@ -611,6 +615,185 @@
 
         .accept-btn:active:not(:disabled) {
             transform: translateY(-1px);
+        }
+
+        /* 生活水平对比样式 */
+        .lifestyle-comparison {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 2px solid #667eea30;
+        }
+
+        .comparison-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .comparison-subtitle {
+            font-size: 14px;
+            color: #999;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .comparison-card.current {
+            border: 2px solid #e0e0e0;
+        }
+
+        .comparison-card.future {
+            border: 2px solid #4caf50;
+            background: linear-gradient(135deg, #ffffff 0%, #f1f8f4 100%);
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .comparison-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .comparison-icon {
+            font-size: 24px;
+        }
+
+        .comparison-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .comparison-salary {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .comparison-card.future .comparison-salary {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .comparison-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .comparison-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #666;
+            padding: 6px 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .comparison-item-icon {
+            font-size: 16px;
+        }
+
+        .comparison-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .arrow-icon {
+            font-size: 32px;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .arrow-text {
+            font-size: 12px;
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .comparison-highlights {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .highlight-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 12px;
+        }
+
+        .highlight-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #666;
+            padding: 8px 12px;
+            background: #f1f8f4;
+            border-radius: 8px;
+        }
+
+        .highlight-icon {
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .comparison-arrow {
+                transform: rotate(90deg);
+            }
+
+            .comparison-card {
+                padding: 16px;
+            }
+
+            .comparison-salary {
+                font-size: 24px;
+            }
         }
 
         .accept-btn:disabled {
@@ -674,6 +857,12 @@
                     <span>💼</span>
                     <span>任务大厅</span>
                 </button>
+                <a href="growth-center.html" style="text-decoration: none;">
+                    <button class="nav-btn">
+                        <span>🌱</span>
+                        <span>成长中心</span>
+                    </button>
+                </a>
                 <a href="index.html#settings" style="text-decoration: none;">
                     <button class="nav-btn">
                         <span>⚙️</span>
@@ -717,6 +906,42 @@
                 <div style="font-size: 12px; color: #999; margin-top: 4px;">可以重新接取以更新入职日期</div>
             </div>
 
+            <!-- 生活水平对比 -->
+            <div id="lifestyleComparison" class="lifestyle-comparison" style="display: none;">
+                <div class="comparison-title">💰 接取后的生活变化</div>
+                <div class="comparison-subtitle">看看你的生活将如何改变</div>
+                
+                <div class="comparison-grid">
+                    <!-- 当前生活 -->
+                    <div class="comparison-card current">
+                        <div class="comparison-card-header">
+                            <span class="comparison-icon">😐</span>
+                            <span class="comparison-label">当前生活</span>
+                        </div>
+                        <div class="comparison-salary" id="currentSalary">¥0</div>
+                        <div class="comparison-items" id="currentLifestyle"></div>
+                    </div>
+                    
+                    <!-- 箭头 -->
+                    <div class="comparison-arrow">
+                        <div class="arrow-icon">→</div>
+                        <div class="arrow-text">升级</div>
+                    </div>
+                    
+                    <!-- 接取后生活 -->
+                    <div class="comparison-card future">
+                        <div class="comparison-card-header">
+                            <span class="comparison-icon">😊</span>
+                            <span class="comparison-label">接取后</span>
+                        </div>
+                        <div class="comparison-salary" id="futureSalary">¥0</div>
+                        <div class="comparison-items" id="futureLifestyle"></div>
+                    </div>
+                </div>
+                
+                <div class="comparison-highlights" id="comparisonHighlights"></div>
+            </div>
+
             <div class="section">
                 <div class="section-title">📋 岗位要求</div>
                 <div id="requirementsList"></div>
@@ -729,6 +954,7 @@
     <script src="hangzhou-data-config.js"></script>
     <script src="rank-system.js"></script>
     <script src="jobs-data.js"></script>
+    <script src="growth-center-data.js"></script>
     <script src="jobs-app.js"></script>
     <script>
         // 主题切换

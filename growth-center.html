@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成长中心 - NOW</title>
+    <script>
+        // 在页面加载前立即应用主题，防止闪烁
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <style>
+        :root {
+            /* 成长中心专属颜色 */
+            --growth-primary: #4caf50;
+            --growth-primary-hover: #45a049;
+            --growth-secondary: #2196f3;
+            --growth-accent: #ff9800;
+            --growth-success: #66bb6a;
+            --growth-warning: #ffa726;
+            --growth-info: #42a5f5;
+            
+            /* 复用主题颜色 */
+            --color-primary: #2563eb;
+            --color-accent: #f59e0b;
+            --color-gray-50: #f8fafc;
+            --color-gray-100: #f1f5f9;
+            --color-gray-200: #e2e8f0;
+            --color-gray-300: #cbd5e1;
+            --color-gray-400: #94a3b8;
+            --color-gray-500: #64748b;
+            --color-gray-600: #475569;
+            --color-gray-700: #334155;
+            --color-gray-800: #1e293b;
+            --color-gray-900: #0f172a;
+            
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            --radius-3xl: 2rem;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            
+            --transition-fast: 150ms ease-in-out;
+            --transition-base: 250ms ease-in-out;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: var(--color-gray-50);
+            min-height: 100vh;
+            color: var(--color-gray-900);
+            transition: background var(--transition-base), color var(--transition-base);
+        }
+
+        body.dark-mode {
+            background: var(--color-gray-900);
+            color: var(--color-gray-50);
+        }
+
+        /* 导航栏样式（复用） */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-sm);
+        }
+
+        body.dark-mode .navbar {
+            background: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid var(--color-gray-700);
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.1em;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+            background: var(--color-gray-100);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-2);
+        }
+
+        body.dark-mode .navbar-menu {
+            background: var(--color-gray-800);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            padding: var(--space-3) var(--space-5);
+            border-radius: var(--radius-xl);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--color-gray-600);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .nav-btn:hover {
+            background: var(--color-gray-200);
+            color: var(--color-gray-900);
+        }
+
+        .nav-btn.active {
+            background: white;
+            color: var(--color-gray-900);
+            box-shadow: var(--shadow-sm);
+        }
+
+        body.dark-mode .nav-btn {
+            color: var(--color-gray-400);
+        }
+
+        body.dark-mode .nav-btn:hover {
+            background: var(--color-gray-700);
+            color: var(--color-gray-100);
+        }
+
+        body.dark-mode .nav-btn.active {
+            background: var(--color-gray-800);
+            color: white;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-xl);
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            margin-left: var(--space-2);
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-gray-200);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: var(--color-gray-700);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-8) var(--space-6);
+        }
+
+        /* 页面标题 */
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--space-10);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-3);
+            background: linear-gradient(135deg, var(--growth-primary) 0%, var(--growth-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: var(--color-gray-600);
+        }
+
+        body.dark-mode .page-subtitle {
+            color: var(--color-gray-400);
+        }
+
+        /* 学习概览卡片 */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-card {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-2xl);
+            text-align: center;
+            transition: all var(--transition-base);
+            border: 2px solid var(--color-gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--growth-primary);
+        }
+
+        body.dark-mode .stat-card {
+            background: var(--color-gray-800);
+            border-color: var(--color-gray-700);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-3);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--growth-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--color-gray-600);
+            font-weight: 500;
+        }
+
+        body.dark-mode .stat-label {
+            color: var(--color-gray-400);
+        }
+
+        /* 任务列表 */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-6);
+            color: var(--color-gray-900);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        body.dark-mode .section-title {
+            color: var(--color-gray-100);
+        }
+
+        .task-count {
+            font-size: 1rem;
+            color: var(--color-gray-500);
+            font-weight: 500;
+        }
+
+        .tasks-grid {
+            display: grid;
+            gap: var(--space-6);
+        }
+
+        .task-card {
+            background: white;
+            padding: var(--space-8);
+            border-radius: var(--radius-3xl);
+            transition: all var(--transition-base);
+            border: 2px solid var(--color-gray-200);
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+        }
+
+        .task-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--growth-primary);
+        }
+
+        body.dark-mode .task-card {
+            background: var(--color-gray-800);
+            border-color: var(--color-gray-700);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-6);
+        }
+
+        .task-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-gray-900);
+            margin-bottom: var(--space-2);
+        }
+
+        body.dark-mode .task-title {
+            color: var(--color-gray-100);
+        }
+
+        .task-salary {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--growth-primary);
+        }
+
+        .task-progress {
+            margin-bottom: var(--space-4);
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-2);
+            font-size: 0.875rem;
+            color: var(--color-gray-600);
+        }
+
+        body.dark-mode .progress-label {
+            color: var(--color-gray-400);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--color-gray-200);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        body.dark-mode .progress-bar {
+            background: var(--color-gray-700);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--growth-primary) 0%, var(--growth-secondary) 100%);
+            transition: width var(--transition-base);
+            border-radius: 999px;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+            font-size: 0.875rem;
+            color: var(--color-gray-600);
+        }
+
+        body.dark-mode .task-meta {
+            color: var(--color-gray-400);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .btn {
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-xl);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--growth-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--growth-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--color-gray-100);
+            color: var(--color-gray-900);
+            border: 1px solid var(--color-gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-gray-200);
+        }
+
+        body.dark-mode .btn-secondary {
+            background: var(--color-gray-700);
+            color: var(--color-gray-100);
+            border-color: var(--color-gray-600);
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-10);
+            background: white;
+            border-radius: var(--radius-3xl);
+            border: 2px dashed var(--color-gray-300);
+        }
+
+        body.dark-mode .empty-state {
+            background: var(--color-gray-800);
+            border-color: var(--color-gray-700);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-4);
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-3);
+            color: var(--color-gray-900);
+        }
+
+        body.dark-mode .empty-title {
+            color: var(--color-gray-100);
+        }
+
+        .empty-text {
+            font-size: 1rem;
+            color: var(--color-gray-600);
+            margin-bottom: var(--space-6);
+        }
+
+        body.dark-mode .empty-text {
+            color: var(--color-gray-400);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: var(--space-6) var(--space-4);
+            }
+
+            .task-card {
+                padding: var(--space-6);
+            }
+
+            .task-header {
+                flex-direction: column;
+                gap: var(--space-3);
+            }
+
+            .task-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-logo">💰 NOW</div>
+            <div class="navbar-menu">
+                <a href="index.html" class="nav-btn">
+                    <span>🏠</span>
+                    <span>首页</span>
+                </a>
+                <a href="jobs.html" class="nav-btn">
+                    <span>💼</span>
+                    <span>任务大厅</span>
+                </a>
+                <a href="growth-center.html" class="nav-btn active">
+                    <span>🌱</span>
+                    <span>成长中心</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" title="切换主题">
+                    <span id="themeIcon">☀️</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1 class="page-title">🌱 成长中心</h1>
+            <p class="page-subtitle">你的职业成长之旅</p>
+        </div>
+
+        <!-- 学习概览 -->
+        <div class="stats-overview" id="statsOverview">
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value" id="totalHours">0</div>
+                <div class="stat-label">学习时长（小时）</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value" id="consecutiveDays">0</div>
+                <div class="stat-label">连续学习（天）</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💻</div>
+                <div class="stat-value" id="completedProjects">0</div>
+                <div class="stat-label">完成项目（个）</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value" id="achievements">0</div>
+                <div class="stat-label">获得成就（个）</div>
+            </div>
+        </div>
+
+        <!-- 任务列表 -->
+        <div class="section-title">
+            📋 我的任务
+            <span class="task-count" id="taskCount">(0)</span>
+        </div>
+        <div class="tasks-grid" id="tasksGrid">
+            <!-- 任务卡片将通过 JS 动态生成 -->
+        </div>
+
+        <!-- 空状态 -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">📚</div>
+            <h2 class="empty-title">还没有接取任务</h2>
+            <p class="empty-text">去任务大厅接取你的第一个任务，开始成长之旅吧！</p>
+            <a href="jobs.html">
+                <button class="btn btn-primary">前往任务大厅</button>
+            </a>
+        </div>
+    </div>
+
+    <script src="hangzhou-data-config.js"></script>
+    <script src="rank-system.js"></script>
+    <script src="jobs-data.js"></script>
+    <script src="growth-center-data.js"></script>
+    <script src="growth-center-app.js"></script>
+    <script>
+        // 主题切换
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        function loadTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeIcon.textContent = '🌙';
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeIcon.textContent = '☀️';
+            }
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            document.documentElement.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            themeIcon.textContent = isDark ? '🌙' : '☀️';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+        
+        loadTheme();
+        if (document.documentElement.classList.contains('dark-mode')) {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
+</body>
+</html>

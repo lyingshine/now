@@ -54,8 +54,157 @@ function openJobModal(jobId) {
     updateProgress();
     updateAcceptButton();
     updateAcceptedInfo();
+    renderLifestyleComparison();
 
     modal.classList.add('active');
+}
+
+// 渲染生活水平对比
+function renderLifestyleComparison() {
+    const comparisonSection = document.getElementById('lifestyleComparison');
+    
+    // 获取当前薪资（从 localStorage 或默认值）
+    const salaryData = JSON.parse(localStorage.getItem('salaryData') || '{}');
+    const currentSalary = salaryData.salary || 8000; // 默认8000
+    const futureSalary = currentJob.salary;
+    
+    // 显示对比区域
+    comparisonSection.style.display = 'block';
+    
+    // 更新薪资显示
+    document.getElementById('currentSalary').textContent = `¥${currentSalary.toLocaleString()}/月`;
+    document.getElementById('futureSalary').textContent = `¥${futureSalary.toLocaleString()}/月`;
+    
+    // 生成生活水平描述
+    const currentLifestyle = getLifestyleDescription(currentSalary);
+    const futureLifestyle = getLifestyleDescription(futureSalary);
+    
+    // 渲染当前生活
+    document.getElementById('currentLifestyle').innerHTML = currentLifestyle.map(item => `
+        <div class="comparison-item">
+            <span class="comparison-item-icon">${item.icon}</span>
+            <span>${item.text}</span>
+        </div>
+    `).join('');
+    
+    // 渲染未来生活
+    document.getElementById('futureLifestyle').innerHTML = futureLifestyle.map(item => `
+        <div class="comparison-item">
+            <span class="comparison-item-icon">${item.icon}</span>
+            <span>${item.text}</span>
+        </div>
+    `).join('');
+    
+    // 生成亮点对比
+    const highlights = getLifestyleHighlights(currentSalary, futureSalary);
+    document.getElementById('comparisonHighlights').innerHTML = `
+        <div class="highlight-title">✨ 生活升级亮点</div>
+        <div class="highlight-items">
+            ${highlights.map(h => `
+                <div class="highlight-item">
+                    <span class="highlight-icon">${h.icon}</span>
+                    <span>${h.text}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// 根据薪资获取生活水平描述
+function getLifestyleDescription(salary) {
+    const items = [];
+    
+    // 住房
+    if (salary < 8000) {
+        items.push({ icon: '🏠', text: '合租单间' });
+    } else if (salary < 12000) {
+        items.push({ icon: '🏠', text: '整租一居室' });
+    } else if (salary < 18000) {
+        items.push({ icon: '🏠', text: '精装两居室' });
+    } else if (salary < 25000) {
+        items.push({ icon: '🏠', text: '品质三居室' });
+    } else {
+        items.push({ icon: '🏠', text: '高档公寓/别墅' });
+    }
+    
+    // 饮食
+    if (salary < 8000) {
+        items.push({ icon: '🍜', text: '食堂/外卖为主' });
+    } else if (salary < 15000) {
+        items.push({ icon: '🍱', text: '偶尔下馆子' });
+    } else if (salary < 25000) {
+        items.push({ icon: '🍽️', text: '经常品质餐厅' });
+    } else {
+        items.push({ icon: '🥘', text: '米其林/高端餐厅' });
+    }
+    
+    // 出行
+    if (salary < 10000) {
+        items.push({ icon: '🚇', text: '地铁/公交出行' });
+    } else if (salary < 18000) {
+        items.push({ icon: '🚗', text: '打车/共享汽车' });
+    } else if (salary < 30000) {
+        items.push({ icon: '🚙', text: '15-25万代步车' });
+    } else {
+        items.push({ icon: '🏎️', text: '30万+豪华车' });
+    }
+    
+    // 娱乐
+    if (salary < 10000) {
+        items.push({ icon: '📱', text: '线上娱乐为主' });
+    } else if (salary < 20000) {
+        items.push({ icon: '🎬', text: '电影/展览/演出' });
+    } else {
+        items.push({ icon: '✈️', text: '国内外旅游' });
+    }
+    
+    // 储蓄
+    const savingsRate = salary < 10000 ? 10 : salary < 20000 ? 20 : 30;
+    const monthlySavings = Math.round(salary * savingsRate / 100);
+    items.push({ icon: '💰', text: `月存 ${monthlySavings.toLocaleString()}元` });
+    
+    return items;
+}
+
+// 获取生活升级亮点
+function getLifestyleHighlights(currentSalary, futureSalary) {
+    const increase = futureSalary - currentSalary;
+    const increasePercent = Math.round((increase / currentSalary) * 100);
+    
+    const highlights = [
+        { icon: '📈', text: `月薪增加 ¥${increase.toLocaleString()}` },
+        { icon: '💹', text: `涨幅 ${increasePercent}%` },
+        { icon: '💰', text: `年收入增加 ¥${(increase * 12).toLocaleString()}` }
+    ];
+    
+    // 根据薪资差异添加具体改善
+    if (increase >= 2000) {
+        highlights.push({ icon: '🏠', text: '可升级更好的住房' });
+    }
+    if (increase >= 5000) {
+        highlights.push({ icon: '🚗', text: '可考虑购车计划' });
+    }
+    if (increase >= 8000) {
+        highlights.push({ icon: '✈️', text: '每年多次出国旅游' });
+    }
+    if (increase >= 10000) {
+        highlights.push({ icon: '💎', text: '进入中产生活水平' });
+    }
+    
+    // 储蓄对比
+    const currentSavings = Math.round(currentSalary * 0.2);
+    const futureSavings = Math.round(futureSalary * 0.2);
+    const savingsIncrease = futureSavings - currentSavings;
+    
+    if (savingsIncrease > 0) {
+        highlights.push({ icon: '🏦', text: `月储蓄增加 ¥${savingsIncrease.toLocaleString()}` });
+    }
+    
+    // 5年后的差距
+    const fiveYearDiff = increase * 12 * 5;
+    highlights.push({ icon: '⏰', text: `5年累计多赚 ¥${(fiveYearDiff / 10000).toFixed(1)}万` });
+    
+    return highlights;
 }
 
 // 更新已接取信息显示
@@ -83,6 +232,8 @@ function renderRequirements() {
 
     requirementsList.innerHTML = currentJob.requirements.map(req => {
         const isChecked = progress.requirements[req.id] || false;
+        const rewardBadge = req.reward ? `<span style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; white-space: nowrap;">💰 ${req.reward}</span>` : '';
+        
         return `
             <div class="requirement-item ${isChecked ? 'checked' : ''}" id="req-${req.id}">
                 <input 
@@ -91,7 +242,10 @@ function renderRequirements() {
                     ${isChecked ? 'checked' : ''}
                     onchange="toggleRequirement('${req.id}')"
                 >
-                <div class="requirement-text">${req.text}</div>
+                <div class="requirement-text">
+                    ${req.text}
+                    ${rewardBadge}
+                </div>
             </div>
             ${!isChecked ? `
                 <div class="growth-task">
@@ -169,10 +323,17 @@ function acceptJob() {
         };
         localStorage.setItem('salaryData', JSON.stringify(salaryData));
 
+        // 生成学习计划
+        if (typeof growthCenterData !== 'undefined') {
+            growthCenterData.addOrUpdatePlan(currentJob);
+            growthCenterData.updateStats();
+            console.log('学习计划已生成:', currentJob.title);
+        }
+
         if (wasAccepted) {
-            alert(`🔄 任务已重新接取！\n\n【${currentJob.title}】\n月薪: ¥${currentJob.salary.toLocaleString()}\n\n恭喜你换了新工作！入职日期已更新为今天，数据已同步到 NOW 收入计算器。`);
+            alert(`🔄 任务已重新接取！\n\n【${currentJob.title}】\n月薪: ¥${currentJob.salary.toLocaleString()}\n\n恭喜你换了新工作！入职日期已更新为今天，数据已同步到 NOW 收入计算器和成长中心。`);
         } else {
-            alert(`🎉 恭喜！你已成功接取【${currentJob.title}】任务！\n\n月薪: ¥${currentJob.salary.toLocaleString()}\n\n数据已同步到 NOW 收入计算器，快去查看你的实时收入吧！`);
+            alert(`🎉 恭喜！你已成功接取【${currentJob.title}】任务！\n\n月薪: ¥${currentJob.salary.toLocaleString()}\n\n数据已同步到 NOW 收入计算器和成长中心，快去查看你的学习计划吧！`);
         }
         
         updateAcceptButton();
