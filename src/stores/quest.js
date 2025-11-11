@@ -41,14 +41,9 @@ export const useQuestStore = defineStore('quest', () => {
    * 是否有活跃的任务
    */
   const hasActiveQuest = computed(() => {
-    const result = currentQuest.value !== null && 
-                   currentQuest.value !== undefined &&
-                   currentQuest.value.status === QUEST_STATUS.IN_PROGRESS
-    console.log('hasActiveQuest 计算:', {
-      currentQuest: currentQuest.value,
-      result
-    })
-    return result
+    return currentQuest.value !== null && 
+           currentQuest.value !== undefined &&
+           currentQuest.value.status === QUEST_STATUS.IN_PROGRESS
   })
 
   /**
@@ -188,10 +183,6 @@ export const useQuestStore = defineStore('quest', () => {
     }
 
     currentQuest.value = quest
-    console.log('任务已接取:', quest.jobTitle)
-    console.log('currentQuest.value:', currentQuest.value)
-    console.log('hasActiveQuest:', hasActiveQuest.value)
-    
     saveToStorage()
     return true
   }
@@ -461,12 +452,7 @@ export const useQuestStore = defineStore('quest', () => {
    * @returns {boolean} 是否成功放弃
    */
   function abandonQuest() {
-    if (!currentQuest.value) {
-      console.log('没有当前任务可以放弃')
-      return false
-    }
-
-    console.log('放弃任务:', currentQuest.value.jobTitle)
+    if (!currentQuest.value) return false
 
     // 标记任务放弃
     currentQuest.value.status = QUEST_STATUS.ABANDONED
@@ -479,8 +465,6 @@ export const useQuestStore = defineStore('quest', () => {
     currentQuest.value = null
 
     saveToStorage()
-    
-    console.log('任务已放弃，currentQuest 已清空')
     return true
   }
 

@@ -34,12 +34,6 @@ const routes = [
     name: 'QuestHistory',
     component: () => import('../views/QuestHistory.vue'),
     meta: { requiresNoActiveQuest: false }
-  },
-  {
-    path: '/debug-quest',
-    name: 'DebugQuest',
-    component: () => import('../views/DebugQuest.vue'),
-    meta: { requiresNoActiveQuest: false }
   }
 ]
 

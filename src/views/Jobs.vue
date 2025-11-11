@@ -118,11 +118,6 @@ onMounted(() => {
   jobsStore.loadJobs(jobsData)
   questStore.loadJobs(jobsData)
   
-  // 调试信息
-  console.log('Jobs 页面加载')
-  console.log('hasActiveQuest:', questStore.hasActiveQuest)
-  console.log('currentQuest:', questStore.currentQuest)
-  
   window.addEventListener('openSettings', () => {
     isSettingsOpen.value = true
   })

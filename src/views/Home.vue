@@ -123,22 +123,11 @@ const questStore = useQuestStore()
 const { calculateLifestyle, getRankInfo, getRank } = useLifestyle()
 
 // 游戏化数据 - 从 questStore 获取
-const playerLevel = computed(() => {
-  const level = questStore.currentLevel || 1
-  console.log('当前等级:', level)
-  return level
-})
-
+const playerLevel = computed(() => questStore.currentLevel || 1)
 const currentExp = computed(() => {
-  if (!questStore.currentQuest) {
-    console.log('没有活跃任务，经验值为 0')
-    return 0
-  }
-  const exp = getCurrentLevelExp(questStore.currentQuest.totalExp)
-  console.log('当前等级经验值:', exp, '总经验值:', questStore.currentQuest.totalExp)
-  return exp
+  if (!questStore.currentQuest) return 0
+  return getCurrentLevelExp(questStore.currentQuest.totalExp)
 })
-
 const maxExp = computed(() => 100)
 const completedQuests = computed(() => {
   return questStore.questHistory.filter(h => h.completionType === 'completed').length
