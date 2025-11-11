@@ -47,9 +47,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
+import { useQuestStore } from '../stores/quest'
 import { useSkillExpansion } from '../composables/useSkillExpansion'
 import ProgressHeader from '../components/growth-detail/ProgressHeader.vue'
 import PlanInfoCards from '../components/growth-detail/PlanInfoCards.vue'
@@ -59,27 +60,65 @@ import SettingsModal from '../components/SettingsModal.vue'
 const route = useRoute()
 const router = useRouter()
 const jobsStore = useJobsStore()
+const questStore = useQuestStore()
 const { expandedSkills, toggleSkill, initializeExpansion } = useSkillExpansion()
 const isSettingsOpen = ref(false)
 
+// 使用 questStore 的当前任务
 const plan = computed(() => {
-  const jobId = parseInt(route.params.id)
-  return jobsStore.learningPlans.find(p => p.jobId === jobId)
+  if (!questStore.currentQuest) return null
+  
+  // 将 quest 格式转换为旧的 plan 格式以兼容现有组件
+  return {
+    jobId: questStore.currentQuest.jobId,
+    jobTitle: questStore.currentQuest.jobTitle,
+    salary: questStore.currentQuest.salary,
+    overallProgress: questStore.currentQuest.overallProgress,
+    skills: questStore.currentQuest.subQuests.map(sq => ({
+      skillId: sq.id,
+      skillName: sq.title,
+      status: sq.status === 'completed' ? 'completed' : sq.status === 'active' ? 'in_progress' : 'not_started',
+      progress: sq.progress,
+      reward: sq.customGoldReward || sq.goldReward,
+      steps: [{
+        title: sq.title,
+        tasks: sq.tasks.map(t => ({
+          id: t.id,
+          text: t.title,
+          completed: t.completed,
+          estimatedHours: t.estimatedHours
+        }))
+      }]
+    }))
+  }
 })
 
 const completedSkills = computed(() => {
-  if (!plan.value) return 0
-  return plan.value.skills.filter(s => s.status === 'completed').length
+  if (!questStore.currentQuest) return 0
+  return questStore.currentQuest.subQuests.filter(sq => sq.status === 'completed').length
 })
 
 const totalReward = computed(() => {
-  if (!plan.value) return 0
-  return plan.value.skills.reduce((sum, skill) => sum + skill.reward, 0)
+  if (!questStore.currentQuest) return 0
+  return questStore.currentQuest.subQuests.reduce((sum, sq) => 
+    sum + (sq.customGoldReward || sq.goldReward), 0
+  )
 })
 
 const toggleTask = (skillIndex, stepIndex, taskIndex) => {
-  const jobId = plan.value.jobId
-  jobsStore.toggleTask(jobId, skillIndex, stepIndex, taskIndex)
+  if (!questStore.currentQuest) return
+  
+  const subQuest = questStore.currentQuest.subQuests[skillIndex]
+  if (!subQuest) return
+  
+  const task = subQuest.tasks[taskIndex]
+  if (!task) return
+  
+  // 使用新的 questStore 方法
+  questStore.completeTask(subQuest.id, task.id)
+  
+  // 同时更新旧的 jobsStore 以保持兼容性
+  jobsStore.toggleTask(questStore.currentQuest.jobId, skillIndex, stepIndex, taskIndex)
 }
 
 const goBack = () => {
@@ -88,7 +127,10 @@ const goBack = () => {
 
 const handleAbandon = () => {
   if (confirm('确定要放弃这个任务吗？所有学习进度将被清除。')) {
-    jobsStore.abandonJob(plan.value.jobId)
+    if (questStore.currentQuest) {
+      questStore.abandonQuest()
+      jobsStore.abandonJob(questStore.currentQuest.jobId)
+    }
     router.push('/growth')
   }
 }
@@ -99,6 +141,7 @@ const handleSettingsSave = () => {
 
 onMounted(() => {
   jobsStore.loadFromStorage()
+  questStore.loadFromStorage()
   
   if (plan.value && plan.value.skills.length > 0) {
     initializeExpansion()
@@ -112,6 +155,13 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('openSettings', () => {})
 })
+
+// 监听 questStore 变化，自动重新初始化展开状态
+watch(() => questStore.currentQuest, (newQuest) => {
+  if (newQuest && newQuest.subQuests.length > 0) {
+    initializeExpansion()
+  }
+}, { deep: true })
 </script>
 
 <style scoped>
