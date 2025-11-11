@@ -502,16 +502,17 @@ onUnmounted(() => {
   backdrop-filter: blur(8px);
   border-radius: var(--radius-3xl);
   padding: var(--space-5);
-  border: 1px solid var(--color-gray-200);
+  border: 2px solid var(--color-gray-200);
   transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 body.dark-mode .left-panel,
 body.dark-mode .middle-panel,
 body.dark-mode .right-panel {
   background: var(--color-gray-800);
-  border: 1px solid var(--color-gray-700);
+  border: 2px solid var(--color-gray-700);
+  box-shadow: var(--shadow-lg);
 }
 
 /* 段位显示 */
@@ -521,18 +522,20 @@ body.dark-mode .right-panel {
   padding: var(--space-5) var(--space-4);
   background: white;
   border-radius: var(--radius-xl);
-  border: 2px solid;
+  border: 3px solid;
   transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .rank-display:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-xl);
+  border-width: 4px;
 }
 
 body.dark-mode .rank-display {
   background: var(--color-gray-800);
+  box-shadow: var(--shadow-lg);
 }
 
 .rank-icon {
@@ -609,7 +612,7 @@ body.dark-mode .rank-progress-bar {
 /* 收入展示 */
 .earnings-display {
   background: white;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   background-image: 
     linear-gradient(white, white),
     linear-gradient(90deg, var(--color-accent), var(--color-primary));
@@ -619,13 +622,14 @@ body.dark-mode .rank-progress-bar {
   border-radius: var(--radius-xl);
   text-align: center;
   transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   margin-bottom: var(--space-4);
 }
 
 .earnings-display:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+  border-width: 4px;
 }
 
 body.dark-mode .earnings-display {
@@ -673,13 +677,13 @@ body.dark-mode .earnings-display {
   text-align: center;
   transition: all var(--transition-fast);
   border: 2px solid var(--color-gray-200);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .stat-card:hover {
-  transform: translateY(-6px) scale(1.02);
+  transform: translateY(-8px) scale(1.05);
   box-shadow: var(--shadow-xl);
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   background-image: 
     linear-gradient(white, white),
     linear-gradient(90deg, var(--color-accent), var(--color-primary));
@@ -690,6 +694,7 @@ body.dark-mode .earnings-display {
 body.dark-mode .stat-card {
   background: var(--color-gray-800);
   border: 2px solid var(--color-gray-700);
+  box-shadow: var(--shadow-lg);
 }
 
 .stat-label {
@@ -743,14 +748,20 @@ body.dark-mode .section-title {
   background: white;
   border-radius: var(--radius-xl);
   padding: var(--space-3);
-  border: 1px solid var(--color-gray-200);
-  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--color-gray-200);
+  box-shadow: var(--shadow-md);
   transition: all var(--transition-fast);
+}
+
+.lifestyle-category:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-gray-300);
 }
 
 body.dark-mode .lifestyle-category {
   background: var(--color-gray-800);
-  border-color: var(--color-gray-700);
+  border: 2px solid var(--color-gray-700);
+  box-shadow: var(--shadow-lg);
 }
 
 .lifestyle-category-title {
@@ -830,20 +841,21 @@ body.dark-mode .lifestyle-desc {
 
 /* 岗位推荐 */
 .job-recommend {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%);
   padding: var(--space-4);
   border-radius: var(--radius-lg);
   margin-bottom: var(--space-3);
   cursor: pointer;
   transition: all var(--transition-fast);
-  border: 1px solid var(--color-gray-200);
-  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--color-gray-200);
+  box-shadow: var(--shadow-md);
 }
 
 .job-recommend:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   border-color: var(--color-accent);
-  box-shadow: var(--shadow-md);
+  border-width: 3px;
+  box-shadow: var(--shadow-xl);
 }
 
 body.dark-mode .job-recommend {
@@ -877,19 +889,20 @@ body.dark-mode .job-recommend-title {
 
 /* 升级建议 */
 .upgrade-tip {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%);
   padding: var(--space-4);
   border-radius: var(--radius-lg);
   margin-bottom: var(--space-3);
-  border: 1px solid var(--color-gray-200);
-  border-left: 3px solid var(--color-primary);
-  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--color-gray-200);
+  border-left: 4px solid var(--color-primary);
+  box-shadow: var(--shadow-md);
   transition: all var(--transition-fast);
 }
 
 .upgrade-tip:hover {
-  border-left-width: 4px;
-  box-shadow: var(--shadow-md);
+  border-left-width: 6px;
+  box-shadow: var(--shadow-lg);
+  transform: translateX(4px);
 }
 
 body.dark-mode .upgrade-tip {
