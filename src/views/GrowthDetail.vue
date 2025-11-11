@@ -85,13 +85,24 @@ const levelUpData = ref({
 const plan = computed(() => {
   if (!questStore.currentQuest) return null
   
+  const quest = questStore.currentQuest
+  
+  // 计算预计完成日期
+  const startDate = new Date(quest.startDate)
+  const estimatedEndDate = new Date(startDate)
+  estimatedEndDate.setDate(estimatedEndDate.getDate() + quest.estimatedDuration)
+  
   // 将 quest 格式转换为旧的 plan 格式以兼容现有组件
   return {
-    jobId: questStore.currentQuest.jobId,
-    jobTitle: questStore.currentQuest.jobTitle,
-    salary: questStore.currentQuest.salary,
-    overallProgress: questStore.currentQuest.overallProgress,
-    skills: questStore.currentQuest.subQuests.map(sq => ({
+    jobId: quest.jobId,
+    jobTitle: quest.jobTitle,
+    salary: quest.salary,
+    startDate: startDate.toISOString().split('T')[0],
+    estimatedEndDate: estimatedEndDate.toISOString().split('T')[0],
+    estimatedWeeks: Math.ceil(quest.estimatedDuration / 7),
+    weeklyHours: 10, // 默认每周10小时
+    overallProgress: quest.overallProgress,
+    skills: quest.subQuests.map(sq => ({
       skillId: sq.id,
       skillName: sq.title,
       status: sq.status === 'completed' ? 'completed' : sq.status === 'active' ? 'in_progress' : 'not_started',
