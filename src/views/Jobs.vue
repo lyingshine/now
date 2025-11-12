@@ -1,33 +1,37 @@
 <template>
-  <div class="jobs">
-    <div class="container">
+  <div class="jobs" :style="{ '--rank-color': rankColor }">
+    <div class="unified-container">
       <!-- 活跃任务警告 -->
       <div v-if="questStore.hasActiveQuest" class="active-quest-warning">
-        <div class="warning-content">
-          <span class="warning-icon">⚠️</span>
-          <div class="warning-text">
-            <h3>你已经有一个进行中的职业任务！</h3>
-            <p>一次只能专注一个职业目标。请先完成或放弃当前任务。</p>
+        <div class="unified-card" style="background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.3);">
+          <div class="flex items-center gap-6">
+            <span class="unified-icon-large">⚠️</span>
+            <div class="flex-1">
+              <h3 class="unified-card-title mb-2">你已经有一个进行中的职业任务！</h3>
+              <p style="color: var(--immersive-text-secondary); font-size: var(--text-sm);">
+                一次只能专注一个职业目标。请先完成或放弃当前任务。
+              </p>
+            </div>
+            <router-link to="/growth" class="unified-btn unified-btn-primary" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: #78350f;">
+              查看当前任务
+            </router-link>
           </div>
-          <router-link to="/growth" class="btn-view-current">
-            查看当前任务
-          </router-link>
         </div>
       </div>
 
-      <div class="quest-hall-header">
-        <h1 class="page-title">⚔️ 任务大厅</h1>
-        <p class="page-subtitle">
+      <div class="section-header-text">
+        <h1 class="unified-title">⚔️ 任务大厅</h1>
+        <p class="unified-subtitle">
           {{ questStore.hasActiveQuest ? '完成当前任务后可接取新任务' : '接取任务，提升技能，升级你的职业生涯！' }}
         </p>
-        <div class="quest-stats">
-          <div class="quest-stat">
-            <span class="stat-icon">📋</span>
-            <span class="stat-text">{{ jobsStore.jobs.length }} 个可用任务</span>
+        <div class="flex justify-center gap-6 mt-6">
+          <div class="unified-tag unified-tag-primary" style="padding: var(--space-3) var(--space-6); font-size: var(--text-sm);">
+            <span class="unified-icon-small">📋</span>
+            <span>{{ jobsStore.jobs.length }} 个可用任务</span>
           </div>
-          <div class="quest-stat">
-            <span class="stat-icon">🎯</span>
-            <span class="stat-text">{{ questStore.hasActiveQuest ? '1 个进行中' : '0 个进行中' }}</span>
+          <div class="unified-tag unified-tag-primary" style="padding: var(--space-3) var(--space-6); font-size: var(--text-sm);">
+            <span class="unified-icon-small">🎯</span>
+            <span>{{ questStore.hasActiveQuest ? '1 个进行中' : '0 个进行中' }}</span>
           </div>
         </div>
       </div>
@@ -62,6 +66,8 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useJobsStore } from '../stores/jobs'
 import { useQuestStore } from '../stores/quest'
+import { useUserStore } from '../stores/user'
+import { useLifestyle } from '../composables/useLifestyle'
 import { useJobModal } from '../composables/useJobModal'
 import JobsGrid from '../components/jobs/JobsGrid.vue'
 import JobModal from '../components/JobModal.vue'
@@ -71,8 +77,17 @@ import jobsData from '../data/jobs-data.js'
 const router = useRouter()
 const jobsStore = useJobsStore()
 const questStore = useQuestStore()
+const userStore = useUserStore()
+const { getRankInfo } = useLifestyle()
 const { selectedJob, isModalOpen, openJobModal, closeJobModal } = useJobModal()
 const isSettingsOpen = ref(false)
+
+// 计算段位颜色
+const rankColor = computed(() => {
+  const salary = userStore.userInfo.currentSalary || 10000
+  const rankInfo = getRankInfo(salary)
+  return rankInfo.current.color
+})
 
 const isJobAccepted = (jobId) => {
   return jobsStore.userProgress[jobId]?.accepted || false
@@ -130,9 +145,9 @@ onUnmounted(() => {
 
 <style scoped>
 .jobs {
-  padding: var(--page-padding);
+  padding: 100px var(--space-8) var(--space-8);
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #fef3c7 100%);
+  background: var(--immersive-bg-primary);
   position: relative;
 }
 
@@ -144,77 +159,24 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--rank-color, #667eea) 8%, transparent) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--rank-color, #667eea) 8%, transparent) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
 
-body.dark-mode .jobs {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+.unified-container {
   position: relative;
   z-index: 1;
 }
 
-.page-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--growth-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-}
-
-.quest-hall-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.page-subtitle {
-  color: var(--text-secondary);
-  margin-bottom: 1.5rem;
-  font-size: 1.125rem;
-  font-weight: 500;
-}
-
-.quest-stats {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 1rem;
-}
-
-.quest-stat {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: var(--glass-bg);
-  border-radius: var(--radius-full);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-md);
-  font-weight: 600;
-}
-
-.stat-icon {
-  font-size: 1.25rem;
-}
-
-body.dark-mode .quest-stat {
-  background: rgba(30, 41, 59, 0.7);
-  border-color: rgba(255, 255, 255, 0.1);
+.section-header-text {
+  margin-bottom: var(--space-12);
 }
 
 /* 活跃任务警告 */
 .active-quest-warning {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-8);
   animation: slideDown 0.3s ease-out;
 }
 
@@ -229,73 +191,19 @@ body.dark-mode .quest-stat {
   }
 }
 
-.warning-content {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem 2rem;
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
-  border: 2px solid rgba(251, 191, 36, 0.3);
-  border-radius: var(--radius-2xl);
-  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
-}
-
-body.dark-mode .warning-content {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.15));
-  border-color: rgba(251, 191, 36, 0.4);
-}
-
-.warning-icon {
-  font-size: 2.5rem;
-  flex-shrink: 0;
-}
-
-.warning-text {
-  flex: 1;
-}
-
-.warning-text h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-}
-
-.warning-text p {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-}
-
-.btn-view-current {
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: #78350f;
-  text-decoration: none;
-  border-radius: var(--radius-xl);
-  font-weight: 700;
-  white-space: nowrap;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
-}
-
-.btn-view-current:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
-}
-
 /* 响应式 */
 @media (max-width: 768px) {
-  .jobs-grid {
-    grid-template-columns: 1fr;
+  .jobs {
+    padding: 80px var(--space-4) var(--space-4);
   }
   
-  .current-quest-banner {
+  .active-quest-warning .flex {
     flex-direction: column;
     text-align: center;
   }
   
-  .quest-banner-content {
-    flex-direction: column;
+  .active-quest-warning .unified-btn {
+    width: 100%;
   }
 }
 </style>
