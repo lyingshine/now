@@ -1,8 +1,10 @@
 <template>
-  <div class="career">
-    <div class="container">
-      <h1 class="page-title">🗺️ 冒险生涯</h1>
-      <p class="page-subtitle">记录你的职业冒险历程</p>
+  <div class="career" :style="{ '--rank-color': rankColor }">
+    <div class="unified-container">
+      <div class="section-header-text">
+        <h1 class="unified-title">🗺️ 冒险生涯</h1>
+        <p class="unified-subtitle">记录你的职业冒险历程</p>
+      </div>
 
       <!-- 时间线容器 -->
       <div class="timeline-wrapper">
@@ -276,10 +278,19 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuestStore } from '../stores/quest'
 import { useUserStore } from '../stores/user'
+import { useLifestyle } from '../composables/useLifestyle'
 
 const router = useRouter()
 const questStore = useQuestStore()
 const userStore = useUserStore()
+const { getRankInfo } = useLifestyle()
+
+// 计算段位颜色
+const rankColor = computed(() => {
+  const salary = userStore.userInfo.currentSalary || 10000
+  const rankInfo = getRankInfo(salary)
+  return rankInfo.current.color
+})
 
 // 初始职业
 const initialJob = computed(() => {
