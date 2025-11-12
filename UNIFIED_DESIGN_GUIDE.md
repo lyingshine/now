@@ -242,13 +242,11 @@
 - [x] Home.vue - 首页（全屏滚动布局）
 - [x] Navbar.vue - 导航栏
 - [x] App.vue - 根组件（段位主题色注入）
+- [x] Jobs.vue - 任务大厅
+- [x] Growth.vue - 成长中心
+- [x] Career.vue - 冒险生涯
 
 ### 🔄 待改造
-
-#### 高优先级
-- [ ] Jobs.vue - 任务大厅
-- [ ] Growth.vue - 成长中心
-- [ ] Career.vue - 冒险生涯
 
 #### 中优先级
 - [ ] GrowthDetail.vue - 成长详情
