@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="{ 'dark': isDark }">
+  <div id="app" :class="{ 'dark': isDark }" :style="{ '--rank-color': rankColor }">
     <!-- 欢迎向导 -->
     <WelcomeWizard 
       :isOpen="showWelcomeWizard" 
@@ -13,17 +13,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import Navbar from './components/Navbar.vue'
 import WelcomeWizard from './components/WelcomeWizard.vue'
 import { useUserStore } from './stores/user'
 import { useQuestStore } from './stores/quest'
 import { useJobsStore } from './stores/jobs'
+import { useLifestyle } from './composables/useLifestyle'
 import { needsMigration, migrateOldData, cleanupOldData } from './utils/dataMigration'
 import jobsData from './data/jobs-data.js'
 
 const isDark = ref(false)
 const showWelcomeWizard = ref(false)
+const { getRankInfo } = useLifestyle()
+
+// 计算段位颜色
+const rankColor = computed(() => {
+  const userStore = useUserStore()
+  const salary = userStore.userInfo.currentSalary || 10000
+  const rankInfo = getRankInfo(salary)
+  return rankInfo.current.color
+})
 
 onMounted(() => {
   // 初始化所有 store
@@ -65,11 +75,8 @@ function checkFirstTimeUser() {
   const userStore = useUserStore()
   const user = userStore.userInfo
   
-  // 检查是否是首次使用或信息不完善
-  const isFirstTime = !user.isInitialized
-  const isIncomplete = !user.name || user.name === '职场冒险者' || !user.currentSalary || user.currentSalary === 10000
-  
-  if (isFirstTime || isIncomplete) {
+  // 只检查是否已初始化
+  if (!user.isInitialized) {
     // 延迟显示，让页面先渲染
     setTimeout(() => {
       showWelcomeWizard.value = true

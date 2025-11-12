@@ -119,4 +119,20 @@ const formatDate = (dateString) => {
   font-size: 0.875rem;
   color: var(--text-secondary);
 }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .history-list {
+    gap: 1rem;
+  }
+  
+  .history-item {
+    padding: 1rem;
+  }
+  
+  .history-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
 </style>

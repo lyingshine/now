@@ -6,8 +6,8 @@
         <h3 class="quest-title">{{ quest.jobTitle }}</h3>
         <div class="quest-salary">
           <span class="salary-icon">💰</span>
-          <span class="salary-amount">{{ quest.salary.toLocaleString() }}</span>
-          <span class="salary-label">金币/月</span>
+          <span class="salary-amount">¥{{ quest.salary.toLocaleString() }}</span>
+          <span class="salary-label">/月</span>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
         :level="currentLevel" 
         :currentExp="currentLevelExp" 
         :maxLevel="quest.maxLevel"
-        :expPerLevel="quest.expPerLevel"
+        :expPerLevel="quest.maxExp"
       />
     </div>
 
@@ -82,8 +82,9 @@ const currentLevel = computed(() => {
   return calculateLevel(props.quest.totalExp)
 })
 
+// 显示总经验值，而不是当前等级的经验值
 const currentLevelExp = computed(() => {
-  return getCurrentLevelExp(props.quest.totalExp)
+  return props.quest.totalExp
 })
 
 const subQuestProgress = computed(() => {

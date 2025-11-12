@@ -61,9 +61,6 @@ export function migrateOldData(oldLearningPlans, jobs) {
       status,
       progress: skill.progress || 0,
       expReward: 0, // 将在下面计算
-      goldReward: skill.reward || Math.floor(activePlan.salary * 0.05),
-      customGoldReward: null,
-      customReward: null,
       order: index,
       weight: 0, // 将在下面计算
       tasks: [],
@@ -106,8 +103,6 @@ export function migrateOldData(oldLearningPlans, jobs) {
     completedSubQuests: subQuestsWithExp.filter(sq => sq.status === SUBTASK_STATUS.COMPLETED).length,
     
     customRewards: {
-      levelUpGold: 1000,
-      completionGold: activePlan.salary * 12,
       ultimateReward: `恭喜你胜任 ${activePlan.jobTitle} 职位！`,
       milestoneRewards: []
     },
@@ -188,8 +183,6 @@ export function repairQuestData(quest) {
     completedSubQuests: quest.completedSubQuests || 0,
     subQuests: quest.subQuests || [],
     customRewards: quest.customRewards || {
-      levelUpGold: 1000,
-      completionGold: quest.salary * 12,
       ultimateReward: `恭喜你胜任 ${quest.jobTitle} 职位！`,
       milestoneRewards: []
     },

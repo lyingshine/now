@@ -1,3 +1,8 @@
+/* 引入设计系统 */
+@import './design-system.css';
+@import './components-library.css';
+@import './immersive-theme.css';
+
 :root {
   /* 主色调 - 高级渐变色 */
   --color-primary: #6366f1;
@@ -45,6 +50,22 @@
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.18);
   
+  /* 统一容器和页面配置 */
+  --container-max-width: 1400px;
+  --page-padding: 2rem 1.5rem;
+  --card-gap: 1.5rem;
+  --section-gap: 2.5rem;
+  
+  /* 统一标题大小 */
+  --title-xl: 2.5rem;
+  --title-lg: 2rem;
+  --title-md: 1.5rem;
+  --title-sm: 1.25rem;
+  
+  /* 统一内容密度 */
+  --content-padding: 1.5rem;
+  --content-gap: 1rem;
+  
   /* 间距 */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -70,6 +91,19 @@
   --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 响应式 CSS 变量 */
+@media (max-width: 768px) {
+  :root {
+    --title-xl: 2rem;
+    --title-lg: 1.75rem;
+    --title-md: 1.25rem;
+    --page-padding: 1.5rem 1rem;
+    --section-gap: 2rem;
+    --card-gap: 1rem;
+    --content-padding: 1rem;
+  }
 }
 
 .dark {

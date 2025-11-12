@@ -7,43 +7,12 @@
 
     <!-- 全局奖励设置 -->
     <div class="global-rewards">
-      <h4>🌟 全局奖励</h4>
+      <h4>🌟 终极奖励</h4>
       
       <div class="reward-item">
         <label class="reward-label">
-          <span class="label-icon">⬆️</span>
-          <span>升级奖励（金币）</span>
-        </label>
-        <input 
-          v-model.number="localRewards.levelUpGold"
-          type="number"
-          min="0"
-          class="reward-input"
-          placeholder="每次升级获得的金币"
-        />
-      </div>
-
-      <div class="reward-item">
-        <label class="reward-label">
-          <span class="label-icon">👑</span>
-          <span>终极奖励（金币）</span>
-        </label>
-        <input 
-          v-model.number="localRewards.completionGold"
-          type="number"
-          min="0"
-          class="reward-input"
-          placeholder="完成任务获得的金币"
-        />
-        <div class="reward-hint">
-          建议：{{ suggestedCompletionGold }} 金币（一年薪资）
-        </div>
-      </div>
-
-      <div class="reward-item">
-        <label class="reward-label">
           <span class="label-icon">🏆</span>
-          <span>终极奖励描述</span>
+          <span>完成任务后的奖励</span>
         </label>
         <textarea 
           v-model="localRewards.ultimateReward"
@@ -79,17 +48,6 @@
           </div>
 
           <div class="reward-inputs">
-            <div class="input-group">
-              <label>💰 金币奖励</label>
-              <input 
-                v-model.number="subtask.customGoldReward"
-                type="number"
-                min="0"
-                :placeholder="`默认: ${subtask.goldReward}`"
-                class="small-input"
-              />
-            </div>
-
             <div class="input-group full-width">
               <label>🎁 自定义奖励</label>
               <input 
@@ -148,8 +106,6 @@ const props = defineProps({
   initialRewards: {
     type: Object,
     default: () => ({
-      levelUpGold: 1000,
-      completionGold: 0,
       ultimateReward: '',
       milestoneRewards: []
     })
@@ -160,18 +116,11 @@ const emit = defineEmits(['save', 'cancel'])
 
 // 本地数据
 const localRewards = ref({
-  levelUpGold: props.initialRewards.levelUpGold || 1000,
-  completionGold: props.initialRewards.completionGold || props.jobSalary * 12,
   ultimateReward: props.initialRewards.ultimateReward || `恭喜你胜任该职位！`,
   milestoneRewards: props.initialRewards.milestoneRewards || []
 })
 
 const localSubtasks = ref(JSON.parse(JSON.stringify(props.subtasks)))
-
-// 计算属性
-const suggestedCompletionGold = computed(() => {
-  return props.jobSalary * 12
-})
 
 // 奖励建议
 const rewardSuggestions = [
@@ -235,14 +184,11 @@ const applySuggestion = (suggestion) => {
 
 const useDefaults = () => {
   localRewards.value = {
-    levelUpGold: 1000,
-    completionGold: props.jobSalary * 12,
     ultimateReward: `恭喜你胜任该职位！`,
     milestoneRewards: []
   }
   
   localSubtasks.value.forEach(st => {
-    st.customGoldReward = null
     st.customReward = null
   })
 }
@@ -424,8 +370,8 @@ body.dark-mode .reward-setup {
 }
 
 .reward-inputs {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 
@@ -436,7 +382,7 @@ body.dark-mode .reward-setup {
 }
 
 .input-group.full-width {
-  grid-column: 1 / -1;
+  width: 100%;
 }
 
 .input-group label {

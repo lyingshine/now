@@ -37,8 +37,8 @@
               <div class="reward-item">
                 <div class="reward-icon">⭐</div>
                 <div class="reward-info">
-                  <div class="reward-label">经验值</div>
-                  <div class="reward-value">+{{ jobData?.expReward || 0 }} EXP</div>
+                  <div class="reward-label">达到等级</div>
+                  <div class="reward-value">Lv.100 满级</div>
                 </div>
               </div>
 
@@ -171,10 +171,28 @@ const goToJobs = () => {
   border-radius: var(--radius-3xl);
   max-width: 600px;
   width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: modalSlideUp 0.4s ease-out;
+}
+
+.modal-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-container::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 4px;
+}
+
+body.dark-mode .modal-container::-webkit-scrollbar-thumb {
+  background: var(--color-gray-600);
 }
 
 @keyframes modalSlideUp {
@@ -190,6 +208,25 @@ const goToJobs = () => {
 
 .modal-content {
   padding: 2.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 3px;
+}
+
+body.dark-mode .modal-content::-webkit-scrollbar-thumb {
+  background: var(--color-gray-600);
 }
 
 .celebration-header {

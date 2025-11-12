@@ -53,7 +53,9 @@ const props = defineProps({
 })
 
 const expProgress = computed(() => {
-  if (props.level >= props.maxLevel) return 100
+  // 如果当前经验值大于等于最大经验值，显示100%
+  if (props.currentExp >= props.expPerLevel) return 100
+  // 否则按比例计算进度
   return Math.round((props.currentExp / props.expPerLevel) * 100)
 })
 </script>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>布局对比演示</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #fef3c7 100%);
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #6366f1 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 3rem;
+      font-size: 1.125rem;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .layout-demo {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .layout-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-old {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-new {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    /* 旧布局演示 */
+    .old-layout {
+      display: grid;
+      grid-template-columns: 0.75fr 2.5fr 0.75fr;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .old-left, .old-middle, .old-right {
+      background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .old-middle {
+      background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+    }
+
+    /* 新布局演示 */
+    .new-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .new-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+
+    .new-metric {
+      background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      min-height: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .new-metric::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #6366f1 50%, transparent 100%);
+    }
+
+    .new-content {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .new-main {
+      background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      min-height: 300px;
+      position: relative;
+    }
+
+    .new-main::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #10b981 0%, #6366f1 50%, #f59e0b 100%);
+      border-radius: 0.75rem 0.75rem 0 0;
+    }
+
+    .new-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .new-sidebar-item {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      min-height: 140px;
+    }
+
+    .demo-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .demo-content {
+      font-size: 0.875rem;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .features {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .features h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+      color: #1e293b;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .feature-content h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #1e293b;
+    }
+
+    .feature-content p {
+      font-size: 0.875rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1024px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .old-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .new-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .new-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 布局重新设计</h1>
+    <p class="subtitle">从传统三栏到现代卡片流 - 更具美感的用户体验</p>
+
+    <div class="comparison">
+      <!-- 旧布局 -->
+      <div class="layout-demo">
+        <div class="layout-title">
+          <span>旧布局</span>
+          <span class="badge badge-old">传统</span>
+        </div>
+        <div class="old-layout">
+          <div class="old-left">
+            <div class="demo-label">左侧栏 (0.75fr)</div>
+            <div class="demo-content">
+              段位信息<br>
+              收入统计<br>
+              数据卡片
+            </div>
+          </div>
+          <div class="old-middle">
+            <div class="demo-label">中间区域 (2.5fr)</div>
+            <div class="demo-content">
+              生活水平详情<br>
+              <br>
+              ⚠️ 区域过宽<br>
+              ⚠️ 信息密度低<br>
+              ⚠️ 视线跨度大
+            </div>
+          </div>
+          <div class="old-right">
+            <div class="demo-label">右侧栏 (0.75fr)</div>
+            <div class="demo-content">
+              岗位推荐<br>
+              升级建议
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 新布局 -->
+      <div class="layout-demo">
+        <div class="layout-title">
+          <span>新布局</span>
+          <span class="badge badge-new">现代</span>
+        </div>
+        <div class="new-layout">
+          <div class="new-metrics">
+            <div class="new-metric">
+              <div class="demo-label">段位卡片</div>
+              <div class="demo-content">独立悬浮</div>
+            </div>
+            <div class="new-metric">
+              <div class="demo-label">收入卡片</div>
+              <div class="demo-content">独立悬浮</div>
+            </div>
+            <div class="new-metric">
+              <div class="demo-label">统计卡片</div>
+              <div class="demo-content">独立悬浮</div>
+            </div>
+          </div>
+          <div class="new-content">
+            <div class="new-main">
+              <div class="demo-label">主内容区 (1.5fr)</div>
+              <div class="demo-content">
+                生活水平详情<br>
+                <br>
+                ✅ 宽度适中<br>
+                ✅ 信息密度合理<br>
+                ✅ 阅读体验佳
+              </div>
+            </div>
+            <div class="new-sidebar">
+              <div class="new-sidebar-item">
+                <div class="demo-label">职业建议 (1fr)</div>
+                <div class="demo-content">岗位推荐</div>
+              </div>
+              <div class="new-sidebar-item">
+                <div class="demo-label">升级指南</div>
+                <div class="demo-content">成长建议</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 特性对比 -->
+    <div class="features">
+      <h2>✨ 新布局优势</h2>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-content">
+            <h3>清晰的视觉层次</h3>
+            <p>从顶部指标到详细内容，自然的信息流动</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📐</div>
+          <div class="feature-content">
+            <h3>黄金比例 (1.5:1)</h3>
+            <p>主内容与侧边栏的完美平衡</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-content">
+            <h3>关键信息突出</h3>
+            <p>三个独立指标卡片，一目了然</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📱</div>
+          <div class="feature-content">
+            <h3>完美响应式</h3>
+            <p>从桌面到手机的流畅体验</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">✨</div>
+          <div class="feature-content">
+            <h3>精致的交互</h3>
+            <p>悬浮效果、渐变装饰、玻璃态背景</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🌊</div>
+          <div class="feature-content">
+            <h3>充足的呼吸感</h3>
+            <p>合理的间距和留白，舒适的阅读体验</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

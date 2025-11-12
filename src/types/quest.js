@@ -57,9 +57,6 @@
  * @property {SubTaskStatus} status - 子任务状态
  * @property {number} progress - 完成进度 (0-100)
  * @property {number} expReward - 经验值奖励
- * @property {number} goldReward - 金币奖励（默认）
- * @property {number|null} customGoldReward - 用户自定义金币奖励
- * @property {string|null} customReward - 用户自定义奖励描述
  * @property {number} order - 子任务顺序
  * @property {number} weight - 难度权重 (1.0, 1.5, 2.0, 2.5)
  * @property {LearningTask[]} tasks - 学习任务列表
@@ -69,8 +66,6 @@
 /**
  * 自定义奖励设置
  * @typedef {Object} CustomRewards
- * @property {number} levelUpGold - 升级奖励金币
- * @property {number} completionGold - 完成任务终极奖励金币
  * @property {string} ultimateReward - 终极奖励描述
  * @property {Array<{level: number, reward: string}>} milestoneRewards - 里程碑奖励
  */

@@ -18,7 +18,7 @@
       <div class="quest-hall-header">
         <h1 class="page-title">⚔️ 任务大厅</h1>
         <p class="page-subtitle">
-          {{ questStore.hasActiveQuest ? '完成当前任务后可接取新任务' : '接取任务，获得奖励，升级你的职业生涯！' }}
+          {{ questStore.hasActiveQuest ? '完成当前任务后可接取新任务' : '接取任务，提升技能，升级你的职业生涯！' }}
         </p>
         <div class="quest-stats">
           <div class="quest-stat">
@@ -130,7 +130,7 @@ onUnmounted(() => {
 
 <style scoped>
 .jobs {
-  padding: 3rem 2rem;
+  padding: var(--page-padding);
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #fef3c7 100%);
   position: relative;
@@ -281,5 +281,21 @@ body.dark-mode .warning-content {
 .btn-view-current:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .jobs-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .current-quest-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .quest-banner-content {
+    flex-direction: column;
+  }
 }
 </style>

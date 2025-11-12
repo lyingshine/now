@@ -112,7 +112,7 @@ export const useUserStore = defineStore('user', () => {
 
     return {
       success: true,
-      message: `恭喜！你已成功转职为「${jobData.title}」，月薪提升至 ${userInfo.value.currentSalary} 金币！`,
+      message: `恭喜！你已成功转职为「${jobData.title}」，月薪提升至 ¥${userInfo.value.currentSalary}！`,
       newSalary: userInfo.value.currentSalary,
       oldSalary: careerHistory.value.length > 0 ? careerHistory.value[careerHistory.value.length - 1].salary : 0
     }

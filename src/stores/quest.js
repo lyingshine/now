@@ -34,6 +34,9 @@ export const useQuestStore = defineStore('quest', () => {
   
   /** @type {import('vue').Ref<Array>} */
   const availableJobs = ref([])
+  
+  /** @type {import('vue').Ref<{expGained: number, levelsGained: number}>} */
+  const lastExpGain = ref({ expGained: 0, levelsGained: 0 })
 
   // ==================== 计算属性 ====================
   
@@ -167,8 +170,6 @@ export const useQuestStore = defineStore('quest', () => {
       completedSubQuests: 0,
       
       customRewards: customRewards || {
-        levelUpGold: 1000,
-        completionGold: job.salary * 12, // 一年薪资
         ultimateReward: `恭喜你胜任 ${job.title} 职位！`,
         milestoneRewards: []
       },
@@ -218,9 +219,6 @@ export const useQuestStore = defineStore('quest', () => {
         status: index === 0 ? SUBTASK_STATUS.ACTIVE : SUBTASK_STATUS.LOCKED,
         progress: 0,
         expReward: 0, // 将在下面计算
-        goldReward: Math.floor(job.salary * 0.05), // 薪资的5%
-        customGoldReward: null,
-        customReward: null,
         order: index,
         weight: 0, // 将在下面计算
         tasks: generateLearningTasks(req, index, totalReqs),
@@ -359,6 +357,12 @@ export const useQuestStore = defineStore('quest', () => {
     currentQuest.value.totalExp = expGainResult.newExp
     currentQuest.value.currentLevel = expGainResult.newLevel
 
+    // 记录本次获得的经验值（用于升级弹窗显示）
+    lastExpGain.value = {
+      expGained: subQuest.expReward,
+      levelsGained: expGainResult.levelsGained
+    }
+
     // 更新统计
     currentQuest.value.completedSubQuests += 1
     currentQuest.value.stats.completedSubTasks += 1
@@ -426,12 +430,16 @@ export const useQuestStore = defineStore('quest', () => {
    * @returns {{success: boolean, jobData: Object|null, message: string}} 完成结果
    */
   function confirmQuestCompletion() {
+    console.log('🔍 检查是否可以完成任务...')
     const { canComplete, message } = canCompleteQuest()
+    console.log('📊 检查结果:', { canComplete, message })
     
     if (!canComplete) {
-      console.error(message)
+      console.error('❌ 无法完成任务:', message)
       return { success: false, jobData: null, message }
     }
+    
+    console.log('✅ 可以完成任务，开始处理...')
 
     // 保存任务数据用于返回
     const completedQuest = { ...currentQuest.value }
@@ -565,6 +573,7 @@ export const useQuestStore = defineStore('quest', () => {
     currentQuest,
     questHistory,
     availableJobs,
+    lastExpGain,
     
     // 计算属性
     hasActiveQuest,

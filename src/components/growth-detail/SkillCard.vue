@@ -21,9 +21,9 @@
             <span class="quest-icon">⚔️</span>
             {{ skill.skillName }}
           </h3>
-          <div class="skill-reward">
-            <span class="reward-icon">💰</span>
-            +{{ skill.reward }} 金币
+          <div v-if="skill.expReward" class="skill-exp-reward">
+            <span class="exp-icon">⚡</span>
+            <span class="exp-text">完成后获得 {{ skill.expReward }} EXP</span>
           </div>
         </div>
       </div>
@@ -187,17 +187,22 @@ body.dark-mode .skill-card {
   font-size: 1.25rem;
 }
 
-.skill-reward {
-  font-size: 0.875rem;
-  color: var(--growth-primary);
-  font-weight: 700;
+.skill-exp-reward {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--growth-primary);
+  font-weight: 600;
 }
 
-.reward-icon {
+.exp-icon {
   font-size: 1rem;
+}
+
+.exp-text {
+  opacity: 0.9;
 }
 
 .skill-progress-info {

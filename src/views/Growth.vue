@@ -119,12 +119,20 @@ const goToDetail = () => {
 }
 
 const handleCompleteQuest = () => {
+  console.log('🎯 handleCompleteQuest 被调用')
+  
   // 在确认完成前保存当前任务数据
   const currentQuestData = questStore.currentQuest
-  if (!currentQuestData) return
+  if (!currentQuestData) {
+    console.error('❌ 没有当前任务数据')
+    return
+  }
+  
+  console.log('📋 当前任务数据:', currentQuestData)
   
   // 确认完成任务
   const result = questStore.confirmQuestCompletion()
+  console.log('✅ 完成结果:', result)
   
   if (result.success) {
     showCompletionModal.value = false
@@ -234,7 +242,7 @@ onUnmounted(() => {
 
 <style scoped>
 .growth {
-  padding: 3rem 2rem;
+  padding: var(--page-padding);
   min-height: 100vh;
   background: linear-gradient(135deg, #ecfdf5 0%, #dbeafe 50%, #fef3c7 100%);
   position: relative;
@@ -259,17 +267,17 @@ body.dark-mode .growth {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   position: relative;
   z-index: 1;
 }
 
 .page-title {
-  font-size: 3.5rem;
+  font-size: var(--title-xl);
   font-weight: 800;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   background: linear-gradient(135deg, var(--growth-primary) 0%, var(--growth-secondary) 50%, var(--color-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -279,8 +287,8 @@ body.dark-mode .growth {
 .page-subtitle {
   text-align: center;
   color: var(--text-secondary);
-  margin-bottom: 3rem;
-  font-size: 1.125rem;
+  margin-bottom: var(--section-gap);
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -361,5 +369,27 @@ body.dark-mode .growth {
 .btn-abandon-quest:hover {
   background: rgba(239, 68, 68, 0.2);
   border-color: rgba(239, 68, 68, 0.5);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .completion-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+  
+  .banner-icon {
+    font-size: 2.5rem;
+  }
+  
+  .banner-content h3 {
+    font-size: 1.25rem;
+  }
+  
+  .btn-complete-quest {
+    font-size: 1rem;
+    padding: 1.25rem 1.5rem;
+  }
 }
 </style>

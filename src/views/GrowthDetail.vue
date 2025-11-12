@@ -18,10 +18,6 @@
                 <span class="stat-icon">✅</span>
                 <span>{{ completedSkills }}/{{ plan.skills.length }} 完成</span>
               </div>
-              <div class="stat-badge">
-                <span class="stat-icon">💰</span>
-                <span>{{ totalReward }} 金币奖励</span>
-              </div>
             </div>
           </div>
           <div class="skills-list">
@@ -107,7 +103,7 @@ const plan = computed(() => {
       skillName: sq.title,
       status: sq.status === 'completed' ? 'completed' : sq.status === 'active' ? 'in_progress' : 'not_started',
       progress: sq.progress,
-      reward: sq.customGoldReward || sq.goldReward,
+      expReward: sq.expReward, // 添加经验值奖励
       steps: [{
         title: sq.title,
         tasks: sq.tasks.map(t => ({
@@ -124,13 +120,6 @@ const plan = computed(() => {
 const completedSkills = computed(() => {
   if (!questStore.currentQuest) return 0
   return questStore.currentQuest.subQuests.filter(sq => sq.status === 'completed').length
-})
-
-const totalReward = computed(() => {
-  if (!questStore.currentQuest) return 0
-  return questStore.currentQuest.subQuests.reduce((sum, sq) => 
-    sum + (sq.customGoldReward || sq.goldReward), 0
-  )
 })
 
 const toggleTask = (skillIndex, stepIndex, taskIndex) => {
@@ -198,7 +187,7 @@ watch(() => questStore.currentLevel, (newLevel) => {
     const milestone = getLevelMilestone(newLevel)
     levelUpData.value = {
       newLevel,
-      expGained: 100, // 每级固定100经验
+      expGained: questStore.lastExpGain.expGained, // 使用实际获得的经验值
       milestone: milestone.message
     }
     showLevelUp.value = true
@@ -209,7 +198,7 @@ watch(() => questStore.currentLevel, (newLevel) => {
 
 <style scoped>
 .growth-detail {
-  padding: 3rem 2rem;
+  padding: var(--page-padding);
   min-height: 100vh;
   background: linear-gradient(135deg, #ecfdf5 0%, #dbeafe 50%, #fef3c7 100%);
   position: relative;
@@ -234,7 +223,7 @@ body.dark-mode .growth-detail {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -318,5 +307,22 @@ body.dark-mode .quest-progress-header {
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-xl);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .quest-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .quest-actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .sub-quests-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

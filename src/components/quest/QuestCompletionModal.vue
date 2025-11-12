@@ -55,16 +55,10 @@
             </div>
             
             <!-- 终极奖励 -->
-            <div class="ultimate-reward">
+            <div v-if="quest.customRewards?.ultimateReward" class="ultimate-reward">
               <div class="reward-header">
                 <div class="reward-icon">🎁</div>
                 <div class="reward-title">终极奖励</div>
-              </div>
-              
-              <div class="reward-gold">
-                <span class="gold-icon">💰</span>
-                <span class="gold-amount">{{ quest.customRewards.completionGold.toLocaleString() }}</span>
-                <span class="gold-label">金币</span>
               </div>
               
               <div class="reward-description">
@@ -168,12 +162,32 @@ const handleClose = () => {
   position: relative;
   width: 90%;
   max-width: 600px;
+  max-height: 85vh;
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #dc2626 100%);
   border-radius: var(--radius-3xl);
   padding: 3rem 2rem;
   box-shadow: 0 20px 60px rgba(251, 191, 36, 0.6);
   animation: modalEnter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.completion-modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.completion-modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.completion-modal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.completion-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 @keyframes modalEnter {

@@ -1,0 +1,85 @@
+/**
+ * 全局样式配置
+ * 统一所有页面的大小和信息密度
+ */
+
+/* 页面容器统一配置 */
+:root {
+  /* 容器宽度 */
+  --container-max-width: 1400px;
+  --container-padding: 2rem 1.5rem;
+  
+  /* 页面内边距 */
+  --page-padding-desktop: 2rem 1.5rem;
+  --page-padding-mobile: 1.5rem 1rem;
+  
+  /* 卡片间距 */
+  --card-gap: 1.5rem;
+  --section-gap: 3rem;
+  
+  /* 标题大小 */
+  --title-size-xl: 2.5rem;
+  --title-size-lg: 2rem;
+  --title-size-md: 1.5rem;
+  --title-size-sm: 1.25rem;
+  
+  /* 内容密度 */
+  --content-padding: 1.5rem;
+  --content-gap: 1rem;
+}
+
+/* 统一页面容器样式 */
+.page-container {
+  min-height: 100vh;
+  padding: var(--page-padding-desktop);
+}
+
+.page-container .container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+}
+
+/* 统一页面标题 */
+.page-title {
+  font-size: var(--title-size-xl);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.page-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+  font-size: 1rem;
+}
+
+/* 统一卡片样式 */
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-2xl);
+  padding: var(--content-padding);
+  border: 2px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  :root {
+    --title-size-xl: 2rem;
+    --title-size-lg: 1.75rem;
+    --title-size-md: 1.25rem;
+    --content-padding: 1.25rem;
+  }
+  
+  .page-container {
+    padding: var(--page-padding-mobile);
+  }
+}

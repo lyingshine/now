@@ -15,7 +15,6 @@
     <span class="task-text">{{ task.text }}</span>
     <div class="task-meta">
       <span class="task-hours">⏱️ {{ task.estimatedHours }}h</span>
-      <span v-if="task.completed" class="task-reward">+{{ task.estimatedHours * 10 }} EXP</span>
     </div>
   </div>
 </template>
