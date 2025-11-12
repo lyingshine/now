@@ -1,0 +1,414 @@
+/* ============================================
+   NOW 职场成长平台 - 高级视觉效果
+   提升整体视觉品质的特效系统
+   ============================================ */
+
+/* ===== 微光效果 ===== */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 3s infinite;
+  pointer-events: none;
+}
+
+/* ===== 悬浮动画增强 ===== */
+@keyframes floatEnhanced {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.02);
+  }
+}
+
+.float-enhanced {
+  animation: floatEnhanced 4s ease-in-out infinite;
+}
+
+/* ===== 脉冲发光 ===== */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+  }
+}
+
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ===== 渐变动画 ===== */
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.gradient-animated {
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+}
+
+/* ===== 3D 卡片效果 ===== */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card-3d:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateZ(10px);
+}
+
+/* ===== 磨砂玻璃增强 ===== */
+.glass-premium {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass-premium,
+body.dark-mode .glass-premium {
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ===== 光晕边框 ===== */
+.glow-border {
+  position: relative;
+  border-radius: var(--radius-2xl);
+}
+
+.glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    var(--rank-color, var(--color-primary)),
+    transparent,
+    var(--rank-color, var(--color-primary))
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--duration-normal) ease;
+}
+
+.glow-border:hover::before {
+  opacity: 1;
+}
+
+/* ===== 粒子效果背景 ===== */
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(20px, -20px) scale(1.2);
+    opacity: 0.6;
+  }
+}
+
+.particle-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.particle-bg::before,
+.particle-bg::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--rank-color, var(--color-primary)) 0%, transparent 70%);
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.particle-bg::before {
+  top: 10%;
+  left: 10%;
+  animation: particleFloat 8s ease-in-out infinite;
+}
+
+.particle-bg::after {
+  bottom: 10%;
+  right: 10%;
+  animation: particleFloat 10s ease-in-out infinite reverse;
+}
+
+/* ===== 文字发光效果 ===== */
+.text-glow {
+  text-shadow: 
+    0 0 10px rgba(102, 126, 234, 0.5),
+    0 0 20px rgba(102, 126, 234, 0.3),
+    0 0 30px rgba(102, 126, 234, 0.2);
+  animation: textGlowPulse 3s ease-in-out infinite;
+}
+
+@keyframes textGlowPulse {
+  0%, 100% {
+    text-shadow: 
+      0 0 10px rgba(102, 126, 234, 0.5),
+      0 0 20px rgba(102, 126, 234, 0.3),
+      0 0 30px rgba(102, 126, 234, 0.2);
+  }
+  50% {
+    text-shadow: 
+      0 0 20px rgba(102, 126, 234, 0.8),
+      0 0 30px rgba(102, 126, 234, 0.5),
+      0 0 40px rgba(102, 126, 234, 0.3);
+  }
+}
+
+/* ===== 平滑缩放 ===== */
+.smooth-scale {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.smooth-scale:hover {
+  transform: scale(1.05);
+}
+
+/* ===== 涟漪效果 ===== */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+}
+
+.ripple-effect:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+/* ===== 霓虹边框 ===== */
+.neon-border {
+  position: relative;
+  border: 2px solid transparent;
+  background: 
+    linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box,
+    linear-gradient(135deg, 
+      var(--rank-color, var(--color-primary)) 0%,
+      var(--color-accent) 50%,
+      var(--rank-color, var(--color-primary)) 100%
+    ) border-box;
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 5px var(--rank-color, var(--color-primary)));
+  }
+  50% {
+    filter: brightness(1.2) drop-shadow(0 0 15px var(--rank-color, var(--color-primary)));
+  }
+}
+
+/* ===== 渐变文字动画 ===== */
+.gradient-text-animated {
+  background: linear-gradient(
+    90deg,
+    var(--rank-color, var(--color-primary)) 0%,
+    var(--color-accent) 25%,
+    var(--color-success) 50%,
+    var(--color-accent) 75%,
+    var(--rank-color, var(--color-primary)) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientTextFlow 4s linear infinite;
+}
+
+@keyframes gradientTextFlow {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* ===== 深度阴影 ===== */
+.depth-shadow {
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 4px 8px rgba(0, 0, 0, 0.05),
+    0 8px 16px rgba(0, 0, 0, 0.05),
+    0 16px 32px rgba(0, 0, 0, 0.05);
+}
+
+.depth-shadow:hover {
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.08),
+    0 16px 32px rgba(0, 0, 0, 0.08),
+    0 32px 64px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== 彩虹边框动画 ===== */
+@keyframes rainbowBorder {
+  0% {
+    border-color: #667eea;
+  }
+  25% {
+    border-color: #764ba2;
+  }
+  50% {
+    border-color: #10b981;
+  }
+  75% {
+    border-color: #f59e0b;
+  }
+  100% {
+    border-color: #667eea;
+  }
+}
+
+.rainbow-border {
+  border: 2px solid;
+  animation: rainbowBorder 4s linear infinite;
+}
+
+/* ===== 呼吸效果 ===== */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 0.9;
+  }
+}
+
+.breathe-effect {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* ===== 星光闪烁 ===== */
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sparkle-effect {
+  position: relative;
+}
+
+.sparkle-effect::before,
+.sparkle-effect::after {
+  content: '✨';
+  position: absolute;
+  font-size: 1rem;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sparkle-effect::before {
+  top: -10px;
+  right: -10px;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle-effect::after {
+  bottom: -10px;
+  left: -10px;
+  animation: sparkle 2s ease-in-out infinite 1s;
+}
+
+/* ===== 工具类 ===== */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-bounce {
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+.hover-grow:hover {
+  transform: scale(1.05);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+}

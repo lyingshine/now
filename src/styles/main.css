@@ -26,3 +26,9 @@
 
 /* 8. 日间模式增强 - 优化浅色主题体验 */
 @import './light-mode-enhanced.css';
+
+/* 9. 统一动画系统 - 高级非线性动画 */
+@import './animations.css';
+
+/* 10. 高级视觉效果 - 提升整体品质 */
+@import './premium-effects.css';

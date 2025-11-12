@@ -684,6 +684,9 @@ const pages = ref([
 ])
 let isScrolling = false
 let scrollDirection = 'down' // 'up' 或 'down'
+let scrollTimer = null // 节流定时器
+let scrollAccumulator = 0 // 滚动累积量
+let lastScrollTime = 0 // 上次滚动时间
 
 // 生活水平轮播索引
 const currentLifestyleIndex = ref({})
@@ -746,9 +749,6 @@ watch(currentPage, (newPage) => {
 })
 
 const handleWheel = (event) => {
-  // 如果正在滚动中，忽略
-  if (isScrolling) return
-  
   // 检查事件目标，如果是轮播相关元素，不触发页面切换
   const target = event.target
   if (target.closest('.lifestyle-carousel') || 
@@ -759,6 +759,35 @@ const handleWheel = (event) => {
   
   // 阻止默认滚动行为
   event.preventDefault()
+  
+  const now = Date.now()
+  const timeDiff = now - lastScrollTime
+  
+  // 如果距离上次滚动超过 300ms，重置累积量（允许打断）
+  if (timeDiff > 300) {
+    scrollAccumulator = 0
+    isScrolling = false
+  }
+  
+  // 如果正在动画中且时间间隔很短（同一次滚动），累积滚动量
+  if (isScrolling && timeDiff < 100) {
+    scrollAccumulator += Math.abs(event.deltaY)
+    // 如果累积量超过阈值，说明是大幅度滚动，但仍然只翻一页
+    return
+  }
+  
+  // 如果已经在滚动且是新的滚动动作（超过100ms），允许打断
+  if (isScrolling && timeDiff >= 100) {
+    clearTimeout(scrollTimer)
+    scrollAccumulator = 0
+  }
+  
+  lastScrollTime = now
+  scrollAccumulator = Math.abs(event.deltaY)
+  
+  // 检查滚动方向和强度
+  const delta = Math.abs(event.deltaY)
+  if (delta < 10) return // 忽略微小的滚动
   
   isScrolling = true
   
@@ -782,22 +811,30 @@ const handleWheel = (event) => {
     }
   }
   
-  setTimeout(() => {
+  // 较短的锁定时间，配合时间判断实现打断
+  scrollTimer = setTimeout(() => {
     isScrolling = false
-  }, 1000)
+    scrollAccumulator = 0
+  }, 300)
 }
 
 const scrollToPage = (index) => {
-  if (isScrolling || index === currentPage.value) return
+  if (index === currentPage.value) return
   
   if (index >= 0 && index < pages.value.length) {
+    // 点击指示器时，清除之前的定时器，允许立即跳转
+    if (scrollTimer) {
+      clearTimeout(scrollTimer)
+    }
+    
     isScrolling = true
     scrollDirection = index > currentPage.value ? 'down' : 'up'
     currentPage.value = index
     
-    setTimeout(() => {
+    // 点击跳转后的锁定时间稍短
+    scrollTimer = setTimeout(() => {
       isScrolling = false
-    }, 1000)
+    }, 400)
   }
 }
 
@@ -825,6 +862,18 @@ onMounted(() => {
     syncDataFromUser()
   }
   
+  // 立即计算一次收入
+  calculateEarnings()
+  
+  // 调试：打印收入数据
+  console.log('收入数据:', {
+    salary: salaryData.value.salary,
+    joinDate: salaryData.value.joinDate,
+    todayEarnings: todayEarnings.value,
+    monthEarnings: monthEarnings.value,
+    yearEarnings: yearEarnings.value
+  })
+  
   // 每秒更新一次，实时显示收入
   timer = setInterval(() => {
     calculateEarnings()
@@ -841,6 +890,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (timer) clearInterval(timer)
+  if (scrollTimer) clearTimeout(scrollTimer)
   stopAutoCarousel()
   window.removeEventListener('openSettings', () => {})
 })
@@ -866,25 +916,25 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  padding-top: 80px;
-  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1), 
-              opacity 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+  padding: 80px var(--space-6) var(--space-6);
+  transition: transform 0.8s var(--ease-out-quart), 
+              opacity 0.6s var(--ease-out-cubic);
   will-change: transform, opacity;
 }
 
 /* 默认位置：下方 */
 .fullpage-section {
-  transform: translateY(100vh);
+  transform: translateY(100vh) scale(0.95);
 }
 
 /* 激活状态 */
 .fullpage-section.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   pointer-events: auto;
   z-index: 2;
 }
@@ -893,19 +943,28 @@ onUnmounted(() => {
 .fullpage-container[data-current="0"] .fullpage-section[data-index="1"],
 .fullpage-container[data-current="0"] .fullpage-section[data-index="2"],
 .fullpage-container[data-current="1"] .fullpage-section[data-index="2"] {
-  transform: translateY(100vh);
+  transform: translateY(100vh) scale(0.95);
+  opacity: 0;
 }
 
 .fullpage-container[data-current="1"] .fullpage-section[data-index="0"],
 .fullpage-container[data-current="2"] .fullpage-section[data-index="0"],
 .fullpage-container[data-current="2"] .fullpage-section[data-index="1"] {
-  transform: translateY(-100vh);
+  transform: translateY(-100vh) scale(0.95);
+  opacity: 0;
 }
 
 .fullpage-section:nth-child(2) {
   background: linear-gradient(135deg, 
     rgba(102, 126, 234, 0.03) 0%, 
     rgba(17, 153, 142, 0.03) 100%
+  );
+}
+
+.fullpage-section:nth-child(2).active {
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.05) 0%, 
+    rgba(17, 153, 142, 0.05) 100%
   );
 }
 
@@ -916,6 +975,13 @@ onUnmounted(() => {
   );
 }
 
+.fullpage-section:nth-child(3).active {
+  background: linear-gradient(135deg, 
+    rgba(17, 153, 142, 0.05) 0%, 
+    rgba(240, 147, 251, 0.05) 100%
+  );
+}
+
 .fullpage-section:nth-child(4) {
   background: linear-gradient(135deg, 
     rgba(240, 147, 251, 0.03) 0%, 
@@ -923,27 +989,42 @@ onUnmounted(() => {
   );
 }
 
+.fullpage-section:nth-child(4).active {
+  background: linear-gradient(135deg, 
+    rgba(240, 147, 251, 0.05) 0%, 
+    rgba(251, 191, 36, 0.05) 100%
+  );
+}
+
 /* ===== 区块内容 ===== */
 .section-content {
   max-width: 1400px;
   width: 100%;
-  height: calc(100vh - 160px);
-  padding: 0 var(--space-8);
+  height: 100%;
   display: flex;
   flex-direction: column;
-  animation: fadeInUp 0.8s ease-out 0.3s both;
-  overflow: hidden;
-  justify-content: center;
+  animation: sectionContentEnter 0.9s var(--ease-out-quint) 0.2s both;
+  overflow-y: auto;
+  overflow-x: hidden;
+  justify-content: flex-start;
+  gap: var(--space-6);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
-@keyframes fadeInUp {
+/* 隐藏滚动条 - Webkit */
+.section-content::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes sectionContentEnter {
   from {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateY(30px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -952,10 +1033,6 @@ onUnmounted(() => {
   text-align: center;
   margin-bottom: var(--space-4);
   flex-shrink: 0;
-  min-height: 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .section-title {
@@ -981,21 +1058,28 @@ onUnmounted(() => {
 .rank-display {
   display: flex;
   justify-content: center;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-4);
   flex-shrink: 0;
   width: 100%;
 }
 
 .rank-main-card {
   text-align: center;
-  padding: var(--space-10) var(--space-12);
+  padding: var(--space-6) var(--space-8);
   background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-4xl);
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border-radius: var(--radius-3xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
   width: 100%;
   max-width: 1200px;
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transition: all var(--duration-normal) var(--ease-hover);
+  will-change: transform;
 }
 
 .rank-main-card::before {
@@ -1004,14 +1088,27 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: var(--rank-color, var(--neon-purple));
+  height: 3px;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    var(--rank-color, var(--neon-purple)) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 20px var(--rank-color, var(--neon-purple));
+}
+
+.rank-main-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 24px 64px rgba(0, 0, 0, 0.3),
+    0 0 40px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 20%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
 .rank-icon {
-  font-size: 6rem;
-  margin-bottom: var(--space-4);
-  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
+  font-size: 4rem;
+  margin-bottom: var(--space-3);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
   animation: float 3s ease-in-out infinite;
   line-height: 1;
 }
@@ -1022,7 +1119,7 @@ onUnmounted(() => {
 }
 
 .rank-name {
-  font-size: var(--text-4xl);
+  font-size: var(--text-3xl);
   font-weight: 900;
   margin-bottom: var(--space-2);
   line-height: 1.2;
@@ -1030,19 +1127,19 @@ onUnmounted(() => {
 }
 
 .rank-level {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   color: var(--immersive-text-secondary);
   font-weight: 600;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
   line-height: 1.5;
 }
 
 .rank-percentile {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--immersive-text-tertiary);
   font-weight: 700;
-  margin-bottom: var(--space-6);
-  padding: var(--space-2) var(--space-5);
+  margin-bottom: var(--space-4);
+  padding: var(--space-1) var(--space-4);
   background: rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-full);
   display: inline-block;
@@ -1054,9 +1151,9 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--space-8);
-  margin-top: var(--space-6);
-  padding-top: var(--space-6);
+  gap: var(--space-6);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
   border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -1082,7 +1179,7 @@ onUnmounted(() => {
 }
 
 .rank-metric-value {
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   font-weight: 900;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
@@ -1091,7 +1188,7 @@ onUnmounted(() => {
 
 .rank-metric-divider {
   width: 1px;
-  height: 60px;
+  height: 40px;
   background: linear-gradient(to bottom, 
     transparent 0%, 
     rgba(255, 255, 255, 0.2) 50%, 
@@ -1266,17 +1363,22 @@ onUnmounted(() => {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: var(--space-2) 0;
 }
 
 .earning-card {
   padding: var(--space-4);
   background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-radius: var(--radius-2xl);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  transition: all var(--duration-normal) var(--ease-smooth);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all var(--duration-normal) var(--ease-hover);
   text-align: center;
+  will-change: transform;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .earning-card::before {
@@ -1286,19 +1388,41 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--rank-color, var(--neon-green));
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--rank-color, var(--neon-green)) 50%,
+    transparent 100%
+  );
   opacity: 0;
   transition: opacity var(--duration-normal) var(--ease-smooth);
+  box-shadow: 0 0 10px var(--rank-color, var(--neon-green));
+}
+
+.earning-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
 }
 
 .earning-card:hover {
   background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.25),
+    0 0 20px color-mix(in srgb, var(--rank-color, var(--neon-green)) 15%, transparent);
 }
 
-.earning-card:hover::before {
+.earning-card:hover::before,
+.earning-card:hover::after {
   opacity: 1;
 }
 
@@ -1321,7 +1445,7 @@ onUnmounted(() => {
 .earning-value {
   font-size: var(--text-lg);
   font-weight: 900;
-  background: var(--neon-green);
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1347,7 +1471,7 @@ onUnmounted(() => {
 
 .earning-bar {
   height: 100%;
-  background: var(--neon-green);
+  background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
   border-radius: var(--radius-full);
   transition: width 1s ease-out;
   animation: progress-fill 1.5s ease-out;
@@ -1431,26 +1555,54 @@ onUnmounted(() => {
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: var(--space-2) 0;
 }
 
 .lifestyle-category {
   background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(15px) saturate(150%);
+  -webkit-backdrop-filter: blur(15px) saturate(150%);
   border-radius: var(--radius-xl);
   padding: var(--space-4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: all var(--duration-normal) var(--ease-smooth);
+  transition: all var(--duration-normal) var(--ease-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+
+.lifestyle-category::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
 }
 
 .lifestyle-category:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(102, 126, 234, 0.1);
+}
+
+.lifestyle-category:hover::before {
+  opacity: 1;
 }
 
 .category-header {
@@ -1527,16 +1679,38 @@ onUnmounted(() => {
 .lifestyle-item {
   padding: var(--space-3);
   background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all var(--duration-normal) var(--ease-smooth);
+  transition: all var(--duration-normal) var(--ease-hover);
   width: 100%;
+  position: relative;
+  will-change: transform;
+  overflow: hidden;
+}
+
+.lifestyle-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--rank-color, var(--color-primary));
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
 }
 
 .lifestyle-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
+  transform: translateX(2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.lifestyle-item:hover::before {
+  opacity: 1;
 }
 
 .item-main {
@@ -1640,10 +1814,11 @@ onUnmounted(() => {
   grid-template-columns: 1.2fr 1fr;
   gap: var(--space-4);
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: var(--space-2) 0;
 }
 
 .career-section {
@@ -1674,17 +1849,45 @@ onUnmounted(() => {
 .job-card {
   padding: var(--space-3);
   background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-smooth);
+  transition: all var(--duration-normal) var(--ease-hover);
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.job-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(102, 126, 234, 0.1) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
 }
 
 .job-card:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   transform: translateY(-2px);
-  border-color: var(--rank-color, rgba(102, 126, 234, 0.5));
-  box-shadow: 0 4px 16px var(--rank-color, rgba(102, 126, 234, 0.2));
+  border-color: var(--rank-color, rgba(102, 126, 234, 0.4));
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    0 0 30px color-mix(in srgb, var(--rank-color, rgba(102, 126, 234, 0.3)), transparent);
+}
+
+.job-card:hover::before {
+  opacity: 1;
+}
+
+.job-card:active {
+  transform: translateY(-2px) scale(1.01);
 }
 
 .job-header {
@@ -1748,14 +1951,39 @@ onUnmounted(() => {
   gap: var(--space-2);
   padding: var(--space-3);
   background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all var(--duration-normal) var(--ease-smooth);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--duration-normal) var(--ease-hover);
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.tip-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg,
+    var(--rank-color, var(--neon-purple)) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
 }
 
 .tip-card:hover {
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tip-card:hover::before {
+  opacity: 1;
 }
 
 .tip-number {
@@ -1806,12 +2034,22 @@ onUnmounted(() => {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3);
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
   border-radius: var(--radius-2xl);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transition: all var(--duration-normal) var(--ease-default);
+}
+
+.page-indicator:hover {
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
 /* 箭头按钮 */
@@ -1824,7 +2062,7 @@ onUnmounted(() => {
   color: var(--immersive-text-secondary);
   font-size: var(--text-xl);
   cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-out-expo);
+  transition: all var(--duration-normal) var(--ease-out-back);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1838,20 +2076,21 @@ onUnmounted(() => {
   inset: 0;
   background: var(--rank-color, var(--color-primary));
   opacity: 0;
-  transition: opacity var(--duration-fast) ease;
+  transition: opacity var(--duration-fast) var(--ease-default);
+  border-radius: var(--radius-lg);
 }
 
 .indicator-arrow:hover {
   color: white;
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .indicator-arrow:hover::before {
-  opacity: 0.2;
+  opacity: 0.25;
 }
 
 .indicator-arrow:active {
-  transform: scale(0.95);
+  transform: scale(0.9);
 }
 
 .indicator-arrow.up {
@@ -1879,19 +2118,37 @@ onUnmounted(() => {
   background: rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-out-expo);
+  transition: all var(--duration-normal) var(--ease-out-back);
   position: relative;
 }
 
 .indicator-dot:hover {
   background: rgba(255, 255, 255, 0.5);
-  transform: scale(1.4);
+  transform: scale(1.3);
 }
 
 .indicator-dot.active {
   background: var(--rank-color, var(--color-primary));
-  box-shadow: 0 0 12px var(--rank-color, var(--color-primary));
-  transform: scale(1.6);
+  box-shadow: 
+    0 0 16px var(--rank-color, var(--color-primary)),
+    0 0 30px color-mix(in srgb, var(--rank-color, var(--color-primary)) 50%, transparent);
+  transform: scale(1.5);
+  animation: dotPulse 2.5s var(--ease-in-out-quad) infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 16px var(--rank-color, var(--color-primary)),
+      0 0 30px color-mix(in srgb, var(--rank-color, var(--color-primary)) 50%, transparent);
+    transform: scale(1.5);
+  }
+  50% {
+    box-shadow: 
+      0 0 20px var(--rank-color, var(--color-primary)),
+      0 0 40px color-mix(in srgb, var(--rank-color, var(--color-primary)) 70%, transparent);
+    transform: scale(1.6);
+  }
 }
 
 .indicator-label {
@@ -2090,7 +2347,7 @@ onUnmounted(() => {
   }
   
   .fullpage-section {
-    padding-top: 70px;
+    padding: 70px var(--space-4) var(--space-4);
   }
   
   .section-content {

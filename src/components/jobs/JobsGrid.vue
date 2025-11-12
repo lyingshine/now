@@ -93,9 +93,10 @@ onUnmounted(() => {
 .jobs-grid-wrapper {
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
+  padding: var(--space-2) 0;
 }
 
 .jobs-grid-wrapper.disabled {

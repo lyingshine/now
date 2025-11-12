@@ -112,16 +112,42 @@ const formatDate = (dateString) => {
 
 <style scoped>
 .quest-progress-card {
-  background: var(--glass-bg);
-  border-radius: var(--radius-2xl);
-  padding: 2rem;
-  border: 2px solid var(--glass-border);
-  box-shadow: var(--shadow-xl);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border-radius: var(--radius-3xl);
+  padding: var(--space-8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--duration-normal) var(--ease-hover);
+  will-change: transform;
 }
 
-body.dark-mode .quest-progress-card {
-  background: rgba(30, 41, 59, 0.7);
-  border-color: rgba(255, 255, 255, 0.1);
+.quest-progress-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--rank-color, var(--color-primary)) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 20px var(--rank-color, var(--color-primary));
+}
+
+.quest-progress-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 24px 64px rgba(0, 0, 0, 0.3),
+    0 0 40px color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
 .card-header {
@@ -182,9 +208,18 @@ body.dark-mode .quest-progress-card {
 }
 
 .stat-item {
-  padding: 1rem;
-  background: var(--bg-primary);
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
   border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--duration-normal) var(--ease-default);
+}
+
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 .stat-label {
@@ -262,22 +297,57 @@ body.dark-mode .stat-bar {
 
 .continue-button {
   width: 100%;
-  padding: 1rem 2rem;
-  background: var(--rank-color, var(--color-primary));
+  padding: var(--space-4) var(--space-8);
+  background: linear-gradient(135deg,
+    var(--rank-color, var(--color-primary)) 0%,
+    color-mix(in srgb, var(--rank-color, var(--color-primary)) 80%, black) 100%
+  );
   color: white;
   border: none;
   border-radius: var(--radius-xl);
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--rank-color, var(--color-primary)) 30%, transparent);
+  transition: all var(--duration-normal) var(--ease-hover);
+  box-shadow: 
+    0 8px 24px color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  position: relative;
+  overflow: hidden;
+}
+
+.continue-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
 }
 
 .continue-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent);
-  filter: brightness(1.1);
+  box-shadow: 
+    0 12px 32px color-mix(in srgb, var(--rank-color, var(--color-primary)) 50%, transparent),
+    0 0 30px color-mix(in srgb, var(--rank-color, var(--color-primary)) 30%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--rank-color, var(--color-primary)) 110%, white) 0%,
+    var(--rank-color, var(--color-primary)) 100%
+  );
+}
+
+.continue-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.continue-button:active {
+  transform: translateY(-1px) scale(1.01);
 }
 
 @media (max-width: 600px) {

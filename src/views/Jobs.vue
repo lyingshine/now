@@ -145,7 +145,7 @@ onUnmounted(() => {
 
 <style scoped>
 .jobs {
-  padding: 80px var(--space-6) var(--space-6);
+  padding: 100px var(--space-6) var(--space-6);
   height: 100vh;
   background: var(--immersive-bg-primary);
   position: relative;
@@ -214,7 +214,7 @@ onUnmounted(() => {
 /* 响应式 */
 @media (max-width: 768px) {
   .jobs {
-    padding: 70px var(--space-4) var(--space-4);
+    padding: 90px var(--space-4) var(--space-4);
   }
   
   .section-header-text {
@@ -237,7 +237,7 @@ onUnmounted(() => {
 
 @media (max-height: 800px) {
   .jobs {
-    padding-top: 70px;
+    padding-top: 90px;
     padding-bottom: var(--space-4);
   }
   

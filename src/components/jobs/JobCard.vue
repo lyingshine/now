@@ -68,23 +68,23 @@ const formatSalary = (salary) => {
 
 <style scoped>
 .job-card {
-  background: linear-gradient(135deg, 
-    color-mix(in srgb, var(--rank-color, var(--color-primary)) 5%, var(--bg-secondary)) 0%,
-    var(--bg-secondary) 100%
-  );
-  backdrop-filter: blur(var(--blur-lg)) saturate(180%);
-  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(180%);
-  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  padding: var(--space-5);
   border-radius: var(--radius-2xl);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  transition: all var(--duration-fast) var(--ease-smooth);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all var(--duration-normal) var(--ease-hover);
   cursor: pointer;
-  box-shadow: var(--shadow-lg);
+  will-change: transform;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
   height: 100%;
 }
 
@@ -95,19 +95,46 @@ const formatSalary = (salary) => {
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--rank-color, var(--neon-purple));
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--rank-color, var(--neon-purple)) 50%,
+    transparent 100%
+  );
   opacity: 0;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  box-shadow: 0 0 15px var(--rank-color, var(--neon-purple));
 }
 
-.job-card:hover::before {
+.job-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
+}
+
+.job-card:hover::before,
+.job-card:hover::after {
   opacity: 1;
 }
 
 .job-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-2xl);
-  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.25),
+    0 0 40px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 20%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.job-card:active {
+  transform: translateY(-2px);
 }
 
 .job-header {
@@ -128,11 +155,18 @@ const formatSalary = (salary) => {
 .job-salary {
   font-size: var(--text-2xl);
   font-weight: var(--font-black);
-  color: var(--rank-color, var(--color-primary));
-  letter-spacing: -0.02em;
+  background: linear-gradient(135deg,
+    var(--rank-color, var(--color-primary)) 0%,
+    color-mix(in srgb, var(--rank-color, var(--color-primary)) 120%, white) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.03em;
   display: flex;
   align-items: baseline;
   gap: var(--space-1);
+  filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.2));
 }
 
 .salary-unit {
@@ -161,14 +195,22 @@ const formatSalary = (salary) => {
 }
 
 .tag {
-  padding: var(--space-1) var(--space-2);
-  background: rgba(102, 126, 234, 0.1);
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  padding: var(--space-1) var(--space-3);
+  background: color-mix(in srgb, var(--rank-color, var(--color-primary)) 10%, transparent);
+  backdrop-filter: blur(10px);
+  border: 1px solid color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent);
   border-radius: var(--radius-full);
   font-size: var(--text-xs);
   line-height: var(--leading-tight);
   font-weight: var(--font-semibold);
-  color: var(--color-primary);
+  color: var(--rank-color, var(--color-primary));
+  transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.tag:hover {
+  background: color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent);
+  border-color: color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent);
+  transform: translateY(-1px);
 }
 
 .job-requirements {

@@ -39,12 +39,17 @@ const isDark = ref(false)
 onMounted(() => {
   const theme = localStorage.getItem('theme') || 'light'
   isDark.value = theme === 'dark'
+  // 初始化时应用主题
+  document.documentElement.classList.toggle('dark', isDark.value)
+  document.body.classList.toggle('dark-mode', isDark.value)
 })
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+  // 同时切换 html 和 body 的类
   document.documentElement.classList.toggle('dark', isDark.value)
+  document.body.classList.toggle('dark-mode', isDark.value)
 }
 </script>
 
@@ -56,7 +61,7 @@ const toggleTheme = () => {
   left: 0;
   right: 0;
   z-index: var(--z-fixed);
-  transition: all var(--duration-normal) var(--ease-out-expo);
+  pointer-events: none;
 }
 
 .navbar::before {
@@ -65,19 +70,13 @@ const toggleTheme = () => {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background: var(--bg-primary);
-  opacity: 0;
-  transition: opacity var(--duration-normal) ease;
-  backdrop-filter: blur(var(--blur-xl)) saturate(180%);
-  -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(180%);
-  border-bottom: 1px solid transparent;
-}
-
-.navbar:hover::before {
-  opacity: 0.98;
-  border-bottom-color: var(--border-subtle);
-  box-shadow: var(--shadow-md);
+  height: 100px;
+  background: linear-gradient(180deg, 
+    rgba(0, 0, 0, 0.3) 0%, 
+    transparent 100%
+  );
+  backdrop-filter: blur(10px);
+  pointer-events: none;
 }
 
 .navbar-content {
@@ -90,6 +89,7 @@ const toggleTheme = () => {
   gap: var(--space-12);
   position: relative;
   z-index: 1;
+  pointer-events: auto;
 }
 
 .navbar-logo {
@@ -116,7 +116,7 @@ const toggleTheme = () => {
   height: 2px;
   background: var(--rank-color, var(--color-primary));
   transform: scaleX(0);
-  transition: transform var(--duration-normal) var(--ease-out-expo);
+  transition: transform var(--duration-normal) var(--ease-hover);
   border-radius: var(--radius-full);
 }
 
@@ -133,13 +133,14 @@ const toggleTheme = () => {
   display: flex;
   gap: var(--space-2);
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(var(--blur-md));
-  -webkit-backdrop-filter: blur(var(--blur-md));
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-full);
   padding: var(--space-2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 }
 
 .nav-btn {
@@ -171,9 +172,10 @@ const toggleTheme = () => {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   transform: translate(-50%, -50%);
-  transition: width 0.4s ease, height 0.4s ease;
+  transition: width 0.4s var(--ease-out-circ), height 0.4s var(--ease-out-circ);
+  z-index: -1;
 }
 
 .nav-btn:hover {
@@ -183,19 +185,40 @@ const toggleTheme = () => {
 }
 
 .nav-btn:hover::before {
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-2xl);
 }
 
 .nav-btn.active {
-  background: var(--rank-color, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+  background: linear-gradient(135deg, 
+    var(--rank-color, #667eea) 0%, 
+    color-mix(in srgb, var(--rank-color, #667eea) 80%, #764ba2) 100%
+  );
   color: white;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--rank-color, #667eea) 40%, transparent);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--rank-color, #667eea) 50%, transparent),
+              0 0 20px color-mix(in srgb, var(--rank-color, #667eea) 30%, transparent);
+  position: relative;
+  overflow: visible;
+}
+
+.nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--rank-color, #667eea);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--rank-color, #667eea);
 }
 
 .nav-btn.active:hover {
-  box-shadow: 0 6px 16px color-mix(in srgb, var(--rank-color, #667eea) 50%, transparent);
-  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--rank-color, #667eea) 60%, transparent),
+              0 0 30px color-mix(in srgb, var(--rank-color, #667eea) 40%, transparent);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .theme-toggle {

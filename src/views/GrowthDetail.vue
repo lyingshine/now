@@ -284,7 +284,7 @@ watch(() => questStore.currentLevel, (newLevel) => {
 
 <style scoped>
 .growth-detail {
-  padding: 80px var(--space-6) var(--space-6);
+  padding: 100px var(--space-6) var(--space-6);
   height: 100vh;
   background: var(--immersive-bg-primary);
   position: relative;
@@ -366,7 +366,7 @@ watch(() => questStore.currentLevel, (newLevel) => {
 /* 响应式 */
 @media (max-width: 768px) {
   .growth-detail {
-    padding: 70px var(--space-4) var(--space-4);
+    padding: 90px var(--space-4) var(--space-4);
   }
   
   .completion-section {
@@ -396,7 +396,7 @@ watch(() => questStore.currentLevel, (newLevel) => {
 
 @media (max-height: 800px) {
   .growth-detail {
-    padding-top: 70px;
+    padding-top: 90px;
     padding-bottom: var(--space-4);
   }
   

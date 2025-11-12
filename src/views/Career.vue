@@ -417,7 +417,7 @@ onUnmounted(() => {
 .career {
   height: 100vh;
   background: var(--immersive-bg-primary);
-  padding: 80px var(--space-6) var(--space-6);
+  padding: 100px var(--space-6) var(--space-6);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -588,26 +588,71 @@ onUnmounted(() => {
 
 .timeline-card {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-radius: var(--radius-xl);
-  padding: var(--space-3);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all var(--duration-normal) var(--ease-smooth);
+  padding: var(--space-4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transition: all var(--duration-normal) var(--ease-hover);
   height: 100%;
   display: flex;
+  will-change: transform;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.timeline-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
 }
 
 .timeline-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(102, 126, 234, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.timeline-card:hover::before {
+  opacity: 1;
 }
 
 .active-card {
   border-color: var(--rank-color, #f59e0b);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--rank-color, #f59e0b) 30%, transparent);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    0 0 40px color-mix(in srgb, var(--rank-color, #f59e0b) 40%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  animation: activeCardPulse 3s ease-in-out infinite;
+}
+
+@keyframes activeCardPulse {
+  0%, 100% {
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.25),
+      0 0 40px color-mix(in srgb, var(--rank-color, #f59e0b) 40%, transparent),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  }
+  50% {
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.3),
+      0 0 60px color-mix(in srgb, var(--rank-color, #f59e0b) 60%, transparent),
+      0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  }
 }
 
 .card-header {
@@ -836,25 +881,52 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-4);
+  padding: var(--space-2) 0;
 }
 
 .stat-card {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-4);
+  padding: var(--space-5);
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-radius: var(--radius-xl);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all var(--duration-normal) var(--ease-smooth);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transition: all var(--duration-normal) var(--ease-hover);
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.2),
+    0 0 30px rgba(102, 126, 234, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
 }
 
 .stat-icon {
@@ -905,7 +977,7 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .career {
-    padding: 70px var(--space-4) var(--space-4);
+    padding: 90px var(--space-4) var(--space-4);
   }
   
   .section-header-text {
@@ -947,7 +1019,7 @@ onUnmounted(() => {
 
 @media (max-height: 800px) {
   .career {
-    padding-top: 70px;
+    padding-top: 90px;
     padding-bottom: var(--space-4);
   }
   

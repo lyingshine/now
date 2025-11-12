@@ -186,7 +186,7 @@ body.dark-mode .exp-bar-container {
   height: 100%;
   background: linear-gradient(90deg, var(--rank-color, var(--color-primary)) 0%, rgba(102, 126, 234, 0.8) 100%);
   border-radius: var(--radius-full);
-  transition: width 0.6s var(--ease-out-expo);
+  transition: width 0.8s var(--ease-out-quint);
   position: relative;
   box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
 }

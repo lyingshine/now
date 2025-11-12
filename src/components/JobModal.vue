@@ -491,7 +491,7 @@ watch(() => props.job, (newJob) => {
   height: 100%;
   background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
   border-radius: var(--radius-full);
-  transition: width 0.6s var(--ease-out-expo);
+  transition: width 0.8s var(--ease-out-quint);
   position: relative;
   box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
 }

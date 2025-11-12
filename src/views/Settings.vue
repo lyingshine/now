@@ -140,6 +140,13 @@
             保存设置
           </button>
         </div>
+
+        <!-- 危险操作区域 -->
+        <div class="danger-zone">
+          <button @click="handleClearData" class="unified-btn unified-btn-large danger-btn">
+            🗑️ 清除所有数据
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -214,6 +221,45 @@ const handleCancel = () => {
   router.back()
 }
 
+// 清除所有数据
+const handleClearData = () => {
+  const confirmed = confirm(
+    '⚠️ 警告：此操作将清除所有数据，包括：\n\n' +
+    '• 个人信息和设置\n' +
+    '• 所有任务进度\n' +
+    '• 职业历史记录\n' +
+    '• 成就和经验值\n\n' +
+    '此操作不可恢复！确定要继续吗？'
+  )
+  
+  if (!confirmed) return
+  
+  // 二次确认
+  const doubleConfirm = confirm(
+    '🚨 最后确认：\n\n' +
+    '你真的要删除所有数据吗？\n' +
+    '这将无法撤销！'
+  )
+  
+  if (!doubleConfirm) return
+  
+  try {
+    // 清除所有 localStorage 数据
+    localStorage.clear()
+    
+    // 显示成功提示
+    alert('✅ 所有数据已清除！页面即将刷新...')
+    
+    // 刷新页面，重新初始化
+    setTimeout(() => {
+      window.location.href = '/'
+    }, 500)
+  } catch (error) {
+    console.error('清除数据失败:', error)
+    alert('❌ 清除数据失败，请重试')
+  }
+}
+
 onMounted(() => {
   userStore.loadFromStorage()
   loadUserData()
@@ -224,7 +270,7 @@ onMounted(() => {
 .settings {
   height: 100vh;
   background: var(--immersive-bg-primary);
-  padding: 80px var(--space-6) var(--space-6);
+  padding: 100px var(--space-6) var(--space-6);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -256,54 +302,147 @@ onMounted(() => {
 }
 
 .section-header-text {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-4);
   flex-shrink: 0;
+  text-align: center;
+}
+
+.section-header-text .unified-title {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-1);
+}
+
+.section-header-text .unified-subtitle {
+  font-size: var(--text-xs);
 }
 
 .settings-content {
   flex: 1;
-  overflow-y: auto;
+  overflow: visible;
   min-height: 0;
-  padding-right: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.settings-content::-webkit-scrollbar {
+  display: none;
 }
 
 .unified-card {
-  margin-bottom: var(--space-4);
+  padding: var(--space-4);
+  transition: all var(--duration-normal) var(--ease-hover);
+  will-change: transform;
+  flex-shrink: 0;
+}
+
+.unified-card .unified-section-title {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-3);
+}
+
+.unified-card:hover {
+  transform: translateY(-1px);
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-4);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 
 .form-label {
-  font-size: var(--text-sm);
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   color: var(--immersive-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  transition: color var(--duration-fast) var(--ease-default);
+}
+
+.form-group:focus-within .form-label {
+  color: var(--rank-color, var(--color-primary));
+}
+
+.unified-input {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
 }
 
 .actions {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--space-3);
   justify-content: center;
-  margin-top: var(--space-6);
-  padding-top: var(--space-4);
+  margin-top: auto;
+  padding-top: var(--space-3);
   flex-shrink: 0;
+}
+
+/* 危险操作区域 */
+.danger-zone {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-3);
+  margin-top: var(--space-2);
+  border-top: 1px solid rgba(239, 68, 68, 0.2);
+  flex-shrink: 0;
+}
+
+.danger-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  transition: all var(--duration-normal) var(--ease-hover);
+  position: relative;
+  overflow: hidden;
+}
+
+.danger-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s var(--ease-out-circ), height 0.6s var(--ease-out-circ);
+  z-index: -1;
+}
+
+.danger-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+}
+
+.danger-btn:hover::before {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-xl);
+}
+
+.danger-btn:active {
+  transform: translateY(0);
 }
 
 /* 响应式 */
 @media (max-width: 768px) {
   .settings {
-    padding: 70px var(--space-4) var(--space-4);
+    padding: 90px var(--space-4) var(--space-4);
   }
   
   .section-header-text {
@@ -327,24 +466,71 @@ onMounted(() => {
   .actions button {
     width: 100%;
   }
+  
+  .danger-zone {
+    padding-top: var(--space-2);
+    margin-top: var(--space-2);
+  }
+  
+  .danger-btn {
+    width: 100%;
+  }
 }
 
-@media (max-height: 800px) {
+@media (max-height: 900px) {
   .settings {
-    padding-top: 70px;
-    padding-bottom: var(--space-4);
+    padding-top: 90px;
+    padding-bottom: var(--space-3);
   }
   
-  .section-header-text .unified-title {
-    font-size: 2rem;
-  }
-  
-  .unified-card {
+  .section-header-text {
     margin-bottom: var(--space-3);
   }
   
+  .section-header-text .unified-title {
+    font-size: var(--text-xl);
+  }
+  
+  .unified-card {
+    padding: var(--space-3);
+  }
+  
+  .unified-card .unified-section-title {
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-2);
+  }
+  
   .form-grid {
-    gap: var(--space-3);
+    gap: var(--space-2);
+  }
+  
+  .form-group {
+    gap: 4px;
+  }
+  
+  .unified-input {
+    padding: 6px var(--space-2);
+    font-size: 13px;
+  }
+  
+  .actions {
+    padding-top: var(--space-2);
+    gap: var(--space-2);
+  }
+  
+  .danger-zone {
+    padding-top: var(--space-2);
+    margin-top: var(--space-1);
+  }
+}
+
+@media (max-height: 800px) {
+  .settings-content {
+    gap: var(--space-2);
+  }
+  
+  .form-label {
+    font-size: 10px;
   }
 }
 </style>

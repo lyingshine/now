@@ -3,60 +3,122 @@
    高级组件和特殊样式
    =================================== */
 
-/* ===== 统一卡片 ===== */
+/* ===== 统一卡片 - 增强玻璃态 ===== */
 .unified-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-2xl);
   padding: var(--space-6);
-  transition: all var(--duration-normal) var(--ease-out-expo);
+  transition: all var(--duration-normal) var(--ease-hover);
   position: relative;
   overflow: hidden;
+  box-shadow: var(--glass-shadow);
+  will-change: transform;
+}
+
+.unified-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    transparent 50%, 
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-default);
+  pointer-events: none;
 }
 
 .unified-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: var(--glass-bg-strong);
+  border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  box-shadow: var(--glass-shadow-hover), 
+              0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
-/* ===== 统一按钮 ===== */
+.unified-card:hover::before {
+  opacity: 1;
+}
+
+/* ===== 统一按钮 - 增强交互 ===== */
 .unified-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-xl);
   font-size: var(--text-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-out-expo);
+  transition: all var(--duration-normal) var(--ease-hover);
   color: var(--text-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.unified-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s var(--ease-out-circ), height 0.6s var(--ease-out-circ);
 }
 
 .unified-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.unified-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.unified-btn:active {
+  transform: translateY(0);
 }
 
 .unified-btn-primary {
-  background: var(--rank-color, var(--color-primary));
+  background: linear-gradient(135deg, 
+    var(--rank-color, var(--color-primary)) 0%, 
+    color-mix(in srgb, var(--rank-color, var(--color-primary)) 80%, black) 100%
+  );
   border-color: transparent;
   color: white;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: var(--shadow-primary);
+  font-weight: 700;
+}
+
+.unified-btn-primary::before {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .unified-btn-primary:hover {
-  filter: brightness(1.1);
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.5);
-  transform: translateY(-3px);
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, var(--rank-color, var(--color-primary)) 110%, white) 0%, 
+    var(--rank-color, var(--color-primary)) 100%
+  );
+  box-shadow: var(--shadow-primary), var(--glow-primary);
+  transform: translateY(-2px);
 }
 
 .unified-btn-large {
@@ -69,17 +131,34 @@
   font-size: var(--text-xs);
 }
 
-/* ===== 统一标题 ===== */
+/* ===== 统一标题 - 增强视觉效果 ===== */
 .unified-title {
   font-size: var(--text-3xl);
   font-weight: 900;
-  background: linear-gradient(135deg, var(--rank-color, var(--color-primary)) 0%, var(--color-accent) 100%);
+  background: linear-gradient(135deg, 
+    var(--rank-color, var(--color-primary)) 0%, 
+    color-mix(in srgb, var(--rank-color, var(--color-primary)) 70%, var(--color-accent)) 50%,
+    var(--color-accent) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
   margin-bottom: var(--space-2);
+  position: relative;
+  display: inline-block;
+  filter: drop-shadow(0 2px 8px rgba(102, 126, 234, 0.2));
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    filter: drop-shadow(0 2px 8px rgba(102, 126, 234, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 4px 16px rgba(102, 126, 234, 0.4));
+  }
 }
 
 .unified-subtitle {
@@ -103,23 +182,32 @@
   margin-bottom: var(--space-3);
 }
 
-/* ===== 统一输入框 ===== */
+/* ===== 统一输入框 - 增强焦点效果 ===== */
 .unified-input {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-xl);
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-sm);
   color: var(--text-primary);
-  transition: all var(--duration-normal) var(--ease-smooth);
+  transition: all var(--duration-normal) var(--ease-default);
   width: 100%;
+  position: relative;
+}
+
+.unified-input:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .unified-input:focus {
   outline: none;
   border-color: var(--rank-color, var(--color-primary));
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent),
+              var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .unified-input::placeholder {
@@ -157,24 +245,63 @@
   color: var(--color-warning);
 }
 
-/* ===== 统一进度条 ===== */
+/* ===== 统一进度条 - 增强动画 ===== */
 .unified-progress {
   width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-full);
   overflow: hidden;
   position: relative;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .unified-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--rank-color, var(--color-primary)) 0%, rgba(102, 126, 234, 0.8) 100%);
+  background: linear-gradient(90deg, 
+    var(--rank-color, var(--color-primary)) 0%, 
+    color-mix(in srgb, var(--rank-color, var(--color-primary)) 120%, white) 50%,
+    var(--rank-color, var(--color-primary)) 100%
+  );
+  background-size: 200% 100%;
   border-radius: var(--radius-full);
-  transition: width 1s var(--ease-out-expo);
+  transition: width 1.2s var(--ease-out-quint);
   position: relative;
-  box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--rank-color, var(--color-primary)) 60%, transparent);
+  animation: progressShine 2s ease-in-out infinite;
+}
+
+.unified-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    transparent 100%
+  );
+  animation: progressGlide 2s ease-in-out infinite;
+}
+
+@keyframes progressShine {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes progressGlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
 }
 
 .unified-progress-large {
@@ -385,41 +512,85 @@
   color: var(--text-tertiary);
 }
 
-/* ===== 浅色模式适配 ===== */
+/* ===== 浅色模式适配 - 增强版 ===== */
 html:not(.dark) .unified-card {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset;
 }
 
 html:not(.dark) .unified-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  border-color: rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
 html:not(.dark) .unified-btn {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(10px);
   color: var(--text-primary);
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 html:not(.dark) .unified-btn:hover {
   background: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+html:not(.dark) .unified-btn-primary {
+  box-shadow: 
+    0 4px 16px color-mix(in srgb, var(--rank-color, var(--color-primary)) 30%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+}
+
+html:not(.dark) .unified-btn-primary:hover {
+  box-shadow: 
+    0 8px 24px color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent),
+    0 0 20px color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.3) inset;
 }
 
 html:not(.dark) .unified-input {
-  background: rgba(0, 0, 0, 0.02);
-  border-color: rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-color: rgba(0, 0, 0, 0.1);
   color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+html:not(.dark) .unified-input:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
 html:not(.dark) .unified-input:focus {
   background: #ffffff;
   border-color: var(--rank-color, var(--color-primary));
+  box-shadow: 
+    0 0 0 4px color-mix(in srgb, var(--rank-color, var(--color-primary)) 15%, transparent),
+    0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 html:not(.dark) .unified-modal {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(30px) saturate(180%);
   border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 
+    0 24px 80px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+}
+
+html:not(.dark) .unified-progress {
+  background: rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+html:not(.dark) .unified-title {
+  filter: drop-shadow(0 2px 8px rgba(102, 126, 234, 0.15));
 }
