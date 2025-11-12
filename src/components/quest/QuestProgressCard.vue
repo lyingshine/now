@@ -162,7 +162,7 @@ body.dark-mode .quest-progress-card {
 
 .salary-amount {
   font-size: 1.25rem;
-  color: var(--growth-primary);
+  color: var(--rank-color, var(--color-primary));
 }
 
 .salary-label {
@@ -196,7 +196,7 @@ body.dark-mode .quest-progress-card {
 .stat-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--growth-primary);
+  color: var(--rank-color, var(--color-primary));
   margin-bottom: 0.75rem;
 }
 
@@ -213,9 +213,30 @@ body.dark-mode .stat-bar {
 
 .stat-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+  background: var(--rank-color, var(--color-primary));
   border-radius: var(--radius-full);
   transition: width 0.3s ease;
+  position: relative;
+}
+
+.stat-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .time-info {
@@ -242,7 +263,7 @@ body.dark-mode .stat-bar {
 .continue-button {
   width: 100%;
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  background: var(--rank-color, var(--color-primary));
   color: white;
   border: none;
   border-radius: var(--radius-xl);
@@ -250,12 +271,13 @@ body.dark-mode .stat-bar {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--rank-color, var(--color-primary)) 30%, transparent);
 }
 
 .continue-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent);
+  filter: brightness(1.1);
 }
 
 @media (max-width: 600px) {

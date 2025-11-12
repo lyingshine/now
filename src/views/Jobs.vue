@@ -116,8 +116,8 @@ const handleAcceptJob = (jobId, customRewards = null) => {
     
     closeJobModal()
     
-    // 跳转到成长中心
-    router.push('/growth')
+    // 直接跳转到任务详情页面
+    router.push('/growth/detail')
   } else {
     alert('接取任务失败，请稍后重试')
   }

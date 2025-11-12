@@ -5,19 +5,37 @@
 @import './styles/unified-design.css';
 
 :root {
-  /* 主色调 - 高级渐变色 */
-  --color-primary: #6366f1;
-  --color-primary-hover: #4f46e5;
+  /* 统一主题色 - 动态段位色 */
+  --color-primary: #667eea;
+  --color-primary-hover: #5568d3;
   --color-primary-light: #818cf8;
-  --color-accent: #f59e0b;
-  --color-accent-hover: #d97706;
-  --color-accent-light: #fbbf24;
+  --color-primary-dark: #4f46e5;
   
-  /* 成长中心颜色 - 更鲜艳 */
-  --growth-primary: #10b981;
-  --growth-primary-hover: #059669;
-  --growth-secondary: #3b82f6;
-  --growth-accent: #f59e0b;
+  /* 辅助色 - 渐变紫 */
+  --color-accent: #764ba2;
+  --color-accent-hover: #6a4492;
+  --color-accent-light: #8b5fbf;
+  
+  /* 成功/成长色 - 青绿色（与紫色搭配） */
+  --color-success: #11998e;
+  --color-success-hover: #0f8a7f;
+  --color-success-light: #38ef7d;
+  
+  /* 警告色 - 金色 */
+  --color-warning: #f59e0b;
+  --color-warning-hover: #d97706;
+  --color-warning-light: #fbbf24;
+  
+  /* 错误色 - 红色 */
+  --color-error: #ef4444;
+  --color-error-hover: #dc2626;
+  --color-error-light: #f87171;
+  
+  /* 成长中心颜色 - 统一为动态主题色 */
+  --growth-primary: var(--rank-color, #667eea);
+  --growth-primary-hover: var(--rank-color, #5568d3);
+  --growth-secondary: #764ba2;
+  --growth-accent: #11998e;
   
   /* 中性色 - 增强对比度 */
   --color-gray-50: #f9fafb;
@@ -44,8 +62,9 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
-  --shadow-glow-accent: 0 0 20px rgba(245, 158, 11, 0.3);
+  --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.4);
+  --shadow-glow-accent: 0 0 20px rgba(118, 75, 162, 0.4);
+  --shadow-glow-success: 0 0 20px rgba(17, 153, 142, 0.4);
   
   /* 玻璃态效果 */
   --glass-bg: rgba(255, 255, 255, 0.7);
@@ -88,10 +107,24 @@
   --radius-full: 9999px;
   
   /* 过渡 - 优化缓动函数 */
-  --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-smooth: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* 高级缓动函数 */
+  --ease-in-out-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  
+  /* 微交互时长 */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 700ms;
 }
 
 /* 响应式 CSS 变量 */
@@ -118,8 +151,9 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.5);
-  --shadow-glow-accent: 0 0 20px rgba(245, 158, 11, 0.5);
+  --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.5);
+  --shadow-glow-accent: 0 0 20px rgba(118, 75, 162, 0.5);
+  --shadow-glow-success: 0 0 20px rgba(17, 153, 142, 0.5);
   --glass-bg: rgba(30, 41, 59, 0.7);
   --glass-border: rgba(255, 255, 255, 0.1);
 }

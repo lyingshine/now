@@ -1,7 +1,18 @@
 <template>
   <div class="home fullpage-container" @wheel="handleWheel" :style="{ '--rank-color': rankInfo.current.color }">
-    <!-- 导航指示器 -->
+    <!-- 导航指示器（合并箭头） -->
     <div class="page-indicator">
+      <!-- 向上箭头 -->
+      <button 
+        v-if="currentPage > 0"
+        class="indicator-arrow up"
+        @click="scrollToPage(currentPage - 1)"
+        aria-label="上一页"
+      >
+        <span>↑</span>
+      </button>
+      
+      <!-- 页面指示点 -->
       <div 
         v-for="(page, index) in pages" 
         :key="index"
@@ -10,6 +21,16 @@
       >
         <span class="indicator-label">{{ page.label }}</span>
       </div>
+      
+      <!-- 向下箭头 -->
+      <button 
+        v-if="currentPage < pages.length - 1"
+        class="indicator-arrow down"
+        @click="scrollToPage(currentPage + 1)"
+        aria-label="下一页"
+      >
+        <span>↓</span>
+      </button>
     </div>
 
     <!-- 第一屏：段位排名 & 收入统计 -->
@@ -76,10 +97,13 @@
               <div class="earning-bar" :style="{ width: (yearEarnings / (salaryData.salary * 12)) * 100 + '%' }"></div>
             </div>
           </div>
-        </div>
-
-        <div class="scroll-hint">
-          <span class="scroll-arrow">↓</span>
+          
+          <div class="earning-card">
+            <div class="earning-icon">💰</div>
+            <div class="earning-label">入职以来</div>
+            <div class="earning-value">¥{{ totalCareerEarnings.toFixed(0) }}</div>
+            <div class="earning-meta">{{ workDuration }}</div>
+          </div>
         </div>
       </div>
     </section>
@@ -104,39 +128,47 @@
         </div>
 
         <div class="lifestyle-showcase">
-          <div v-for="category in lifestyleCategories" :key="category.title" class="lifestyle-category">
-            <h3 class="category-title">{{ category.title }}</h3>
-            <div class="lifestyle-items">
-              <div v-for="item in category.items" :key="item.label" class="lifestyle-item">
-                <div class="item-main">
-                  <div class="item-header">
-                    <span class="item-icon">{{ item.icon }}</span>
-                    <div class="item-info">
-                      <span class="item-label">{{ item.label }}</span>
-                      <span class="item-description">{{ item.description }}</span>
-                    </div>
-                  </div>
-                  <div class="item-status-badge" :style="{ 
-                    backgroundColor: getStatusBgColor(item.status),
-                    color: getStatusColor(item.status)
-                  }">
-                    {{ item.status }}
-                  </div>
-                </div>
-                <div class="item-progress">
-                  <div class="item-bar" :style="{ 
-                    width: getLifestyleProgress(item) + '%',
-                    background: getLifestyleColor(item)
-                  }"></div>
-                </div>
-                <div v-if="item.value" class="item-value">{{ item.value }}</div>
+          <div v-for="(category, catIndex) in lifestyleCategories" :key="category.title" class="lifestyle-category">
+            <div class="category-header">
+              <h3 class="category-title">{{ category.title }}</h3>
+              <div class="category-nav" v-if="category.items.length > 1">
+                <button 
+                  class="nav-dot"
+                  v-for="(item, index) in category.items"
+                  :key="index"
+                  :class="{ active: currentLifestyleIndex[catIndex] === index }"
+                  @click="setLifestyleIndex(catIndex, index)"
+                ></button>
               </div>
             </div>
+            
+            <!-- 单项轮播显示 -->
+            <div class="lifestyle-carousel">
+              <transition name="slide-fade" mode="out-in">
+                <div 
+                  v-if="category.items.length > 0 && currentLifestyleIndex[catIndex] !== undefined"
+                  :key="currentLifestyleIndex[catIndex]" 
+                  class="lifestyle-item"
+                >
+                  <div class="item-main">
+                    <div class="item-header">
+                      <span class="item-icon">{{ category.items[currentLifestyleIndex[catIndex] || 0].icon }}</span>
+                      <div class="item-info">
+                        <span class="item-label">{{ category.items[currentLifestyleIndex[catIndex] || 0].label }}</span>
+                        <span class="item-description">{{ category.items[currentLifestyleIndex[catIndex] || 0].description }}</span>
+                      </div>
+                    </div>
+                    <div class="item-status-badge" :style="{ 
+                      backgroundColor: getStatusBgColor(category.items[currentLifestyleIndex[catIndex] || 0].status),
+                      color: getStatusColor(category.items[currentLifestyleIndex[catIndex] || 0].status)
+                    }">
+                      {{ category.items[currentLifestyleIndex[catIndex] || 0].status }}
+                    </div>
+                  </div>
+                </div>
+              </transition>
+            </div>
           </div>
-        </div>
-
-        <div class="scroll-hint">
-          <span class="scroll-arrow">↓</span>
         </div>
       </div>
     </section>
@@ -181,10 +213,6 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="scroll-hint">
-          <span class="scroll-arrow" @click="scrollToPage(0)">↑</span>
         </div>
       </div>
     </section>
@@ -311,6 +339,48 @@ const lifestyleLevel = computed(() => {
   return lifestyleMap[rank.lifestyleLevel] || '一般'
 })
 
+// 计算入职以来的收入
+const totalCareerEarnings = computed(() => {
+  if (!salaryData.value.joinDate) return 0
+  
+  const joinDate = new Date(salaryData.value.joinDate)
+  const now = new Date()
+  
+  // 计算工作月数
+  const months = (now.getFullYear() - joinDate.getFullYear()) * 12 + 
+                 (now.getMonth() - joinDate.getMonth())
+  
+  // 简化计算：月薪 * 月数
+  // 实际应该考虑薪资变化历史，这里先用当前薪资估算
+  return salaryData.value.salary * Math.max(months, 0)
+})
+
+// 计算工作时长
+const workDuration = computed(() => {
+  if (!salaryData.value.joinDate) return '未设置入职日期'
+  
+  const joinDate = new Date(salaryData.value.joinDate)
+  const now = new Date()
+  
+  const years = now.getFullYear() - joinDate.getFullYear()
+  const months = now.getMonth() - joinDate.getMonth()
+  const days = now.getDate() - joinDate.getDate()
+  
+  let totalMonths = years * 12 + months
+  if (days < 0) totalMonths--
+  
+  if (totalMonths < 1) {
+    const totalDays = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24))
+    return `${totalDays} 天`
+  } else if (totalMonths < 12) {
+    return `${totalMonths} 个月`
+  } else {
+    const y = Math.floor(totalMonths / 12)
+    const m = totalMonths % 12
+    return m > 0 ? `${y} 年 ${m} 个月` : `${y} 年`
+  }
+})
+
 const savingsRecommendation = computed(() => {
   const { rankSystem } = useLifestyle()
   return rankSystem.getSavingsRateRecommendation(salaryData.value.salary)
@@ -358,28 +428,73 @@ const lifestyleCategories = computed(() => {
   return Object.values(categories).filter(cat => cat.items.length > 0)
 })
 
-// 根据项目内容判断状态
+// 根据项目内容和用户段位判断状态
 const getItemStatus = (item) => {
-  const desc = item.desc.toLowerCase()
-  
-  // 根据描述关键词判断状态
-  if (desc.includes('无法') || desc.includes('困难') || desc.includes('紧张') || desc.includes('压力大')) {
-    return '艰难'
-  } else if (desc.includes('基本') || desc.includes('勉强') || desc.includes('简单')) {
-    return '温饱'
-  } else if (desc.includes('偶尔') || desc.includes('适度') || desc.includes('一般')) {
-    return '小康'
-  } else if (desc.includes('较为') || desc.includes('比较') || desc.includes('不错')) {
-    return '舒适'
-  } else if (desc.includes('充足') || desc.includes('丰富') || desc.includes('自由')) {
-    return '富足'
-  } else if (desc.includes('高品质') || desc.includes('优质') || desc.includes('高端')) {
-    return '优越'
-  } else if (desc.includes('顶级') || desc.includes('奢华') || desc.includes('随心')) {
-    return '自由'
+  // 如果是收入与储蓄类别，直接返回段位对应的生活水平
+  if (item.category === 'income') {
+    return lifestyleLevel.value
   }
   
-  return '一般'
+  const desc = item.desc.toLowerCase()
+  const salary = salaryData.value.salary
+  
+  // 根据薪资范围和描述关键词综合判断
+  // 0-5000: 艰难
+  if (salary <= 5000) {
+    if (desc.includes('无法') || desc.includes('困难') || desc.includes('很少') || desc.includes('城中村') || desc.includes('远郊')) {
+      return '艰难'
+    }
+    return '温饱'
+  }
+  // 5001-7000: 温饱
+  else if (salary <= 7000) {
+    if (desc.includes('偶尔') || desc.includes('快餐') || desc.includes('远郊')) {
+      return '温饱'
+    }
+    return '小康'
+  }
+  // 7001-10000: 小康
+  else if (salary <= 10000) {
+    if (desc.includes('工作日') || desc.includes('普通') || desc.includes('20-30元')) {
+      return '小康'
+    }
+    return '舒适'
+  }
+  // 10001-15000: 舒适
+  else if (salary <= 15000) {
+    if (desc.includes('正常') || desc.includes('品质') || desc.includes('30-40元')) {
+      return '舒适'
+    }
+    return '富足'
+  }
+  // 15001-25000: 富足
+  else if (salary <= 25000) {
+    if (desc.includes('无忧') || desc.includes('40-60元') || desc.includes('中档')) {
+      return '富足'
+    }
+    return '优越'
+  }
+  // 25001-35000: 优越
+  else if (salary <= 35000) {
+    if (desc.includes('品质好') || desc.includes('高档') || desc.includes('60-80元')) {
+      return '优越'
+    }
+    return '优越'
+  }
+  // 35001-50000: 优越+
+  else if (salary <= 50000) {
+    if (desc.includes('高端') || desc.includes('奢华') || desc.includes('顶级')) {
+      return '优越+'
+    }
+    return '优越'
+  }
+  // 50000+: 自由
+  else {
+    if (desc.includes('自由') || desc.includes('随心') || desc.includes('想买就买') || desc.includes('任何')) {
+      return '自由'
+    }
+    return '优越+'
+  }
 }
 
 // 提取数值信息
@@ -486,7 +601,8 @@ const getLifestyleProgress = (item) => {
     '小康': 60,
     '舒适': 75,
     '富足': 85,
-    '优越': 95,
+    '优越': 92,
+    '优越+': 97,
     '自由': 100
   }
   return statusMap[item.status] || 50
@@ -509,6 +625,7 @@ const getStatusColor = (status) => {
     '舒适': '#8b5cf6',
     '富足': '#10b981',
     '优越': '#06b6d4',
+    '优越+': '#0891b2',
     '自由': '#14b8a6'
   }
   return colorMap[status] || '#64748b'
@@ -522,6 +639,7 @@ const getStatusBgColor = (status) => {
     '舒适': 'rgba(139, 92, 246, 0.15)',
     '富足': 'rgba(16, 185, 129, 0.15)',
     '优越': 'rgba(6, 182, 212, 0.15)',
+    '优越+': 'rgba(8, 145, 178, 0.15)',
     '自由': 'rgba(20, 184, 166, 0.15)'
   }
   return colorMap[status] || 'rgba(100, 116, 139, 0.15)'
@@ -554,8 +672,77 @@ const pages = ref([
 ])
 let isScrolling = false
 
+// 生活水平轮播索引
+const currentLifestyleIndex = ref({})
+const isCarouselInitialized = ref(false)
+
+// 初始化轮播索引
+const initLifestyleCarousel = () => {
+  if (isCarouselInitialized.value) return // 已经初始化过，不再重复初始化
+  
+  lifestyleCategories.value.forEach((category, index) => {
+    if (currentLifestyleIndex.value[index] === undefined) {
+      currentLifestyleIndex.value[index] = 0
+    }
+  })
+  isCarouselInitialized.value = true
+}
+
+// 设置轮播索引
+const setLifestyleIndex = (categoryIndex, itemIndex) => {
+  currentLifestyleIndex.value[categoryIndex] = itemIndex
+}
+
+// 自动轮播
+let carouselTimer = null
+const startAutoCarousel = () => {
+  carouselTimer = setInterval(() => {
+    lifestyleCategories.value.forEach((category, catIndex) => {
+      if (category.items.length > 1) {
+        const currentIndex = currentLifestyleIndex.value[catIndex] || 0
+        const nextIndex = (currentIndex + 1) % category.items.length
+        currentLifestyleIndex.value[catIndex] = nextIndex
+      }
+    })
+  }, 5000) // 每5秒切换
+}
+
+const stopAutoCarousel = () => {
+  if (carouselTimer) {
+    clearInterval(carouselTimer)
+    carouselTimer = null
+  }
+}
+
+// 监听 lifestyleCategories 变化，初始化轮播索引（仅首次）
+watch(lifestyleCategories, (newCategories) => {
+  if (newCategories && newCategories.length > 0 && !isCarouselInitialized.value) {
+    initLifestyleCarousel()
+  }
+}, { immediate: true })
+
+// 监听页面切换，控制轮播
+watch(currentPage, (newPage) => {
+  if (newPage === 1) {
+    // 进入生活水平页面，启动轮播
+    startAutoCarousel()
+  } else {
+    // 离开生活水平页面，停止轮播
+    stopAutoCarousel()
+  }
+})
+
 const handleWheel = (event) => {
+  // 如果正在滚动中，忽略
   if (isScrolling) return
+  
+  // 检查事件目标，如果是轮播相关元素，不触发页面切换
+  const target = event.target
+  if (target.closest('.lifestyle-carousel') || 
+      target.closest('.category-nav') || 
+      target.closest('.nav-dot')) {
+    return
+  }
   
   isScrolling = true
   
@@ -622,6 +809,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (timer) clearInterval(timer)
+  stopAutoCarousel()
   window.removeEventListener('openSettings', () => {})
 })
 </script>
@@ -1019,7 +1207,7 @@ onUnmounted(() => {
 /* 收入网格 */
 .earnings-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-4);
   flex-shrink: 0;
   width: 100%;
@@ -1088,6 +1276,13 @@ onUnmounted(() => {
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
   letter-spacing: -0.02em;
+}
+
+.earning-meta {
+  font-size: var(--text-xs);
+  color: var(--immersive-text-secondary);
+  font-weight: 600;
+  margin-top: var(--space-1);
 }
 
 .earning-progress {
@@ -1180,7 +1375,7 @@ onUnmounted(() => {
 
 .lifestyle-showcase {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
   flex: 1;
   overflow: hidden;
@@ -1192,54 +1387,115 @@ onUnmounted(() => {
 .lifestyle-category {
   background: rgba(255, 255, 255, 0.03);
   border-radius: var(--radius-xl);
-  padding: var(--space-3);
+  padding: var(--space-4);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
-  max-height: 100%;
-  overflow: hidden;
+  height: 100%;
+  transition: all var(--duration-normal) var(--ease-smooth);
 }
 
-.category-title {
-  font-size: var(--text-base);
-  font-weight: 700;
-  margin-bottom: var(--space-2);
-  color: var(--immersive-text-primary);
+.lifestyle-category:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
   padding-bottom: var(--space-2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
 }
 
+.category-title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--immersive-text-primary);
+  margin: 0;
+}
+
+.category-nav {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+  padding: 0;
+}
+
+.nav-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.2);
+}
+
+.nav-dot.active {
+  background: var(--rank-color, var(--neon-purple));
+  transform: scale(1.3);
+}
+
+.lifestyle-carousel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-height: 140px;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
 .lifestyle-items {
   display: grid;
   gap: var(--space-2);
-  overflow: hidden;
 }
 
 .lifestyle-item {
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3);
   background: rgba(255, 255, 255, 0.02);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all var(--duration-normal) var(--ease-smooth);
+  width: 100%;
 }
 
 .lifestyle-item:hover {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.15);
-  transform: translateX(2px);
+  transform: translateY(-2px);
 }
 
 .item-main {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .item-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-2);
   flex: 1;
   min-width: 0;
@@ -1272,11 +1528,9 @@ onUnmounted(() => {
 .item-description {
   font-size: var(--text-xs);
   color: var(--immersive-text-tertiary);
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.6;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .item-status-badge {
@@ -1487,7 +1741,7 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-/* ===== 导航指示器 ===== */
+/* ===== 导航指示器（合并箭头） ===== */
 .page-indicator {
   position: fixed;
   right: var(--space-8);
@@ -1496,86 +1750,122 @@ onUnmounted(() => {
   z-index: 100;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* 箭头按钮 */
+.indicator-arrow {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
+  color: var(--immersive-text-secondary);
+  font-size: var(--text-xl);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.indicator-arrow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--rank-color, var(--color-primary));
+  opacity: 0;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.indicator-arrow:hover {
+  color: white;
+  transform: scale(1.1);
+}
+
+.indicator-arrow:hover::before {
+  opacity: 0.2;
+}
+
+.indicator-arrow:active {
+  transform: scale(0.95);
+}
+
+.indicator-arrow.up {
+  animation: bounce-up 2s ease-in-out infinite;
+}
+
+.indicator-arrow.down {
+  animation: bounce-down 2s ease-in-out infinite;
+}
+
+@keyframes bounce-up {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes bounce-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+/* 指示点 */
 .indicator-dot {
-  width: 12px;
-  height: 12px;
-  background: rgba(255, 255, 255, 0.2);
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-smooth);
+  transition: all var(--duration-normal) var(--ease-out-expo);
   position: relative;
 }
 
 .indicator-dot:hover {
-  background: rgba(255, 255, 255, 0.4);
-  transform: scale(1.3);
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.4);
 }
 
 .indicator-dot.active {
-  background: var(--rank-color, var(--neon-purple));
-  box-shadow: 0 0 20px var(--rank-color, var(--neon-purple));
-  transform: scale(1.5);
+  background: var(--rank-color, var(--color-primary));
+  box-shadow: 0 0 12px var(--rank-color, var(--color-primary));
+  transform: scale(1.6);
 }
 
 .indicator-label {
   position: absolute;
-  right: 24px;
+  right: 28px;
   top: 50%;
   transform: translateY(-50%);
   white-space: nowrap;
   font-size: var(--text-xs);
-  color: var(--immersive-text-tertiary);
+  color: var(--immersive-text-primary);
   opacity: 0;
-  transition: opacity var(--duration-fast) var(--ease-smooth);
+  transition: all var(--duration-fast) var(--ease-out-expo);
   pointer-events: none;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .indicator-dot:hover .indicator-label,
 .indicator-dot.active .indicator-label {
   opacity: 1;
-}
-
-/* ===== 滚动提示 ===== */
-.scroll-hint {
-  position: fixed;
-  right: var(--space-4);
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--immersive-text-tertiary);
-  animation: bounce 2s ease-in-out infinite;
-  z-index: 100;
-  background: rgba(0, 0, 0, 0.5);
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-xl);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(-50%) scale(1); }
-  50% { transform: translateY(-50%) scale(1.1); }
-}
-
-.scroll-arrow {
-  font-size: var(--text-2xl);
-  cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-smooth);
-  pointer-events: auto;
-  line-height: 1;
-}
-
-.scroll-arrow:hover {
-  color: var(--immersive-text-primary);
+  transform: translateY(-50%) translateX(-8px);
 }
 
 /* 任务横幅 */
@@ -1711,8 +2001,12 @@ onUnmounted(() => {
   }
   
   .earnings-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+  
+  .lifestyle-showcase {
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .career-grid {
@@ -1721,6 +2015,27 @@ onUnmounted(() => {
 }
 
 @media (max-width: 768px) {
+  .page-indicator {
+    right: var(--space-4);
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+  
+  .indicator-arrow {
+    width: 28px;
+    height: 28px;
+    font-size: var(--text-lg);
+  }
+  
+  .indicator-dot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .indicator-label {
+    display: none;
+  }
+  
   .fullpage-section {
     padding-top: 70px;
   }
@@ -1761,6 +2076,11 @@ onUnmounted(() => {
     gap: var(--space-4);
   }
   
+  .earnings-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
   .rank-metric-divider {
     width: 80%;
     height: 1px;
@@ -1795,8 +2115,16 @@ onUnmounted(() => {
     display: none;
   }
   
-  .lifestyle-showcase,
+  .lifestyle-showcase {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
+  .lifestyle-category {
+    min-height: 150px;
+  }
+  
   .career-grid {
-    max-height: 60vh;
+    grid-template-columns: 1fr;
   }
 }

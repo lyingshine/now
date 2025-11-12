@@ -18,27 +18,9 @@
           <span class="arrow">←</span>
         </button>
 
-        <!-- 时间线 -->
+        <!-- 时间线（从近到远排列） -->
         <div class="timeline" ref="timelineRef" @scroll="updateScrollButtons">
-        <!-- 初始职业 -->
-        <div class="timeline-item initial">
-          <div class="timeline-dot">🎯</div>
-          <div class="timeline-content">
-            <div class="timeline-card">
-              <div class="card-header">
-                <h3>起点：初始职业</h3>
-                <span class="date">{{ formatDate(userStore.userInfo.createdAt) }}</span>
-              </div>
-              <div class="card-body">
-                <div class="job-info">
-                  <div class="job-title">{{ initialJob }}</div>
-                  <div class="job-salary">月薪：¥{{ formatNumber(initialSalary) }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        
         <!-- 当前冒险（如果有活跃任务） -->
         <div v-if="questStore.hasActiveQuest" class="timeline-item active">
           <div class="timeline-dot pulsing">⚡</div>
@@ -49,35 +31,21 @@
                 <span class="status-badge active">进行中</span>
               </div>
               <div class="card-body">
-                <!-- 冒险准备期 -->
+                <!-- 学习期 -->
                 <div class="adventure-phase">
                   <div class="phase-header">
-                    <span class="phase-icon">📋</span>
-                    <span class="phase-title">冒险准备期</span>
+                    <span class="phase-icon">📚</span>
+                    <span class="phase-title">学习期</span>
                   </div>
                   <div class="phase-content">
                     <div class="phase-info">
-                      <span class="info-label">接取任务</span>
+                      <span class="info-label">开始时间</span>
                       <span class="info-value">{{ formatDate(questStore.currentQuest.startDate) }}</span>
                     </div>
                     <div class="phase-info">
                       <span class="info-label">目标职位</span>
                       <span class="info-value">{{ questStore.currentQuest.jobTitle }}</span>
                     </div>
-                    <div class="phase-info">
-                      <span class="info-label">目标薪资</span>
-                      <span class="info-value">¥{{ formatNumber(questStore.currentQuest.salary) }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 冒险期 -->
-                <div class="adventure-phase">
-                  <div class="phase-header">
-                    <span class="phase-icon">⚔️</span>
-                    <span class="phase-title">冒险期（学习中）</span>
-                  </div>
-                  <div class="phase-content">
                     <div class="progress-info">
                       <div class="progress-label">
                         <span>学习进度</span>
@@ -92,8 +60,8 @@
                       <span class="info-value">Lv.{{ questStore.currentLevel }} / 100</span>
                     </div>
                     <div class="phase-info">
-                      <span class="info-label">已完成</span>
-                      <span class="info-value">{{ questStore.completedSubQuestsCount }} / {{ questStore.currentQuest.subQuests.length }} 个技能</span>
+                      <span class="info-label">已完成技能</span>
+                      <span class="info-value">{{ questStore.completedSubQuestsCount }} / {{ questStore.currentQuest.subQuests.length }}</span>
                     </div>
                     <div class="phase-info">
                       <span class="info-label">已学习</span>
@@ -102,11 +70,11 @@
                   </div>
                 </div>
 
-                <!-- 试用期（预计） -->
+                <!-- 实习期（预计） -->
                 <div class="adventure-phase future">
                   <div class="phase-header">
-                    <span class="phase-icon">🎯</span>
-                    <span class="phase-title">试用期（预计）</span>
+                    <span class="phase-icon">💼</span>
+                    <span class="phase-title">实习期（预计）</span>
                   </div>
                   <div class="phase-content">
                     <div class="phase-info">
@@ -114,12 +82,12 @@
                       <span class="info-value">完成学习后</span>
                     </div>
                     <div class="phase-info">
-                      <span class="info-label">试用期长</span>
-                      <span class="info-value">3-6 个月</span>
+                      <span class="info-label">目标薪资</span>
+                      <span class="info-value">¥{{ formatNumber(questStore.currentQuest.salary) }}</span>
                     </div>
                     <div class="phase-info">
-                      <span class="info-label">转正后</span>
-                      <span class="info-value">冒险结束</span>
+                      <span class="info-label">实习期长</span>
+                      <span class="info-value">3-6 个月</span>
                     </div>
                   </div>
                 </div>
@@ -128,7 +96,7 @@
           </div>
         </div>
 
-        <!-- 历史冒险 -->
+        <!-- 历史冒险（从近到远） -->
         <div 
           v-for="(history, index) in questHistory" 
           :key="index"
@@ -138,35 +106,21 @@
           <div class="timeline-content">
             <div class="timeline-card">
               <div class="card-header">
-                <h3>🏆 冒险 #{{ questHistory.length - index }}</h3>
+                <h3>{{ history.quest.jobTitle }}</h3>
                 <span class="status-badge completed">已完成</span>
               </div>
               <div class="card-body">
-                <!-- 冒险准备期 -->
+                <!-- 学习期 -->
                 <div class="adventure-phase completed">
                   <div class="phase-header">
-                    <span class="phase-icon">📋</span>
-                    <span class="phase-title">冒险准备期</span>
+                    <span class="phase-icon">📚</span>
+                    <span class="phase-title">学习期</span>
                   </div>
                   <div class="phase-content">
                     <div class="phase-info">
-                      <span class="info-label">接取任务</span>
+                      <span class="info-label">开始时间</span>
                       <span class="info-value">{{ formatDate(history.quest.startDate) }}</span>
                     </div>
-                    <div class="phase-info">
-                      <span class="info-label">目标职位</span>
-                      <span class="info-value">{{ history.quest.jobTitle }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 冒险期 -->
-                <div class="adventure-phase completed">
-                  <div class="phase-header">
-                    <span class="phase-icon">⚔️</span>
-                    <span class="phase-title">冒险期（已完成）</span>
-                  </div>
-                  <div class="phase-content">
                     <div class="phase-info">
                       <span class="info-label">学习时长</span>
                       <span class="info-value">{{ calculateDuration(history.quest.startDate, history.quest.completedDate) }}</span>
@@ -182,11 +136,11 @@
                   </div>
                 </div>
 
-                <!-- 试用期 -->
+                <!-- 实习期 - 冒险完成 -->
                 <div class="adventure-phase completed">
                   <div class="phase-header">
-                    <span class="phase-icon">🎯</span>
-                    <span class="phase-title">试用期</span>
+                    <span class="phase-icon">💼</span>
+                    <span class="phase-title">实习期</span>
                   </div>
                   <div class="phase-content">
                     <div class="phase-info">
@@ -194,14 +148,55 @@
                       <span class="info-value">{{ formatDate(history.quest.completedDate) }}</span>
                     </div>
                     <div class="phase-info">
+                      <span class="info-label">实习时长</span>
+                      <span class="info-value">{{ history.internshipDuration || '3-6 个月' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 转正 - 冒险完成 -->
+                <div class="adventure-phase completed success">
+                  <div class="phase-header">
+                    <span class="phase-icon">🎉</span>
+                    <span class="phase-title">冒险完成</span>
+                  </div>
+                  <div class="phase-content">
+                    <div class="phase-info">
+                      <span class="info-label">转正时间</span>
+                      <span class="info-value">{{ formatDate(history.quest.completedDate) }}</span>
+                    </div>
+                    <div class="phase-info">
                       <span class="info-label">转正薪资</span>
-                      <span class="info-value">¥{{ formatNumber(history.quest.salary) }}</span>
+                      <span class="info-value success">¥{{ formatNumber(history.quest.salary) }}</span>
+                    </div>
+                    <div class="phase-info">
+                      <span class="info-label">确认职位</span>
+                      <span class="info-value success">✓ {{ history.quest.jobTitle }}</span>
                     </div>
                     <div class="phase-info">
                       <span class="info-label">状态</span>
                       <span class="info-value success">✓ 已转正</span>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 初始职业（最后显示） -->
+        <div class="timeline-item initial">
+          <div class="timeline-dot">🎯</div>
+          <div class="timeline-content">
+            <div class="timeline-card">
+              <div class="card-header">
+                <h3>起点</h3>
+                <span class="date">{{ formatDate(userStore.userInfo.createdAt) }}</span>
+              </div>
+              <div class="card-body">
+                <div class="job-info">
+                  <div class="job-title">{{ initialJob }}</div>
+                  <div class="job-salary">月薪：¥{{ formatNumber(initialSalary) }}</div>
                 </div>
               </div>
             </div>
@@ -307,9 +302,16 @@ const initialSalary = computed(() => {
   return 10000
 })
 
-// 任务历史（只显示已完成的）
+// 任务历史（只显示已完成的，按时间从近到远排序）
 const questHistory = computed(() => {
-  return questStore.questHistory.filter(h => h.completionType === 'completed').reverse()
+  return questStore.questHistory
+    .filter(h => h.completionType === 'completed')
+    .sort((a, b) => {
+      // 按完成时间从近到远排序
+      const dateA = new Date(a.quest.completedDate || a.completedAt)
+      const dateB = new Date(b.quest.completedDate || b.completedAt)
+      return dateB - dateA
+    })
 })
 
 // 当前冒险已用天数
@@ -495,12 +497,12 @@ onUnmounted(() => {
 /* 时间线 - 横版 */
 .timeline {
   position: relative;
-  padding: 4rem 2rem;
+  padding: 2rem 1rem;
   overflow-x: auto;
   overflow-y: visible;
   display: flex;
-  gap: 3rem;
-  padding-bottom: 2rem;
+  gap: 2rem;
+  padding-bottom: 1rem;
 }
 
 /* 隐藏滚动条 */
@@ -518,8 +520,8 @@ onUnmounted(() => {
   position: absolute;
   left: 0;
   right: 0;
-  top: 90px;
-  height: 4px;
+  top: 50px;
+  height: 3px;
   background: var(--rank-color, var(--neon-purple));
   border-radius: 2px;
   box-shadow: 0 2px 8px color-mix(in srgb, var(--rank-color, #667eea) 30%, transparent);
@@ -528,7 +530,7 @@ onUnmounted(() => {
 .timeline-item {
   position: relative;
   flex-shrink: 0;
-  width: 400px;
+  width: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -536,18 +538,18 @@ onUnmounted(() => {
 
 .timeline-dot {
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   background: var(--immersive-bg-secondary);
-  border: 4px solid var(--rank-color, var(--neon-purple));
+  border: 3px solid var(--rank-color, var(--neon-purple));
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
   z-index: 2;
   box-shadow: 0 4px 12px color-mix(in srgb, var(--rank-color, #667eea) 30%, transparent);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .timeline-dot.pulsing {
@@ -572,38 +574,38 @@ onUnmounted(() => {
 .timeline-card {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
-  border-radius: var(--radius-2xl);
-  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
   border: 2px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transition: all var(--duration-normal) var(--ease-smooth);
-  min-height: 500px;
+  min-height: 380px;
   display: flex;
   flex-direction: column;
 }
 
 .timeline-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   border-color: rgba(255, 255, 255, 0.25);
 }
 
 .active-card {
   border-color: var(--rank-color, #f59e0b);
-  box-shadow: 0 0 30px color-mix(in srgb, var(--rank-color, #f59e0b) 30%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--rank-color, #f59e0b) 30%, transparent);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-6);
-  padding-bottom: var(--space-4);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card-header h3 {
-  font-size: var(--text-xl);
+  font-size: var(--text-base);
   font-weight: 700;
   color: var(--immersive-text-primary);
 }
@@ -612,13 +614,13 @@ onUnmounted(() => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-3);
 }
 
 .status-badge {
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-full);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 700;
 }
 
@@ -644,16 +646,21 @@ onUnmounted(() => {
 
 /* 冒险阶段 */
 .adventure-phase {
-  margin-bottom: var(--space-6);
-  padding: var(--space-6);
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
   background: rgba(255, 255, 255, 0.03);
-  border-radius: var(--radius-xl);
-  border-left: 4px solid var(--rank-color, #6366f1);
+  border-radius: var(--radius-lg);
+  border-left: 3px solid var(--rank-color, #6366f1);
 }
 
 .adventure-phase.completed {
   border-left-color: var(--color-success);
   opacity: 0.9;
+}
+
+.adventure-phase.success {
+  border-left-color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
 }
 
 .adventure-phase.future {
@@ -664,16 +671,16 @@ onUnmounted(() => {
 .phase-header {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
 }
 
 .phase-icon {
-  font-size: var(--text-2xl);
+  font-size: var(--text-lg);
 }
 
 .phase-title {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--immersive-text-primary);
 }
@@ -681,23 +688,23 @@ onUnmounted(() => {
 .phase-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .phase-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-2) 0;
+  padding: var(--space-1) 0;
 }
 
 .info-label {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--immersive-text-secondary);
 }
 
 .info-value {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--immersive-text-primary);
 }
@@ -707,23 +714,23 @@ onUnmounted(() => {
 }
 
 .progress-info {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-1);
 }
 
 .progress-label {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
+  margin-bottom: var(--space-1);
+  font-size: var(--text-xs);
 }
 
 .progress-value {
   font-weight: 700;
-  color: var(--growth-primary);
+  color: var(--rank-color, var(--color-success));
 }
 
 .progress-bar {
-  height: 8px;
+  height: 6px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-full);
   overflow: hidden;
@@ -737,20 +744,20 @@ onUnmounted(() => {
 }
 
 .job-info {
-  padding: var(--space-4);
+  padding: var(--space-3);
   background: rgba(255, 255, 255, 0.03);
   border-radius: var(--radius-lg);
 }
 
 .job-title {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 700;
   color: var(--rank-color, var(--neon-purple));
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
 .job-salary {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: 600;
   color: var(--color-success);
 }
@@ -798,28 +805,28 @@ onUnmounted(() => {
 
 /* 统计区域 */
 .stats-section {
-  margin-top: 4rem;
+  margin-top: var(--space-8);
 }
 
 .section-title {
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   font-weight: 700;
   color: var(--immersive-text-primary);
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
   text-align: center;
 }
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
 .stat-card {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-6);
+  gap: var(--space-3);
+  padding: var(--space-4);
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-xl);
@@ -829,13 +836,13 @@ onUnmounted(() => {
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   border-color: rgba(255, 255, 255, 0.25);
 }
 
 .stat-icon {
-  font-size: var(--text-4xl);
+  font-size: var(--text-3xl);
   flex-shrink: 0;
 }
 
@@ -844,13 +851,13 @@ onUnmounted(() => {
 }
 
 .stat-label {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--immersive-text-secondary);
-  margin-bottom: var(--space-1);
+  margin-bottom: 2px;
 }
 
 .stat-value {
-  font-size: var(--text-2xl);
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--immersive-text-primary);
 }

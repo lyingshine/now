@@ -19,10 +19,10 @@
           <span>🗺️</span>
           <span>冒险生涯</span>
         </router-link>
-        <button class="nav-btn" @click="openSettings">
+        <router-link to="/settings" class="nav-btn" :class="{ active: $route.path === '/settings' }">
           <span>⚙️</span>
           <span>设置</span>
-        </button>
+        </router-link>
         <button class="theme-toggle" @click="toggleTheme">
           <span>{{ isDark ? '🌙' : '☀️' }}</span>
         </button>
@@ -46,10 +46,6 @@ const toggleTheme = () => {
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
   document.documentElement.classList.toggle('dark', isDark.value)
 }
-
-const openSettings = () => {
-  window.dispatchEvent(new Event('openSettings'))
-}
 </script>
 
 <style scoped>
@@ -60,7 +56,7 @@ const openSettings = () => {
   left: 0;
   right: 0;
   z-index: 1000;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--duration-normal) var(--ease-out-expo);
 }
 
 .navbar::before {
@@ -72,15 +68,16 @@ const openSettings = () => {
   bottom: 0;
   background: var(--immersive-bg-primary);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-normal) ease;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid transparent;
 }
 
 .navbar:hover::before {
-  opacity: 0.95;
+  opacity: 0.98;
   border-bottom-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-content {
@@ -98,19 +95,38 @@ const openSettings = () => {
 .navbar-logo {
   font-size: 1.75rem;
   font-weight: 900;
-  background: linear-gradient(135deg, #667eea 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, 
+    var(--rank-color, #667eea) 0%, 
+    color-mix(in srgb, var(--rank-color, #667eea) 70%, #f59e0b) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: 0.05em;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--duration-normal) var(--ease-out-back);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  position: relative;
+}
+
+.navbar-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--rank-color, #667eea);
+  transform: scaleX(0);
+  transition: transform var(--duration-normal) var(--ease-out-expo);
 }
 
 .navbar-logo:hover {
-  transform: scale(1.05);
-  filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.3));
+  transform: scale(1.05) translateY(-2px);
+  filter: drop-shadow(0 4px 8px color-mix(in srgb, var(--rank-color, #667eea) 40%, transparent));
+}
+
+.navbar-logo:hover::after {
+  transform: scaleX(1);
 }
 
 .navbar-menu {

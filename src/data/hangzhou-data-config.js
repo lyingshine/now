@@ -35,7 +35,7 @@ const hangzhouDataConfig = {
             icon: '🥉',
             color: '#CD7F32',
             salaryRange: { min: 0, max: 5000 },
-            percentile: '后20%',
+            percentile: '20%',
             lifestyleLevel: 'struggling',
             description: '低于最低生活标准，生存压力大'
         },
@@ -45,7 +45,7 @@ const hangzhouDataConfig = {
             icon: '🥈',
             color: '#C0C0C0',
             salaryRange: { min: 5001, max: 7000 },
-            percentile: '后30-50%',
+            percentile: '40%',
             lifestyleLevel: 'subsistence',
             description: '温饱线，需要极度节俭'
         },
@@ -55,7 +55,7 @@ const hangzhouDataConfig = {
             icon: '🥇',
             color: '#FFD700',
             salaryRange: { min: 7001, max: 10000 },
-            percentile: '中等50-70%',
+            percentile: '60%',
             lifestyleLevel: 'basic',
             description: '接近中位数，基本生活无忧'
         },
@@ -63,9 +63,9 @@ const hangzhouDataConfig = {
             id: 'platinum',
             name: '铂金',
             icon: '💎',
-            color: '#E5E4E2',
+            color: '#00CED1',
             salaryRange: { min: 10001, max: 15000 },
-            percentile: '前30%',
+            percentile: '70%',
             lifestyleLevel: 'comfortable',
             description: '达到平均水平，小康生活'
         },
@@ -73,19 +73,19 @@ const hangzhouDataConfig = {
             id: 'diamond',
             name: '钻石',
             icon: '💠',
-            color: '#B9F2FF',
+            color: '#4169E1',
             salaryRange: { min: 15001, max: 25000 },
-            percentile: '前15%',
+            percentile: '85%',
             lifestyleLevel: 'prosperous',
             description: '中产阶级，生活舒适'
         },
         {
             id: 'master',
             name: '大师',
-            icon: '🌟',
-            color: '#FFD700',
+            icon: '🏆',
+            color: '#FF8C00',
             salaryRange: { min: 25001, max: 35000 },
-            percentile: '前8%',
+            percentile: '92%',
             lifestyleLevel: 'affluent',
             description: '高收入群体，生活优越'
         },
@@ -95,7 +95,7 @@ const hangzhouDataConfig = {
             icon: '👑',
             color: '#9370DB',
             salaryRange: { min: 35001, max: 50000 },
-            percentile: '前4%',
+            percentile: '96%',
             lifestyleLevel: 'wealthy',
             description: '精英阶层，财务相对自由'
         },
@@ -105,7 +105,7 @@ const hangzhouDataConfig = {
             icon: '⭐',
             color: '#FF6B6B',
             salaryRange: { min: 50001, max: Infinity },
-            percentile: '前1%',
+            percentile: '99%',
             lifestyleLevel: 'financial_freedom',
             description: '顶尖收入，财务自由'
         }

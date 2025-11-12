@@ -138,6 +138,29 @@
             <small class="input-hint">如果你已经有工作，可以填写当前职业</small>
           </div>
 
+          <!-- 如果填写了当前职业，显示入职时间和休息制度 -->
+          <template v-if="formData.currentJob && formData.currentJob.trim()">
+            <div class="input-group">
+              <label>入职时间 <span class="required">*</span></label>
+              <input 
+                type="date" 
+                v-model="formData.joinDate"
+                @input="validateStep"
+              >
+              <small v-if="errors.joinDate" class="error-text">{{ errors.joinDate }}</small>
+            </div>
+
+            <div class="input-group">
+              <label>休息制度 <span class="required">*</span></label>
+              <select v-model="formData.workSchedule">
+                <option value="double">双休（周六日休息）</option>
+                <option value="alternate">大小休（隔周单休）</option>
+                <option value="single">单休（仅周日休息）</option>
+                <option value="full">全勤（无休息日）</option>
+              </select>
+            </div>
+          </template>
+
           <div class="input-group">
             <label>月薪（元）<span class="required">*</span></label>
             <input 
@@ -268,6 +291,7 @@ const formData = ref({
   workEnd: '18:00',
   workSchedule: 'double',
   currentJob: '',
+  joinDate: '',
   salary: null,
   rent: 2000,
   utilities: 300,
@@ -276,7 +300,8 @@ const formData = ref({
 
 const errors = ref({
   name: '',
-  salary: ''
+  salary: '',
+  joinDate: ''
 })
 
 // 计算每日工作时长
@@ -301,7 +326,7 @@ const monthlyWorkDays = computed(() => {
 
 // 验证当前步骤
 const validateStep = () => {
-  errors.value = { name: '', salary: '' }
+  errors.value = { name: '', salary: '', joinDate: '' }
   
   if (currentStep.value === 1) {
     if (!formData.value.name || formData.value.name.trim() === '') {
@@ -319,6 +344,14 @@ const validateStep = () => {
       errors.value.salary = '请输入有效的月薪'
       return false
     }
+    
+    // 如果填写了当前职业，必须填写入职时间
+    if (formData.value.currentJob && formData.value.currentJob.trim()) {
+      if (!formData.value.joinDate) {
+        errors.value.joinDate = '请选择入职时间'
+        return false
+      }
+    }
   }
   
   return true
@@ -332,7 +365,15 @@ const canProceed = computed(() => {
   }
   if (currentStep.value === 2) return true
   if (currentStep.value === 3) {
-    return formData.value.salary && formData.value.salary > 0
+    // 必须填写月薪
+    if (!formData.value.salary || formData.value.salary <= 0) return false
+    
+    // 如果填写了当前职业，必须填写入职时间
+    if (formData.value.currentJob && formData.value.currentJob.trim()) {
+      if (!formData.value.joinDate) return false
+    }
+    
+    return true
   }
   return true
 })
@@ -363,13 +404,14 @@ const complete = () => {
     isInitialized: true // 标记已完成初始化
   }
   
-  // 如果填写了当前职业，也保存
+  // 如果填写了当前职业，也保存入职时间和休息制度
   if (formData.value.currentJob && formData.value.currentJob.trim()) {
     updates.currentJob = {
       title: formData.value.currentJob,
       salary: formData.value.salary,
-      startDate: new Date().toISOString().split('T')[0]
+      startDate: formData.value.joinDate
     }
+    updates.joinDate = formData.value.joinDate
   }
   
   userStore.updateUserInfo(updates)
@@ -487,13 +529,13 @@ body.dark-mode .progress-step:not(:last-child)::after {
 }
 
 .progress-step.active .step-circle {
-  background: var(--color-accent);
+  background: var(--rank-color, var(--color-primary));
   transform: scale(1.1);
-  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent);
 }
 
 .progress-step.completed .step-circle {
-  background: var(--color-accent);
+  background: var(--rank-color, var(--color-primary));
 }
 
 .step-label {
@@ -507,7 +549,7 @@ body.dark-mode .step-label {
 }
 
 .progress-step.active .step-label {
-  color: var(--color-accent);
+  color: var(--rank-color, var(--color-primary));
   font-weight: 600;
 }
 
@@ -637,8 +679,8 @@ select {
 input:focus,
 select:focus {
   outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+  border-color: var(--rank-color, var(--color-primary));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rank-color, var(--color-primary)) 10%, transparent);
 }
 
 body.dark-mode input,
@@ -683,14 +725,14 @@ body.dark-mode select {
 }
 
 .avatar-btn:hover {
-  border-color: var(--color-accent);
+  border-color: var(--rank-color, var(--color-primary));
   transform: scale(1.05);
 }
 
 .avatar-btn.selected {
-  border-color: var(--color-accent);
-  background: rgba(245, 158, 11, 0.1);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  border-color: var(--rank-color, var(--color-primary));
+  background: color-mix(in srgb, var(--rank-color, var(--color-primary)) 10%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rank-color, var(--color-primary)) 15%, transparent);
 }
 
 body.dark-mode .avatar-btn {
@@ -731,7 +773,7 @@ body.dark-mode .info-label {
 .info-value {
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--rank-color, var(--color-primary));
 }
 
 /* 摘要卡片 */
@@ -809,15 +851,15 @@ body.dark-mode .wizard-footer {
 }
 
 .btn-primary {
-  background: var(--color-accent);
+  background: var(--rank-color, var(--color-primary));
   color: white;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--rank-color, var(--color-primary)) 30%, transparent);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--color-accent-hover);
+  background: color-mix(in srgb, var(--rank-color, var(--color-primary)) 90%, black);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent);
 }
 
 .btn-primary:disabled {

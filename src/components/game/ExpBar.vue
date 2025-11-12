@@ -50,7 +50,7 @@ const progress = computed(() => {
 }
 
 .level {
-  color: var(--growth-primary);
+  color: var(--rank-color, var(--color-primary));
   font-size: 1rem;
   font-weight: 700;
 }
@@ -70,9 +70,31 @@ const progress = computed(() => {
 
 .exp-fill {
   height: 100%;
-  background: linear-gradient(90deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
+  background: var(--rank-color, var(--color-primary));
   border-radius: var(--radius-full);
   transition: width 0.5s ease;
+  position: relative;
+}
+
+.exp-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
   position: relative;
   overflow: hidden;
 }

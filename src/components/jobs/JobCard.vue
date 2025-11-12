@@ -79,7 +79,7 @@ const rank = computed(() => getRank(props.job.salary))
   background: var(--glass-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: var(--radius-3xl);
   border: 2px solid var(--glass-border);
   transition: all 0.3s ease;
@@ -87,6 +87,9 @@ const rank = computed(() => getRank(props.job.salary))
   box-shadow: var(--shadow-lg);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .job-card::before {
@@ -142,23 +145,23 @@ body.dark-mode .job-card:hover {
 .job-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
+  align-items: flex-start;
+  gap: 0.75rem;
 }
 
 .job-rank {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 6px;
+  padding: 6px 12px;
   border-radius: var(--radius-full);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 700;
-  margin-bottom: 1rem;
   border: 2px solid;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-sm);
+  align-self: flex-start;
 }
 
 body.dark-mode .job-rank {
@@ -166,11 +169,13 @@ body.dark-mode .job-rank {
 }
 
 .job-title {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex: 1;
+  line-height: 1.4;
 }
 
 .quest-icon {
@@ -180,19 +185,22 @@ body.dark-mode .job-rank {
 
 .quest-rewards {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px dashed var(--border-color);
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .reward-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--text-secondary);
   font-weight: 600;
+  line-height: 1.5;
 }
 
 .reward-icon {
@@ -201,46 +209,48 @@ body.dark-mode .job-rank {
 
 .job-info {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .info-item {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .job-tags {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1rem;
   flex-wrap: wrap;
 }
 
 .tag {
-  padding: 0.25rem 0.75rem;
+  padding: 0.375rem 0.75rem;
   background: var(--bg-primary);
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.job-requirements {
-  margin-bottom: 1.5rem;
-  padding: 0.75rem;
-  background: var(--bg-primary);
-  border-radius: 0.75rem;
-}
-
-.req-count {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
+  border-radius: var(--radius-lg);
+  font-size: 0.75rem;
+  line-height: 1.3;
   font-weight: 500;
 }
 
+.job-requirements {
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+}
+
+.req-count {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
 .job-status {
-  margin-top: 1rem;
-  padding-top: 1rem;
+  padding-top: 0.75rem;
   border-top: 1px solid var(--color-gray-200);
+  margin-top: auto;
 }
 
 body.dark-mode .job-status {
@@ -254,9 +264,10 @@ body.dark-mode .job-status {
   padding: 6px 12px;
   background: #e8f5e9;
   color: #2e7d32;
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: var(--radius-lg);
+  font-size: 0.8125rem;
   font-weight: 600;
+  line-height: 1.3;
 }
 
 body.dark-mode .status-badge {

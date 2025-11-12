@@ -45,7 +45,7 @@ body.dark-mode .empty-state {
 .btn-primary {
   display: inline-block;
   padding: 1.25rem 2.5rem;
-  background: linear-gradient(135deg, var(--growth-primary) 0%, var(--growth-secondary) 100%);
+  background: var(--rank-color, var(--color-primary));
   color: white;
   text-decoration: none;
   border-radius: var(--radius-xl);

@@ -40,6 +40,12 @@ const routes = [
     name: 'Career',
     component: () => import('../views/Career.vue'),
     meta: { requiresNoActiveQuest: false }
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('../views/Settings.vue'),
+    meta: { requiresNoActiveQuest: false }
   }
 ]
 
