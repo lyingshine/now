@@ -1,8 +1,8 @@
 <template>
-  <div v-if="isOpen" class="modal" @click.self="close">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="modal-title">⚙️ 设置</div>
+  <div v-if="isOpen" class="unified-modal-overlay" @click.self="close">
+    <div class="unified-modal">
+      <div class="unified-modal-header">
+        <h2 class="unified-card-title">⚙️ 设置</h2>
         <button class="close-btn" @click="close">×</button>
       </div>
 
@@ -22,7 +22,7 @@
       <div v-show="activeTab === 'personal'" class="tab-content">
         <div class="input-group">
           <label for="name">昵称</label>
-          <input type="text" v-model="formData.name" placeholder="请输入昵称">
+          <input type="text" v-model="formData.name" placeholder="请输入昵称" class="unified-input">
         </div>
 
         <div class="input-group">
@@ -55,17 +55,17 @@
 
         <div class="input-group">
           <label for="email">邮箱（可选）</label>
-          <input type="email" v-model="formData.email" placeholder="your@email.com">
+          <input type="email" v-model="formData.email" placeholder="your@email.com" class="unified-input">
         </div>
 
         <div class="input-group">
           <label for="phone">手机号（可选）</label>
-          <input type="tel" v-model="formData.phone" placeholder="请输入手机号">
+          <input type="tel" v-model="formData.phone" placeholder="请输入手机号" class="unified-input">
         </div>
 
         <div class="input-group">
           <label for="city">所在城市</label>
-          <select v-model="formData.city">
+          <select v-model="formData.city" class="unified-input">
             <option value="杭州">杭州</option>
             <option value="北京">北京</option>
             <option value="上海">上海</option>
@@ -81,22 +81,22 @@
       <div v-show="activeTab === 'work'" class="tab-content">
         <div class="input-group">
           <label for="joinDate">入职日期</label>
-          <input type="date" v-model="formData.joinDate">
+          <input type="date" v-model="formData.joinDate" class="unified-input">
         </div>
 
         <div class="input-group">
           <label for="workStart">上班时间</label>
-          <input type="time" v-model="formData.workStart">
+          <input type="time" v-model="formData.workStart" class="unified-input">
         </div>
 
         <div class="input-group">
           <label for="workEnd">下班时间</label>
-          <input type="time" v-model="formData.workEnd">
+          <input type="time" v-model="formData.workEnd" class="unified-input">
         </div>
 
         <div class="input-group">
           <label for="workSchedule">工作制度</label>
-          <select v-model="formData.workSchedule">
+          <select v-model="formData.workSchedule" class="unified-input">
             <option value="double">双休（周六日休息）</option>
             <option value="alternate">大小休（隔周单休）</option>
             <option value="single">单休（仅周日休息）</option>
@@ -107,7 +107,7 @@
 
         <div v-if="formData.workSchedule === 'custom'" class="input-group">
           <label for="workDays">每月工作天数</label>
-          <input type="number" v-model.number="formData.workDays" placeholder="默认 22 天" min="1" max="31">
+          <input type="number" v-model.number="formData.workDays" placeholder="默认 22 天" min="1" max="31" class="unified-input">
         </div>
 
         <div class="work-hours-display">
@@ -126,27 +126,27 @@
       <div v-show="activeTab === 'life'" class="tab-content">
         <div class="input-group">
           <label for="salary">月薪（元）</label>
-          <input type="number" v-model.number="formData.salary" placeholder="请输入你的月薪">
+          <input type="number" v-model.number="formData.salary" placeholder="请输入你的月薪" class="unified-input">
         </div>
 
         <div class="input-group">
           <label for="peopleCount">几个人生活</label>
-          <input type="number" v-model.number="formData.peopleCount" placeholder="默认 1 人" min="1" max="10">
+          <input type="number" v-model.number="formData.peopleCount" placeholder="默认 1 人" min="1" max="10" class="unified-input">
         </div>
 
         <div class="input-group">
           <label for="rent">每月房租（元）</label>
-          <input type="number" v-model.number="formData.rent" placeholder="请输入每月房租">
+          <input type="number" v-model.number="formData.rent" placeholder="请输入每月房租" class="unified-input">
         </div>
 
         <div class="input-group">
           <label for="utilities">每月水电网费（元）</label>
-          <input type="number" v-model.number="formData.utilities" placeholder="请输入每月水电网费">
+          <input type="number" v-model.number="formData.utilities" placeholder="请输入每月水电网费" class="unified-input">
         </div>
 
         <div class="input-group">
           <label for="savingsRate">储蓄率（%）</label>
-          <input type="number" v-model.number="formData.savingsRate" placeholder="建议20-40%" min="0" max="100">
+          <input type="number" v-model.number="formData.savingsRate" placeholder="建议20-40%" min="0" max="100" class="unified-input">
           <div v-if="savingsRateRecommendation" class="savings-recommendation">
             💡 基于您的段位，建议储蓄率 {{ savingsRateRecommendation.recommended }}%
           </div>
@@ -169,7 +169,7 @@
       <div v-show="activeTab === 'preferences'" class="tab-content">
         <div class="input-group">
           <label for="theme">主题</label>
-          <select v-model="formData.theme">
+          <select v-model="formData.theme" class="unified-input">
             <option value="light">☀️ 浅色模式</option>
             <option value="dark">🌙 深色模式</option>
           </select>
@@ -177,7 +177,7 @@
 
         <div class="input-group">
           <label for="weeklyGoal">每周学习目标（小时）</label>
-          <input type="number" v-model.number="formData.weeklyGoal" placeholder="建议 10 小时" min="1" max="168">
+          <input type="number" v-model.number="formData.weeklyGoal" placeholder="建议 10 小时" min="1" max="168" class="unified-input">
           <small class="input-hint">设定每周学习时长目标，帮助你保持学习节奏</small>
         </div>
 
@@ -190,16 +190,44 @@
 
         <div class="danger-zone">
           <h4>⚠️ 危险操作</h4>
-          <button class="danger-btn" @click="handleReset">
-            重置所有数据
+          <button class="unified-btn danger-btn" @click="showResetConfirm = true">
+            <span>清除所有数据</span>
           </button>
-          <small class="input-hint">此操作将清空所有学习记录和设置，无法恢复</small>
+          <small class="input-hint">此操作将清空所有学习记录、任务进度和设置，无法恢复</small>
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button class="cancel-btn" @click="close">取消</button>
-        <button class="save-btn" @click="handleSave">保存设置</button>
+      <div class="unified-modal-footer">
+        <button class="unified-btn cancel-btn" @click="close"><span>取消</span></button>
+        <button class="unified-btn unified-btn-primary save-btn" @click="handleSave"><span>保存设置</span></button>
+      </div>
+    </div>
+
+    <!-- 确认对话框 - 独立覆盖层 -->
+    <div v-if="showResetConfirm" class="confirm-overlay" @click.self="showResetConfirm = false">
+      <div class="confirm-dialog">
+        <div class="confirm-icon">⚠️</div>
+        <h3 class="confirm-title">确认清除所有数据？</h3>
+        <p class="confirm-message">
+          此操作将永久删除以下内容：
+        </p>
+        <ul class="confirm-list">
+          <li>✗ 所有学习记录和任务进度</li>
+          <li>✗ 个人信息和工作设置</li>
+          <li>✗ 生活设置和偏好配置</li>
+          <li>✗ 任务历史和成就记录</li>
+        </ul>
+        <p class="confirm-warning">
+          <strong>此操作无法撤销！</strong>数据清除后将无法恢复。
+        </p>
+        <div class="confirm-actions">
+          <button class="unified-btn" @click="showResetConfirm = false">
+            <span>取消</span>
+          </button>
+          <button class="unified-btn danger-btn" @click="handleReset">
+            <span>确认清除</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -227,6 +255,7 @@ const questStore = useQuestStore()
 const { rankSystem } = useLifestyle()
 
 const activeTab = ref('personal')
+const showResetConfirm = ref(false)
 
 const tabs = [
   { id: 'personal', label: '个人信息', icon: '👤' },
@@ -389,25 +418,37 @@ const handleSave = () => {
 }
 
 const handleReset = () => {
-  if (confirm('确定要重置所有数据吗？此操作无法恢复！')) {
-    // 重置所有 store
-    userStore.resetUserData()
-    jobsStore.learningPlans = []
-    jobsStore.userProgress = {}
-    jobsStore.saveToStorage()
-    questStore.currentQuest = null
-    questStore.questHistory = []
-    questStore.saveToStorage()
-    
-    // 清除旧数据
-    localStorage.removeItem('salaryData')
-    
-    alert('数据已重置！')
-    close()
-    
-    // 刷新页面
+  // 关闭确认对话框
+  showResetConfirm.value = false
+  
+  // 重置所有 store
+  userStore.resetUserData()
+  jobsStore.learningPlans = []
+  jobsStore.userProgress = {}
+  jobsStore.saveToStorage()
+  questStore.currentQuest = null
+  questStore.questHistory = []
+  questStore.saveToStorage()
+  
+  // 清除所有 localStorage 数据
+  localStorage.removeItem('salaryData')
+  localStorage.removeItem('userStore')
+  localStorage.removeItem('jobsStore')
+  localStorage.removeItem('questStore')
+  
+  // 清除所有以 job_ 开头的进度数据
+  Object.keys(localStorage).forEach(key => {
+    if (key.startsWith('job_')) {
+      localStorage.removeItem(key)
+    }
+  })
+  
+  close()
+  
+  // 延迟刷新页面，让用户看到关闭动画
+  setTimeout(() => {
     window.location.reload()
-  }
+  }, 300)
 }
 
 const close = () => {
@@ -423,105 +464,13 @@ watch(() => props.isOpen, (newVal) => {
 </script>
 
 <style scoped>
-.modal {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.modal-content {
-  background: white;
-  border-radius: var(--radius-3xl);
-  padding: var(--space-8);
-  max-width: 600px;
-  width: 90%;
-  max-height: 85vh;
-  overflow-y: auto;
-  position: relative;
-  animation: slideUp 0.3s ease;
-  box-shadow: var(--shadow-xl);
-  border: 1px solid var(--color-gray-200);
-}
-
-.modal-content::-webkit-scrollbar {
-  width: 8px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-  background: transparent;
-  margin: 20px 0;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
-  border-radius: 4px;
-  transition: background 0.3s ease;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-400);
-}
-
-body.dark-mode .modal-content {
-  background: var(--color-gray-800);
-  border-color: var(--color-gray-700);
-}
-
-body.dark-mode .modal-content::-webkit-scrollbar-thumb {
-  background: var(--color-gray-600);
-}
-
-body.dark-mode .modal-content::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-500);
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.modal-title {
-  font-size: 1.5rem;
-  color: var(--color-gray-900);
-  font-weight: 700;
-}
-
-body.dark-mode .modal-title {
-  color: var(--color-gray-100);
-}
+/* 使用统一设计系统的模态框样式 */
 
 .close-btn {
-  background: var(--color-gray-100);
+  background: var(--immersive-bg-secondary);
   border: none;
   font-size: 1.5rem;
-  color: var(--color-gray-600);
+  color: var(--immersive-text-secondary);
   cursor: pointer;
   width: 40px;
   height: 40px;
@@ -533,163 +482,113 @@ body.dark-mode .modal-title {
 }
 
 .close-btn:hover {
-  background: var(--color-accent);
+  background: var(--rank-color, var(--neon-purple));
   color: white;
   transform: rotate(90deg);
-}
-
-body.dark-mode .close-btn {
-  background: var(--color-gray-700);
-  color: var(--color-gray-400);
 }
 
 /* 标签页 */
 .tabs {
   display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-  border-bottom: 2px solid var(--color-gray-200);
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  border-bottom: 2px solid var(--immersive-border);
   overflow-x: auto;
 }
 
-body.dark-mode .tabs {
-  border-bottom-color: var(--color-gray-700);
-}
-
 .tab {
-  padding: 10px 16px;
+  padding: var(--space-2) var(--space-4);
   background: none;
   border: none;
-  color: var(--color-gray-600);
+  color: var(--immersive-text-secondary);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
   white-space: nowrap;
 }
 
 .tab:hover {
-  color: var(--color-accent);
+  color: var(--rank-color, var(--neon-purple));
 }
 
 .tab.active {
-  color: var(--color-accent);
-  border-bottom-color: var(--color-accent);
-}
-
-body.dark-mode .tab {
-  color: var(--color-gray-400);
-}
-
-body.dark-mode .tab.active {
-  color: var(--color-accent);
+  color: var(--rank-color, var(--neon-purple));
+  border-bottom-color: var(--rank-color, var(--neon-purple));
 }
 
 .tab-content {
   animation: fadeIn 0.3s ease;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* 表单 */
 .input-group {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
 }
 
 label {
   display: block;
   margin-bottom: var(--space-2);
-  color: var(--color-gray-700);
+  color: var(--immersive-text-primary);
   font-weight: 500;
   font-size: 0.875rem;
-}
-
-body.dark-mode label {
-  color: var(--color-gray-300);
-}
-
-input, select {
-  width: 100%;
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-xl);
-  font-size: 0.875rem;
-  font-weight: 500;
-  background: var(--color-gray-50);
-  color: var(--color-gray-900);
-  transition: all var(--transition-fast);
-}
-
-input:focus, select:focus {
-  outline: none;
-  border-color: var(--color-accent);
-  background: white;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
-}
-
-body.dark-mode input,
-body.dark-mode select {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
-  color: var(--color-gray-100);
-}
-
-body.dark-mode input:focus,
-body.dark-mode select:focus {
-  background: var(--color-gray-600);
 }
 
 /* 头像选择器 */
 .avatar-selector {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .avatar-option {
   width: 100%;
   aspect-ratio: 1;
   font-size: 1.5rem;
-  border: 2px solid var(--color-gray-200);
+  border: 2px solid var(--immersive-border);
   border-radius: var(--radius-xl);
-  background: var(--color-gray-50);
+  background: var(--immersive-bg-secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .avatar-option:hover {
-  border-color: var(--color-accent);
+  border-color: var(--rank-color, var(--neon-purple));
   transform: scale(1.1);
 }
 
 .avatar-option.selected {
-  border-color: var(--color-accent);
-  background: rgba(245, 158, 11, 0.1);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
-}
-
-body.dark-mode .avatar-option {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
+  border-color: var(--rank-color, var(--neon-purple));
+  background: color-mix(in srgb, var(--rank-color, var(--neon-purple)) 10%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 15%, transparent);
 }
 
 /* 当前职业卡片 */
 .current-job-card {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-  border: 2px solid rgba(99, 102, 241, 0.2);
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, var(--rank-color, var(--neon-purple)) 10%, transparent),
+    color-mix(in srgb, var(--rank-color, var(--neon-purple)) 5%, transparent));
+  border: 2px solid color-mix(in srgb, var(--rank-color, var(--neon-purple)) 20%, transparent);
   border-radius: var(--radius-xl);
-  padding: 16px;
-  margin-top: 16px;
+  padding: var(--space-4);
+  margin-top: var(--space-4);
 }
 
 .job-card-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
 }
 
 .job-icon {
@@ -698,131 +597,98 @@ body.dark-mode .avatar-option {
 
 .job-label {
   font-size: 0.75rem;
-  color: var(--color-gray-600);
+  color: var(--immersive-text-secondary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-body.dark-mode .job-label {
-  color: var(--color-gray-400);
-}
-
 .job-card-content {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-1);
 }
 
 .job-title {
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--rank-color, var(--neon-purple));
 }
 
 .job-salary {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--growth-primary);
+  color: var(--color-success);
 }
 
 .job-date {
   font-size: 0.8125rem;
-  color: var(--color-gray-600);
-}
-
-body.dark-mode .job-date {
-  color: var(--color-gray-400);
-}
-
-body.dark-mode .current-job-card {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
-  border-color: rgba(99, 102, 241, 0.3);
+  color: var(--immersive-text-tertiary);
 }
 
 /* 工作时长显示 */
 .work-hours-display {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 16px;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
 }
 
 .info-card {
-  background: var(--color-gray-50);
-  padding: 12px;
+  background: var(--immersive-bg-secondary);
+  padding: var(--space-3);
   border-radius: var(--radius-xl);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .info-label {
   font-size: 0.75rem;
-  color: var(--color-gray-600);
+  color: var(--immersive-text-secondary);
 }
 
 .info-value {
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--color-accent);
-}
-
-body.dark-mode .info-card {
-  background: var(--color-gray-700);
-}
-
-body.dark-mode .info-label {
-  color: var(--color-gray-400);
+  color: var(--rank-color, var(--neon-purple));
 }
 
 /* 支出汇总 */
 .expense-summary {
-  background: var(--color-gray-50);
-  padding: 16px;
+  background: var(--immersive-bg-secondary);
+  padding: var(--space-4);
   border-radius: var(--radius-xl);
-  margin-top: 16px;
+  margin-top: var(--space-4);
 }
 
 .summary-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: var(--space-2) 0;
   font-size: 0.875rem;
 }
 
 .summary-item:not(:last-child) {
-  border-bottom: 1px solid var(--color-gray-200);
+  border-bottom: 1px solid var(--immersive-border);
 }
 
 .amount {
   font-weight: 700;
-  color: var(--color-gray-700);
+  color: var(--immersive-text-primary);
 }
 
 .amount.highlight {
-  color: var(--color-accent);
+  color: var(--rank-color, var(--neon-purple));
   font-size: 1.125rem;
-}
-
-body.dark-mode .expense-summary {
-  background: var(--color-gray-700);
-}
-
-body.dark-mode .summary-item {
-  border-bottom-color: var(--color-gray-600);
-}
-
-body.dark-mode .amount {
-  color: var(--color-gray-300);
 }
 
 /* 复选框 */
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   cursor: pointer;
   font-weight: 500;
 }
@@ -834,107 +700,148 @@ body.dark-mode .amount {
 
 /* 危险区域 */
 .danger-zone {
-  margin-top: 32px;
-  padding: 16px;
-  background: rgba(239, 68, 68, 0.05);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  margin-top: var(--space-8);
+  padding: var(--space-4);
+  background: color-mix(in srgb, var(--color-error) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-error) 20%, transparent);
   border-radius: var(--radius-xl);
 }
 
 .danger-zone h4 {
-  margin: 0 0 12px 0;
-  color: #dc2626;
+  margin: 0 0 var(--space-3) 0;
+  color: var(--color-error);
   font-size: 0.875rem;
 }
 
 .danger-btn {
   width: 100%;
-  padding: 10px;
-  background: #dc2626;
-  color: white;
-  border: none;
-  border-radius: var(--radius-lg);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 8px;
+  background: var(--color-error) !important;
+  margin-bottom: var(--space-2);
 }
 
 .danger-btn:hover {
-  background: #b91c1c;
+  background: color-mix(in srgb, var(--color-error) 90%, black) !important;
 }
 
 .savings-recommendation {
-  color: var(--color-accent);
+  color: var(--rank-color, var(--neon-purple));
   font-size: 0.8125rem;
-  margin-top: 6px;
+  margin-top: var(--space-1);
   font-weight: 500;
 }
 
 .input-hint {
-  color: var(--color-gray-500);
+  color: var(--immersive-text-tertiary);
   font-size: 0.75rem;
-  margin-top: 4px;
+  margin-top: var(--space-1);
   display: block;
 }
 
-/* 底部按钮 */
-.modal-footer {
+/* 确认对话框 */
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
   display: flex;
-  gap: 12px;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--color-gray-200);
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
 }
 
-body.dark-mode .modal-footer {
-  border-top-color: var(--color-gray-700);
+.confirm-dialog {
+  background: var(--immersive-bg-primary);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s ease;
+  border: 2px solid var(--color-error);
 }
 
-.cancel-btn {
-  flex: 1;
-  padding: 12px;
-  background: var(--color-gray-100);
-  color: var(--color-gray-700);
-  border: none;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.confirm-icon {
+  font-size: 4rem;
+  text-align: center;
+  margin-bottom: var(--space-4);
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.confirm-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-error);
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.confirm-message {
+  font-size: 0.9375rem;
+  color: var(--immersive-text-primary);
+  text-align: center;
+  margin-bottom: var(--space-4);
+  line-height: 1.6;
+}
+
+.confirm-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-4) 0;
+  background: color-mix(in srgb, var(--color-error) 5%, transparent);
   border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--color-error) 20%, transparent);
+}
+
+.confirm-list li {
   font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  color: var(--immersive-text-secondary);
+  padding: var(--space-2) 0;
+  line-height: 1.5;
 }
 
-.cancel-btn:hover {
-  background: var(--color-gray-200);
+.confirm-list li:not(:last-child) {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-error) 10%, transparent);
 }
 
-body.dark-mode .cancel-btn {
-  background: var(--color-gray-700);
-  color: var(--color-gray-300);
+.confirm-warning {
+  font-size: 0.875rem;
+  color: var(--color-error);
+  text-align: center;
+  margin-bottom: var(--space-6);
+  padding: var(--space-3);
+  background: color-mix(in srgb, var(--color-error) 10%, transparent);
+  border-radius: var(--radius-lg);
+  line-height: 1.6;
 }
 
-body.dark-mode .cancel-btn:hover {
-  background: var(--color-gray-600);
+.confirm-actions {
+  display: flex;
+  gap: var(--space-3);
 }
 
-.save-btn {
+.confirm-actions .unified-btn {
   flex: 1;
-  padding: 12px;
-  background: var(--color-accent);
-  color: white;
-  border: none;
-  border-radius: var(--radius-xl);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
-}
-
-.save-btn:hover {
-  background: var(--color-accent-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
 }
 </style>

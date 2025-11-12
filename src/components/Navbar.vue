@@ -55,7 +55,7 @@ const toggleTheme = () => {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: var(--z-fixed);
   transition: all var(--duration-normal) var(--ease-out-expo);
 }
 
@@ -66,38 +66,36 @@ const toggleTheme = () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--immersive-bg-primary);
+  background: var(--bg-primary);
   opacity: 0;
   transition: opacity var(--duration-normal) ease;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(var(--blur-xl)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(180%);
   border-bottom: 1px solid transparent;
 }
 
 .navbar:hover::before {
   opacity: 0.98;
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-bottom-color: var(--border-subtle);
+  box-shadow: var(--shadow-md);
 }
 
 .navbar-content {
-  max-width: 1600px;
+  max-width: var(--container-2xl);
   margin: 0 auto;
-  padding: 1rem 3rem;
+  padding: var(--space-4) var(--space-12);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 3rem;
+  gap: var(--space-12);
   position: relative;
   z-index: 1;
 }
 
 .navbar-logo {
-  font-size: 1.75rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, 
-    var(--rank-color, #667eea) 0%, 
-    color-mix(in srgb, var(--rank-color, #667eea) 70%, #f59e0b) 100%);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-black);
+  background: linear-gradient(135deg, var(--rank-color, var(--color-primary)) 0%, var(--color-warning) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -106,6 +104,7 @@ const toggleTheme = () => {
   transition: all var(--duration-normal) var(--ease-out-back);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   position: relative;
+  user-select: none;
 }
 
 .navbar-logo::after {
@@ -115,14 +114,15 @@ const toggleTheme = () => {
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--rank-color, #667eea);
+  background: var(--rank-color, var(--color-primary));
   transform: scaleX(0);
   transition: transform var(--duration-normal) var(--ease-out-expo);
+  border-radius: var(--radius-full);
 }
 
 .navbar-logo:hover {
   transform: scale(1.05) translateY(-2px);
-  filter: drop-shadow(0 4px 8px color-mix(in srgb, var(--rank-color, #667eea) 40%, transparent));
+  filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.4));
 }
 
 .navbar-logo:hover::after {
@@ -131,23 +131,24 @@ const toggleTheme = () => {
 
 .navbar-menu {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-2);
   align-items: center;
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border-radius: 2rem;
-  padding: 0.5rem;
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border-radius: var(--radius-full);
+  padding: var(--space-2);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .nav-btn {
   background: transparent;
   border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-2xl);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   cursor: pointer;
   transition: all 0.2s ease;
   color: rgba(255, 255, 255, 0.7);

@@ -1,6 +1,6 @@
 <template>
-  <div v-if="isOpen" class="wizard-overlay">
-    <div class="wizard-container">
+  <div v-if="isOpen" class="unified-modal-overlay wizard-overlay">
+    <div class="unified-modal wizard-container">
       <!-- 进度指示器 -->
       <div class="progress-bar">
         <div 
@@ -53,6 +53,7 @@
               type="text" 
               v-model="formData.name" 
               placeholder="请输入昵称"
+              class="unified-input"
               @input="validateStep"
             >
             <small v-if="errors.name" class="error-text">{{ errors.name }}</small>
@@ -74,7 +75,7 @@
 
           <div class="input-group">
             <label>所在城市</label>
-            <select v-model="formData.city">
+            <select v-model="formData.city" class="unified-input">
               <option value="杭州">杭州</option>
               <option value="北京">北京</option>
               <option value="上海">上海</option>
@@ -93,17 +94,17 @@
 
           <div class="input-group">
             <label>上班时间</label>
-            <input type="time" v-model="formData.workStart">
+            <input type="time" v-model="formData.workStart" class="unified-input">
           </div>
 
           <div class="input-group">
             <label>下班时间</label>
-            <input type="time" v-model="formData.workEnd">
+            <input type="time" v-model="formData.workEnd" class="unified-input">
           </div>
 
           <div class="input-group">
             <label>工作制度</label>
-            <select v-model="formData.workSchedule">
+            <select v-model="formData.workSchedule" class="unified-input">
               <option value="double">双休（周六日休息）</option>
               <option value="alternate">大小休（隔周单休）</option>
               <option value="single">单休（仅周日休息）</option>
@@ -134,6 +135,7 @@
               type="text" 
               v-model="formData.currentJob" 
               placeholder="例如：前端开发工程师"
+              class="unified-input"
             >
             <small class="input-hint">如果你已经有工作，可以填写当前职业</small>
           </div>
@@ -145,6 +147,7 @@
               <input 
                 type="date" 
                 v-model="formData.joinDate"
+                class="unified-input"
                 @input="validateStep"
               >
               <small v-if="errors.joinDate" class="error-text">{{ errors.joinDate }}</small>
@@ -152,7 +155,7 @@
 
             <div class="input-group">
               <label>休息制度 <span class="required">*</span></label>
-              <select v-model="formData.workSchedule">
+              <select v-model="formData.workSchedule" class="unified-input">
                 <option value="double">双休（周六日休息）</option>
                 <option value="alternate">大小休（隔周单休）</option>
                 <option value="single">单休（仅周日休息）</option>
@@ -167,6 +170,7 @@
               type="number" 
               v-model.number="formData.salary" 
               placeholder="请输入月薪"
+              class="unified-input"
               @input="validateStep"
             >
             <small v-if="errors.salary" class="error-text">{{ errors.salary }}</small>
@@ -174,12 +178,12 @@
 
           <div class="input-group">
             <label>每月房租（元）</label>
-            <input type="number" v-model.number="formData.rent" placeholder="0">
+            <input type="number" v-model.number="formData.rent" placeholder="0" class="unified-input">
           </div>
 
           <div class="input-group">
             <label>每月水电网费（元）</label>
-            <input type="number" v-model.number="formData.utilities" placeholder="0">
+            <input type="number" v-model.number="formData.utilities" placeholder="0" class="unified-input">
           </div>
 
           <div class="input-group">
@@ -190,6 +194,7 @@
               placeholder="建议 20-40%"
               min="0"
               max="100"
+              class="unified-input"
             >
             <small class="input-hint">建议储蓄率 20-40%，设置为 0 表示月光族</small>
           </div>
@@ -229,27 +234,27 @@
       <div class="wizard-footer">
         <button 
           v-if="currentStep > 0 && currentStep < 4"
-          class="btn-secondary"
+          class="unified-btn btn-secondary"
           @click="prevStep"
         >
-          上一步
+          <span>上一步</span>
         </button>
         <div v-else></div>
 
         <button 
           v-if="currentStep < 4"
-          class="btn-primary"
+          class="unified-btn unified-btn-primary btn-primary"
           :disabled="!canProceed"
           @click="nextStep"
         >
-          {{ currentStep === 0 ? '开始设置' : '下一步' }}
+          <span>{{ currentStep === 0 ? '开始设置' : '下一步' }}</span>
         </button>
         <button 
           v-else
-          class="btn-primary"
+          class="unified-btn unified-btn-primary btn-primary"
           @click="complete"
         >
-          开始使用
+          <span>开始使用</span>
         </button>
       </div>
     </div>
@@ -422,66 +427,29 @@ const complete = () => {
 </script>
 
 <style scoped>
+/* 使用统一设计系统的模态框样式 */
 .wizard-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
   z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(8px);
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 .wizard-container {
-  background: white;
-  border-radius: 24px;
   width: 90%;
   max-width: 600px;
   max-height: 90vh;
-  overflow: hidden;
+  overflow: hidden !important;
   display: flex;
   flex-direction: column;
-  animation: slideUp 0.4s ease;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-body.dark-mode .wizard-container {
-  background: var(--color-gray-800);
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(50px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  padding: 0 !important;
+  background: var(--immersive-bg-primary) !important;
 }
 
 /* 进度条 */
 .progress-bar {
   display: flex;
   justify-content: space-between;
-  padding: 32px 32px 24px;
-  background: var(--color-gray-50);
-  border-bottom: 1px solid var(--color-gray-200);
-}
-
-body.dark-mode .progress-bar {
-  background: var(--color-gray-900);
-  border-bottom-color: var(--color-gray-700);
+  padding: var(--space-8) var(--space-8) var(--space-6);
+  background: var(--immersive-bg-secondary);
+  border-bottom: 1px solid var(--immersive-border);
 }
 
 .progress-step {
@@ -500,23 +468,19 @@ body.dark-mode .progress-bar {
   left: 50%;
   width: 100%;
   height: 2px;
-  background: var(--color-gray-300);
+  background: var(--immersive-border);
   z-index: 0;
 }
 
-body.dark-mode .progress-step:not(:last-child)::after {
-  background: var(--color-gray-700);
-}
-
 .progress-step.completed:not(:last-child)::after {
-  background: var(--color-accent);
+  background: var(--rank-color, var(--neon-purple));
 }
 
 .step-circle {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--color-gray-300);
+  background: var(--immersive-bg-tertiary);
   color: white;
   display: flex;
   align-items: center;
@@ -525,31 +489,27 @@ body.dark-mode .progress-step:not(:last-child)::after {
   font-size: 0.875rem;
   position: relative;
   z-index: 1;
-  transition: all 0.3s;
+  transition: all var(--transition-fast);
 }
 
 .progress-step.active .step-circle {
-  background: var(--rank-color, var(--color-primary));
+  background: var(--rank-color, var(--neon-purple));
   transform: scale(1.1);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 20%, transparent);
 }
 
 .progress-step.completed .step-circle {
-  background: var(--rank-color, var(--color-primary));
+  background: var(--rank-color, var(--neon-purple));
 }
 
 .step-label {
   font-size: 0.75rem;
-  color: var(--color-gray-600);
+  color: var(--immersive-text-secondary);
   font-weight: 500;
 }
 
-body.dark-mode .step-label {
-  color: var(--color-gray-400);
-}
-
 .progress-step.active .step-label {
-  color: var(--rank-color, var(--color-primary));
+  color: var(--rank-color, var(--neon-purple));
   font-weight: 600;
 }
 
@@ -557,7 +517,7 @@ body.dark-mode .step-label {
 .wizard-content {
   flex: 1;
   overflow-y: auto;
-  padding: 40px 32px;
+  padding: var(--space-10) var(--space-8);
 }
 
 .wizard-content::-webkit-scrollbar {
@@ -565,7 +525,7 @@ body.dark-mode .step-label {
 }
 
 .wizard-content::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
+  background: var(--immersive-bg-tertiary);
   border-radius: 3px;
 }
 
@@ -573,25 +533,22 @@ body.dark-mode .step-label {
   animation: fadeIn 0.3s ease;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .step-content h2 {
-  margin: 0 0 12px 0;
+  margin: 0 0 var(--space-3) 0;
   font-size: 1.75rem;
-  color: var(--color-gray-900);
+  color: var(--immersive-text-primary);
   font-weight: 700;
 }
 
-body.dark-mode .step-content h2 {
-  color: var(--color-gray-100);
-}
-
 .step-desc {
-  margin: 0 0 32px 0;
-  color: var(--color-gray-600);
+  margin: 0 0 var(--space-8) 0;
+  color: var(--immersive-text-secondary);
   font-size: 0.9375rem;
-}
-
-body.dark-mode .step-desc {
-  color: var(--color-gray-400);
 }
 
 /* 欢迎页 */
@@ -610,33 +567,25 @@ body.dark-mode .step-desc {
 
 .welcome-text {
   text-align: center;
-  color: var(--color-gray-600);
+  color: var(--immersive-text-secondary);
   font-size: 1rem;
   line-height: 1.6;
-  margin-bottom: 32px;
-}
-
-body.dark-mode .welcome-text {
-  color: var(--color-gray-400);
+  margin-bottom: var(--space-8);
 }
 
 .feature-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .feature-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: var(--color-gray-50);
-  border-radius: 12px;
-}
-
-body.dark-mode .feature-item {
-  background: var(--color-gray-700);
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--immersive-bg-secondary);
+  border-radius: var(--radius-xl);
 }
 
 .feature-icon {
@@ -645,62 +594,32 @@ body.dark-mode .feature-item {
 
 /* 表单 */
 .input-group {
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
 }
 
 label {
   display: block;
-  margin-bottom: 8px;
-  color: var(--color-gray-700);
+  margin-bottom: var(--space-2);
+  color: var(--immersive-text-primary);
   font-weight: 600;
   font-size: 0.875rem;
 }
 
-body.dark-mode label {
-  color: var(--color-gray-300);
-}
-
 .required {
-  color: #dc2626;
-}
-
-input,
-select {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid var(--color-gray-200);
-  border-radius: 12px;
-  font-size: 0.9375rem;
-  background: white;
-  color: var(--color-gray-900);
-  transition: all 0.2s;
-}
-
-input:focus,
-select:focus {
-  outline: none;
-  border-color: var(--rank-color, var(--color-primary));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rank-color, var(--color-primary)) 10%, transparent);
-}
-
-body.dark-mode input,
-body.dark-mode select {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
-  color: var(--color-gray-100);
+  color: var(--color-error);
 }
 
 .error-text {
   display: block;
-  margin-top: 6px;
-  color: #dc2626;
+  margin-top: var(--space-1);
+  color: var(--color-error);
   font-size: 0.8125rem;
 }
 
 .input-hint {
   display: block;
-  margin-top: 6px;
-  color: var(--color-gray-500);
+  margin-top: var(--space-1);
+  color: var(--immersive-text-tertiary);
   font-size: 0.8125rem;
 }
 
@@ -708,94 +627,77 @@ body.dark-mode select {
 .avatar-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .avatar-btn {
   aspect-ratio: 1;
   font-size: 1.5rem;
-  border: 2px solid var(--color-gray-200);
-  border-radius: 12px;
-  background: white;
+  border: 2px solid var(--immersive-border);
+  border-radius: var(--radius-xl);
+  background: var(--immersive-bg-secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .avatar-btn:hover {
-  border-color: var(--rank-color, var(--color-primary));
+  border-color: var(--rank-color, var(--neon-purple));
   transform: scale(1.05);
 }
 
 .avatar-btn.selected {
-  border-color: var(--rank-color, var(--color-primary));
-  background: color-mix(in srgb, var(--rank-color, var(--color-primary)) 10%, transparent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rank-color, var(--color-primary)) 15%, transparent);
-}
-
-body.dark-mode .avatar-btn {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
+  border-color: var(--rank-color, var(--neon-purple));
+  background: color-mix(in srgb, var(--rank-color, var(--neon-purple)) 10%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 15%, transparent);
 }
 
 /* 信息框 */
 .info-box {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 24px;
-  padding: 16px;
-  background: var(--color-gray-50);
-  border-radius: 12px;
-}
-
-body.dark-mode .info-box {
-  background: var(--color-gray-700);
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  background: var(--immersive-bg-secondary);
+  border-radius: var(--radius-xl);
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .info-label {
   font-size: 0.75rem;
-  color: var(--color-gray-600);
-}
-
-body.dark-mode .info-label {
-  color: var(--color-gray-400);
+  color: var(--immersive-text-secondary);
 }
 
 .info-value {
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--rank-color, var(--color-primary));
+  color: var(--rank-color, var(--neon-purple));
 }
 
 /* 摘要卡片 */
 .summary-card {
-  background: var(--color-gray-50);
-  border-radius: 16px;
-  padding: 24px;
+  background: var(--immersive-bg-secondary);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-body.dark-mode .summary-card {
-  background: var(--color-gray-700);
+  gap: var(--space-4);
 }
 
 .summary-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-gray-200);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--immersive-border);
 }
 
 .summary-item:last-child {
@@ -803,89 +705,33 @@ body.dark-mode .summary-card {
   padding-bottom: 0;
 }
 
-body.dark-mode .summary-item {
-  border-bottom-color: var(--color-gray-600);
-}
-
 .summary-label {
-  color: var(--color-gray-600);
+  color: var(--immersive-text-secondary);
   font-size: 0.875rem;
-}
-
-body.dark-mode .summary-label {
-  color: var(--color-gray-400);
 }
 
 .summary-value {
   font-weight: 700;
-  color: var(--color-gray-900);
-}
-
-body.dark-mode .summary-value {
-  color: var(--color-gray-100);
+  color: var(--immersive-text-primary);
 }
 
 /* 底部按钮 */
 .wizard-footer {
   display: flex;
   justify-content: space-between;
-  padding: 24px 32px;
-  border-top: 1px solid var(--color-gray-200);
-  background: var(--color-gray-50);
-}
-
-body.dark-mode .wizard-footer {
-  border-top-color: var(--color-gray-700);
-  background: var(--color-gray-900);
-}
-
-.btn-primary,
-.btn-secondary {
-  padding: 12px 32px;
-  border: none;
-  border-radius: 12px;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-primary {
-  background: var(--rank-color, var(--color-primary));
-  color: white;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--rank-color, var(--color-primary)) 30%, transparent);
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--rank-color, var(--color-primary)) 90%, black);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent);
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  padding: var(--space-6) var(--space-8);
+  border-top: 1px solid var(--immersive-border);
+  background: var(--immersive-bg-secondary);
 }
 
 .btn-secondary {
-  background: white;
-  color: var(--color-gray-700);
-  border: 2px solid var(--color-gray-300);
+  background: var(--immersive-bg-primary) !important;
+  color: var(--immersive-text-primary) !important;
+  border: 2px solid var(--immersive-border) !important;
 }
 
 .btn-secondary:hover {
-  background: var(--color-gray-50);
-  border-color: var(--color-gray-400);
-}
-
-body.dark-mode .btn-secondary {
-  background: var(--color-gray-700);
-  color: var(--color-gray-300);
-  border-color: var(--color-gray-600);
-}
-
-body.dark-mode .btn-secondary:hover {
-  background: var(--color-gray-600);
+  background: var(--immersive-bg-secondary) !important;
 }
 
 /* 响应式 */
@@ -896,7 +742,7 @@ body.dark-mode .btn-secondary:hover {
   }
 
   .progress-bar {
-    padding: 24px 16px 16px;
+    padding: var(--space-6) var(--space-4) var(--space-4);
   }
 
   .step-label {
@@ -904,11 +750,11 @@ body.dark-mode .btn-secondary:hover {
   }
 
   .wizard-content {
-    padding: 24px 16px;
+    padding: var(--space-6) var(--space-4);
   }
 
   .wizard-footer {
-    padding: 16px;
+    padding: var(--space-4);
   }
 
   .avatar-grid {

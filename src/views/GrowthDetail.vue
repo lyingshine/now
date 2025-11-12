@@ -284,10 +284,13 @@ watch(() => questStore.currentLevel, (newLevel) => {
 
 <style scoped>
 .growth-detail {
-  padding: 100px var(--space-8) var(--space-8);
-  min-height: 100vh;
+  padding: 80px var(--space-6) var(--space-6);
+  height: 100vh;
   background: var(--immersive-bg-primary);
   position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .growth-detail::before {
@@ -307,11 +310,17 @@ watch(() => questStore.currentLevel, (newLevel) => {
 .unified-container {
   position: relative;
   z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .completion-section {
-  margin-top: var(--space-8);
-  margin-bottom: var(--space-8);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-6);
+  flex-shrink: 0;
 }
 
 @keyframes pulse {
@@ -324,14 +333,18 @@ watch(() => questStore.currentLevel, (newLevel) => {
 }
 
 .skills-section {
-  margin-top: var(--space-8);
+  margin-top: var(--space-6);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-4);
+  flex-shrink: 0;
 }
 
 .quest-stats {
@@ -342,28 +355,58 @@ watch(() => questStore.currentLevel, (newLevel) => {
 .skills-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .empty-state {
   text-align: center;
-  padding: var(--space-12) var(--space-8);
+  padding: var(--space-8) var(--space-6);
 }
 
 /* 响应式 */
 @media (max-width: 768px) {
   .growth-detail {
-    padding: 80px var(--space-4) var(--space-4);
+    padding: 70px var(--space-4) var(--space-4);
+  }
+  
+  .completion-section {
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  
+  .skills-section {
+    margin-top: var(--space-4);
   }
   
   .section-header {
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-2);
     align-items: flex-start;
+    margin-bottom: var(--space-3);
   }
   
   .quest-stats {
     width: 100%;
+  }
+  
+  .skills-list {
+    gap: var(--space-2);
+  }
+}
+
+@media (max-height: 800px) {
+  .growth-detail {
+    padding-top: 70px;
+    padding-bottom: var(--space-4);
+  }
+  
+  .completion-section {
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  
+  .skills-section {
+    margin-top: var(--space-4);
   }
 }
 </style>

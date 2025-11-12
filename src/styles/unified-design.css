@@ -1,8 +1,9 @@
 /* ===================================
    NOW 职场成长平台 - 统一设计系统
+   高级组件和特殊样式
    =================================== */
 
-/* ===== 1. 统一卡片样式 ===== */
+/* ===== 统一卡片 ===== */
 .unified-card {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px) saturate(180%);
@@ -15,71 +16,14 @@
   overflow: hidden;
 }
 
-.unified-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-    rgba(255, 255, 255, 0.1) 0%, 
-    transparent 50%);
-  opacity: 0;
-  transition: opacity var(--duration-fast) ease;
-  pointer-events: none;
-}
-
-.unified-card:hover::before {
-  opacity: 1;
-}
-
 .unified-card:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-4px);
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
-.unified-card-large {
-  padding: var(--space-8);
-  border-radius: var(--radius-3xl);
-}
-
-.unified-card-xl {
-  padding: var(--space-10) var(--space-12);
-  border-radius: var(--radius-4xl);
-}
-
-/* 卡片顶部装饰条 */
-.unified-card-accent::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    var(--rank-color, var(--color-primary)) 50%, 
-    transparent 100%);
-  opacity: 0;
-  transition: opacity var(--duration-normal) var(--ease-out-expo);
-}
-
-.unified-card-accent:hover::after {
-  opacity: 1;
-  animation: shimmer-line 2s ease-in-out infinite;
-}
-
-@keyframes shimmer-line {
-  0%, 100% { transform: translateX(-100%); }
-  50% { transform: translateX(100%); }
-}
-
-/* ===== 2. 统一按钮样式 ===== */
+/* ===== 统一按钮 ===== */
 .unified-btn {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -89,32 +33,11 @@
   font-weight: 600;
   cursor: pointer;
   transition: all var(--duration-normal) var(--ease-out-expo);
-  color: var(--immersive-text-primary);
+  color: var(--text-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  position: relative;
-  overflow: hidden;
-}
-
-.unified-btn::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: translate(-50%, -50%);
-  transition: width var(--duration-slow) var(--ease-out-expo), 
-              height var(--duration-slow) var(--ease-out-expo);
-}
-
-.unified-btn:hover::before {
-  width: 300px;
-  height: 300px;
 }
 
 .unified-btn:hover {
@@ -123,25 +46,17 @@
   transform: translateY(-2px);
 }
 
-.unified-btn:active {
-  transform: translateY(0);
-}
-
 .unified-btn-primary {
   background: var(--rank-color, var(--color-primary));
   border-color: transparent;
   color: white;
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--rank-color, #667eea) 30%, transparent);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .unified-btn-primary:hover {
   filter: brightness(1.1);
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--rank-color, #667eea) 50%, transparent);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.5);
   transform: translateY(-3px);
-}
-
-.unified-btn-primary:active {
-  transform: translateY(-1px);
 }
 
 .unified-btn-large {
@@ -154,11 +69,11 @@
   font-size: var(--text-xs);
 }
 
-/* ===== 3. 统一标题样式 ===== */
+/* ===== 统一标题 ===== */
 .unified-title {
   font-size: var(--text-3xl);
   font-weight: 900;
-  background: linear-gradient(135deg, var(--rank-color, #667eea) 0%, var(--neon-purple) 100%);
+  background: linear-gradient(135deg, var(--rank-color, var(--color-primary)) 0%, var(--color-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -169,7 +84,7 @@
 
 .unified-subtitle {
   font-size: var(--text-sm);
-  color: var(--immersive-text-secondary);
+  color: var(--text-secondary);
   font-weight: 400;
   line-height: 1.5;
 }
@@ -177,41 +92,41 @@
 .unified-section-title {
   font-size: var(--text-2xl);
   font-weight: 700;
-  color: var(--immersive-text-primary);
+  color: var(--text-primary);
   margin-bottom: var(--space-6);
 }
 
 .unified-card-title {
   font-size: var(--text-lg);
   font-weight: 700;
-  color: var(--immersive-text-primary);
+  color: var(--text-primary);
   margin-bottom: var(--space-3);
 }
 
-/* ===== 4. 统一输入框样式 ===== */
+/* ===== 统一输入框 ===== */
 .unified-input {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-xl);
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-sm);
-  color: var(--immersive-text-primary);
+  color: var(--text-primary);
   transition: all var(--duration-normal) var(--ease-smooth);
   width: 100%;
 }
 
 .unified-input:focus {
   outline: none;
-  border-color: var(--rank-color, var(--neon-purple));
+  border-color: var(--rank-color, var(--color-primary));
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rank-color, #667eea) 20%, transparent);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 .unified-input::placeholder {
-  color: var(--immersive-text-tertiary);
+  color: var(--text-tertiary);
 }
 
-/* ===== 5. 统一标签样式 ===== */
+/* ===== 统一标签 ===== */
 .unified-tag {
   display: inline-flex;
   align-items: center;
@@ -221,34 +136,28 @@
   border-radius: var(--radius-full);
   font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--immersive-text-secondary);
+  color: var(--text-secondary);
 }
 
 .unified-tag-primary {
-  background: color-mix(in srgb, var(--rank-color, #667eea) 20%, transparent);
-  border-color: var(--rank-color, var(--neon-purple));
-  color: var(--rank-color, var(--neon-purple));
+  background: rgba(102, 126, 234, 0.2);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .unified-tag-success {
   background: rgba(16, 185, 129, 0.2);
-  border-color: #10b981;
-  color: #10b981;
+  border-color: var(--color-success);
+  color: var(--color-success);
 }
 
 .unified-tag-warning {
   background: rgba(245, 158, 11, 0.2);
-  border-color: #f59e0b;
-  color: #f59e0b;
+  border-color: var(--color-warning);
+  color: var(--color-warning);
 }
 
-.unified-tag-error {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: #ef4444;
-  color: #ef4444;
-}
-
-/* ===== 6. 统一进度条样式 ===== */
+/* ===== 统一进度条 ===== */
 .unified-progress {
   width: 100%;
   height: 6px;
@@ -261,41 +170,11 @@
 
 .unified-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, 
-    var(--rank-color, var(--color-primary)) 0%, 
-    color-mix(in srgb, var(--rank-color, var(--color-primary)) 80%, white) 100%);
+  background: linear-gradient(90deg, var(--rank-color, var(--color-primary)) 0%, rgba(102, 126, 234, 0.8) 100%);
   border-radius: var(--radius-full);
   transition: width 1s var(--ease-out-expo);
   position: relative;
-  box-shadow: 0 0 8px color-mix(in srgb, var(--rank-color, var(--color-primary)) 50%, transparent);
-}
-
-.unified-progress-bar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(to bottom, 
-    rgba(255, 255, 255, 0.3) 0%, 
-    transparent 100%);
-  border-radius: var(--radius-full) var(--radius-full) 0 0;
-}
-
-.unified-progress-bar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.4) 50%, 
-    transparent 100%
-  );
-  animation: shimmer 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
 }
 
 .unified-progress-large {
@@ -306,7 +185,7 @@
   height: 4px;
 }
 
-/* ===== 7. 统一徽章样式 ===== */
+/* ===== 统一徽章 ===== */
 .unified-badge {
   display: inline-flex;
   align-items: center;
@@ -314,22 +193,14 @@
   min-width: 24px;
   height: 24px;
   padding: 0 var(--space-2);
-  background: var(--rank-color, var(--neon-purple));
+  background: var(--rank-color, var(--color-primary));
   border-radius: var(--radius-full);
   font-size: var(--text-xs);
   font-weight: 700;
   color: white;
 }
 
-.unified-badge-dot {
-  width: 8px;
-  height: 8px;
-  min-width: 8px;
-  padding: 0;
-  border-radius: var(--radius-full);
-}
-
-/* ===== 8. 统一分隔线样式 ===== */
+/* ===== 统一分隔线 ===== */
 .unified-divider {
   width: 100%;
   height: 1px;
@@ -337,17 +208,7 @@
   margin: var(--space-6) 0;
 }
 
-.unified-divider-vertical {
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(to bottom, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.2) 50%, 
-    transparent 100%
-  );
-}
-
-/* ===== 9. 统一图标样式 ===== */
+/* ===== 统一图标 ===== */
 .unified-icon {
   font-size: var(--text-2xl);
   line-height: 1;
@@ -363,7 +224,7 @@
   font-size: var(--text-lg);
 }
 
-/* ===== 10. 统一网格布局 ===== */
+/* ===== 统一网格 ===== */
 .unified-grid {
   display: grid;
   gap: var(--space-4);
@@ -396,23 +257,23 @@
   }
 }
 
-/* ===== 11. 统一容器样式 ===== */
+/* ===== 统一容器 ===== */
 .unified-container {
-  max-width: 1200px;
+  max-width: var(--container-xl);
   width: 100%;
   margin: 0 auto;
   padding: 0 var(--space-8);
 }
 
 .unified-container-wide {
-  max-width: 1400px;
+  max-width: var(--container-2xl);
 }
 
 .unified-container-narrow {
-  max-width: 800px;
+  max-width: var(--container-md);
 }
 
-/* ===== 12. 统一模态框样式 ===== */
+/* ===== 统一模态框 ===== */
 .unified-modal-overlay {
   position: fixed;
   top: 0;
@@ -424,12 +285,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: var(--z-modal-backdrop);
   padding: var(--space-8);
 }
 
 .unified-modal {
-  background: var(--immersive-bg-secondary);
+  background: var(--bg-secondary);
   border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-3xl);
   max-width: 600px;
@@ -437,6 +298,7 @@
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
+  z-index: var(--z-modal);
 }
 
 .unified-modal-header {
@@ -456,7 +318,7 @@
   justify-content: flex-end;
 }
 
-/* ===== 13. 统一列表样式 ===== */
+/* ===== 统一列表 ===== */
 .unified-list {
   display: flex;
   flex-direction: column;
@@ -477,19 +339,15 @@
   transform: translateX(4px);
 }
 
-/* ===== 14. 统一加载状态 ===== */
+/* ===== 统一加载状态 ===== */
 .unified-loading {
   display: inline-block;
   width: 40px;
   height: 40px;
   border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--rank-color, var(--neon-purple));
+  border-top-color: var(--rank-color, var(--color-primary));
   border-radius: var(--radius-full);
   animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 .unified-loading-small {
@@ -504,11 +362,11 @@
   border-width: 4px;
 }
 
-/* ===== 15. 统一空状态样式 ===== */
+/* ===== 统一空状态 ===== */
 .unified-empty {
   text-align: center;
   padding: var(--space-12) var(--space-8);
-  color: var(--immersive-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .unified-empty-icon {
@@ -524,53 +382,44 @@
 
 .unified-empty-hint {
   font-size: var(--text-sm);
-  color: var(--immersive-text-tertiary);
+  color: var(--text-tertiary);
 }
 
-/* ===== 16. 统一工具类 ===== */
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
+/* ===== 浅色模式适配 ===== */
+html:not(.dark) .unified-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-center { justify-content: center; }
-.justify-between { justify-content: space-between; }
-.gap-2 { gap: var(--space-2); }
-.gap-4 { gap: var(--space-4); }
-.gap-6 { gap: var(--space-6); }
+html:not(.dark) .unified-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.15);
+}
 
-.w-full { width: 100%; }
-.h-full { height: 100%; }
+html:not(.dark) .unified-btn {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+  border-color: rgba(0, 0, 0, 0.1);
+}
 
-.mb-2 { margin-bottom: var(--space-2); }
-.mb-4 { margin-bottom: var(--space-4); }
-.mb-6 { margin-bottom: var(--space-6); }
-.mb-8 { margin-bottom: var(--space-8); }
+html:not(.dark) .unified-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
 
-.mt-2 { margin-top: var(--space-2); }
-.mt-4 { margin-top: var(--space-4); }
-.mt-6 { margin-top: var(--space-6); }
-.mt-8 { margin-top: var(--space-8); }
+html:not(.dark) .unified-input {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.15);
+  color: var(--text-primary);
+}
 
-.p-4 { padding: var(--space-4); }
-.p-6 { padding: var(--space-6); }
-.p-8 { padding: var(--space-8); }
+html:not(.dark) .unified-input:focus {
+  background: #ffffff;
+  border-color: var(--rank-color, var(--color-primary));
+}
 
-.opacity-50 { opacity: 0.5; }
-.opacity-70 { opacity: 0.7; }
-
-.cursor-pointer { cursor: pointer; }
-.cursor-not-allowed { cursor: not-allowed; }
-
-.overflow-hidden { overflow: hidden; }
-.overflow-auto { overflow: auto; }
-
-.relative { position: relative; }
-.absolute { position: absolute; }
-.fixed { position: fixed; }
-
-.z-10 { z-index: 10; }
-.z-50 { z-index: 50; }
-.z-100 { z-index: 100; }
+html:not(.dark) .unified-modal {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}

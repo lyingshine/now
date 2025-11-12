@@ -49,18 +49,18 @@ const circumference = 2 * Math.PI * 54
 
 <style scoped>
 .detail-header {
-  background: var(--glass-bg);
+  background: var(--immersive-bg-secondary);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  padding: 2.5rem;
-  border-radius: var(--radius-3xl);
-  margin-bottom: 2rem;
-  border: 1px solid var(--glass-border);
+  padding: var(--space-8);
+  border-radius: var(--radius-2xl);
+  margin-bottom: var(--space-6);
+  border: 2px solid color-mix(in srgb, var(--rank-color, var(--neon-purple)) 30%, transparent);
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 2rem;
+  gap: var(--space-6);
   align-items: center;
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 10%, transparent);
   position: relative;
   overflow: hidden;
 }
@@ -71,33 +71,26 @@ const circumference = 2 * Math.PI * 54
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--growth-primary), var(--growth-secondary), var(--color-accent));
-}
-
-body.dark-mode .detail-header {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 3px;
+  background: var(--rank-color, var(--neon-purple));
 }
 
 .btn-back {
-  padding: 1rem 1.75rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
+  padding: var(--space-3) var(--space-5);
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
   border-radius: var(--radius-xl);
   cursor: pointer;
-  font-weight: 700;
-  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: var(--shadow-md);
-  color: var(--text-primary);
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  color: var(--immersive-text-primary);
+  font-size: 0.9375rem;
 }
 
 .btn-back:hover {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
-  color: white;
+  background: color-mix(in srgb, var(--rank-color, var(--neon-purple)) 10%, var(--immersive-bg-tertiary));
+  border-color: var(--rank-color, var(--neon-purple));
   transform: translateX(-2px);
-  box-shadow: var(--shadow-lg);
 }
 
 body.dark-mode .btn-back {
@@ -108,36 +101,25 @@ body.dark-mode .btn-back {
 .header-left {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
 
 .btn-abandon {
-  padding: 0.75rem 1.25rem;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: var(--space-2) var(--space-4);
+  background: color-mix(in srgb, var(--color-error) 10%, transparent);
+  color: var(--color-error);
+  border: 1px solid color-mix(in srgb, var(--color-error) 30%, transparent);
   border-radius: var(--radius-xl);
   font-weight: 600;
   font-size: 0.875rem;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
   cursor: pointer;
 }
 
 .btn-abandon:hover {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
-  border-color: rgba(239, 68, 68, 0.5);
+  background: color-mix(in srgb, var(--color-error) 20%, transparent);
+  border-color: var(--color-error);
   transform: translateX(-2px);
-}
-
-body.dark-mode .btn-abandon {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
-  color: #fca5a5;
-  border-color: rgba(239, 68, 68, 0.4);
-}
-
-body.dark-mode .btn-abandon:hover {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.25) 100%);
-  border-color: rgba(239, 68, 68, 0.6);
 }
 
 .header-content {
@@ -145,16 +127,15 @@ body.dark-mode .btn-abandon:hover {
 }
 
 .job-title {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-2);
+  color: var(--immersive-text-primary);
 }
 
 .job-salary {
-  font-size: 1.5rem;
-  background: linear-gradient(135deg, var(--growth-primary) 0%, var(--color-accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 1.25rem;
+  color: var(--rank-color, var(--neon-purple));
   font-weight: 800;
 }
 
@@ -170,8 +151,8 @@ body.dark-mode .btn-abandon:hover {
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--growth-primary);
+  font-weight: 900;
+  color: var(--rank-color, var(--neon-purple));
 }
 
 @media (max-width: 768px) {

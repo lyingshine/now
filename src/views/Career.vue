@@ -415,10 +415,13 @@ onUnmounted(() => {
 
 <style scoped>
 .career {
-  min-height: 100vh;
+  height: 100vh;
   background: var(--immersive-bg-primary);
-  padding: 100px var(--space-8) var(--space-8);
+  padding: 80px var(--space-6) var(--space-6);
   position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .career::before {
@@ -438,16 +441,26 @@ onUnmounted(() => {
 .unified-container {
   position: relative;
   z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .section-header-text {
-  margin-bottom: var(--space-12);
+  margin-bottom: var(--space-6);
+  flex-shrink: 0;
 }
 
 /* 时间线容器 */
 .timeline-wrapper {
   position: relative;
-  margin-bottom: 3rem;
+  flex: 1;
+  min-height: 0;
+  margin-bottom: var(--space-6);
+  display: flex;
+  flex-direction: column;
 }
 
 /* 滚动按钮 */
@@ -497,12 +510,14 @@ onUnmounted(() => {
 /* 时间线 - 横版 */
 .timeline {
   position: relative;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
   overflow-x: auto;
   overflow-y: visible;
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   padding-bottom: 1rem;
+  flex: 1;
+  min-height: 0;
 }
 
 /* 隐藏滚动条 */
@@ -575,11 +590,11 @@ onUnmounted(() => {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-xl);
-  padding: var(--space-4);
+  padding: var(--space-3);
   border: 2px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transition: all var(--duration-normal) var(--ease-smooth);
-  min-height: 380px;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -646,8 +661,8 @@ onUnmounted(() => {
 
 /* 冒险阶段 */
 .adventure-phase {
-  margin-bottom: var(--space-3);
-  padding: var(--space-3);
+  margin-bottom: var(--space-2);
+  padding: var(--space-2);
   background: rgba(255, 255, 255, 0.03);
   border-radius: var(--radius-lg);
   border-left: 3px solid var(--rank-color, #6366f1);
@@ -805,14 +820,15 @@ onUnmounted(() => {
 
 /* 统计区域 */
 .stats-section {
-  margin-top: var(--space-8);
+  flex-shrink: 0;
+  margin-top: var(--space-4);
 }
 
 .section-title {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--immersive-text-primary);
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-4);
   text-align: center;
 }
 
@@ -869,7 +885,7 @@ onUnmounted(() => {
   }
   
   .timeline-item {
-    width: 350px;
+    width: 300px;
   }
   
   .scroll-button {
@@ -889,17 +905,21 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .career {
-    padding: 80px var(--space-4) var(--space-4);
+    padding: 70px var(--space-4) var(--space-4);
+  }
+  
+  .section-header-text {
+    margin-bottom: var(--space-4);
   }
   
   .timeline-item {
-    width: 300px;
+    width: 280px;
   }
 
   .timeline-dot {
-    width: 50px;
-    height: 50px;
-    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
   }
 
   .stats-grid {
@@ -907,13 +927,13 @@ onUnmounted(() => {
   }
   
   .timeline {
-    padding: 2rem 1rem;
+    padding: 1rem 0.5rem;
   }
   
   .scroll-button {
-    width: 44px;
-    height: 44px;
-    font-size: 1.25rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.125rem;
   }
   
   .scroll-button.left {
@@ -922,6 +942,34 @@ onUnmounted(() => {
   
   .scroll-button.right {
     right: 10px;
+  }
+}
+
+@media (max-height: 800px) {
+  .career {
+    padding-top: 70px;
+    padding-bottom: var(--space-4);
+  }
+  
+  .section-header-text .unified-title {
+    font-size: 2rem;
+  }
+  
+  .timeline-card {
+    padding: var(--space-2);
+  }
+  
+  .adventure-phase {
+    padding: var(--space-1);
+    margin-bottom: var(--space-1);
+  }
+  
+  .stats-section {
+    margin-top: var(--space-2);
+  }
+  
+  .section-title {
+    margin-bottom: var(--space-2);
   }
 }
 </style>

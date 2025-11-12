@@ -1,5 +1,5 @@
 <template>
-  <div class="home fullpage-container" @wheel="handleWheel" :style="{ '--rank-color': rankInfo.current.color }">
+  <div class="home fullpage-container" @wheel="handleWheel" :style="{ '--rank-color': rankInfo.current.color }" :data-current="currentPage">
     <!-- 导航指示器（合并箭头） -->
     <div class="page-indicator">
       <!-- 向上箭头 -->
@@ -34,7 +34,11 @@
     </div>
 
     <!-- 第一屏：段位排名 & 收入统计 -->
-    <section class="fullpage-section" :class="{ active: currentPage === 0 }">
+    <section 
+      class="fullpage-section" 
+      :class="{ active: currentPage === 0 }"
+      :data-index="0"
+    >
       <div class="section-content">
         <div class="section-header-text">
           <h1 class="section-title">职场段位</h1>
@@ -109,7 +113,11 @@
     </section>
 
     <!-- 第二屏：生活水平 -->
-    <section class="fullpage-section" :class="{ active: currentPage === 1 }">
+    <section 
+      class="fullpage-section" 
+      :class="{ active: currentPage === 1 }"
+      :data-index="1"
+    >
       <div class="section-content">
         <div class="section-header-text">
           <h1 class="section-title">生活水平</h1>
@@ -174,7 +182,11 @@
     </section>
 
     <!-- 第三屏：职业推荐 & 建议 -->
-    <section class="fullpage-section" :class="{ active: currentPage === 2 }">
+    <section 
+      class="fullpage-section" 
+      :class="{ active: currentPage === 2 }"
+      :data-index="2"
+    >
       <div class="section-content">
         <div class="section-header-text">
           <h1 class="section-title">职业发展</h1>
@@ -671,6 +683,7 @@ const pages = ref([
   { label: '职业发展' }
 ])
 let isScrolling = false
+let scrollDirection = 'down' // 'up' 或 'down'
 
 // 生活水平轮播索引
 const currentLifestyleIndex = ref({})
@@ -744,28 +757,47 @@ const handleWheel = (event) => {
     return
   }
   
+  // 阻止默认滚动行为
+  event.preventDefault()
+  
   isScrolling = true
   
   if (event.deltaY > 0) {
     // 向下滚动
     if (currentPage.value < pages.value.length - 1) {
+      scrollDirection = 'down'
       currentPage.value++
+    } else {
+      isScrolling = false
+      return
     }
   } else {
     // 向上滚动
     if (currentPage.value > 0) {
+      scrollDirection = 'up'
       currentPage.value--
+    } else {
+      isScrolling = false
+      return
     }
   }
   
   setTimeout(() => {
     isScrolling = false
-  }, 800)
+  }, 1000)
 }
 
 const scrollToPage = (index) => {
+  if (isScrolling || index === currentPage.value) return
+  
   if (index >= 0 && index < pages.value.length) {
+    isScrolling = true
+    scrollDirection = index > currentPage.value ? 'down' : 'up'
     currentPage.value = index
+    
+    setTimeout(() => {
+      isScrolling = false
+    }, 1000)
   }
 }
 
@@ -837,16 +869,37 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transform: translateY(100vh);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   padding-top: 80px;
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1), 
+              opacity 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform, opacity;
 }
 
+/* 默认位置：下方 */
+.fullpage-section {
+  transform: translateY(100vh);
+}
+
+/* 激活状态 */
 .fullpage-section.active {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+  z-index: 2;
+}
+
+/* 根据当前页面位置动态调整非激活页面的位置 */
+.fullpage-container[data-current="0"] .fullpage-section[data-index="1"],
+.fullpage-container[data-current="0"] .fullpage-section[data-index="2"],
+.fullpage-container[data-current="1"] .fullpage-section[data-index="2"] {
+  transform: translateY(100vh);
+}
+
+.fullpage-container[data-current="1"] .fullpage-section[data-index="0"],
+.fullpage-container[data-current="2"] .fullpage-section[data-index="0"],
+.fullpage-container[data-current="2"] .fullpage-section[data-index="1"] {
+  transform: translateY(-100vh);
 }
 
 .fullpage-section:nth-child(2) {

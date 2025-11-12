@@ -1,0 +1,393 @@
+/* ============================================
+   NOW 职场成长平台 - 单屏布局优化
+   确保所有页面单屏显示，无滚动条
+   ============================================ */
+
+/* ===== 全局单屏设置 ===== */
+html, body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+#app {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== 页面容器单屏优化 ===== */
+.jobs,
+.growth,
+.career,
+.settings {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px;
+  box-sizing: border-box;
+}
+
+.unified-container {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 80px);
+}
+
+/* ===== 头部区域固定高度 ===== */
+.section-header-text {
+  flex-shrink: 0;
+  margin-bottom: var(--space-6);
+}
+
+.unified-title {
+  margin-bottom: var(--space-2);
+}
+
+.unified-subtitle {
+  margin-bottom: 0;
+}
+
+/* ===== 内容区域自适应 ===== */
+.jobs .unified-container > *:last-child,
+.growth .unified-container > *:last-child {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Jobs 页面优化 ===== */
+.jobs-grid {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 当内容超出时，使用轮播 */
+.jobs-grid-carousel {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 如果不使用轮播，则显示滚动条 */
+.jobs-grid.scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: var(--space-2);
+}
+
+/* 隐藏滚动条但保持功能 */
+.jobs-grid.scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+
+.jobs-grid.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.jobs-grid.scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.jobs-grid.scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== Growth 页面优化 ===== */
+.growth .unified-container {
+  justify-content: center;
+}
+
+/* ===== Career 页面优化 ===== */
+.career .unified-container {
+  max-height: calc(100vh - 80px);
+}
+
+.timeline-wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.timeline {
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ===== Home 页面全屏优化 ===== */
+.fullpage-container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.fullpage-section {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.section-content {
+  max-height: calc(100vh - 160px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ===== 模态框优化 ===== */
+.unified-modal {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.unified-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.unified-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.unified-modal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+/* ===== 卡片网格优化 ===== */
+.earnings-grid,
+.stats-grid,
+.career-grid {
+  display: grid;
+  gap: var(--space-4);
+  max-height: 100%;
+  overflow: hidden;
+}
+
+/* ===== 生活方式区域优化 ===== */
+.lifestyle-showcase {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 生活方式轮播容器 */
+.lifestyle-carousel-wrapper {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 如果使用滚动模式 */
+.lifestyle-showcase.scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: var(--space-2);
+}
+
+.lifestyle-showcase.scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+
+.lifestyle-showcase.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.lifestyle-showcase.scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+/* ===== 响应式优化 ===== */
+@media (max-width: 768px) {
+  .jobs,
+  .growth,
+  .career,
+  .settings {
+    padding-top: 70px;
+  }
+  
+  .unified-container {
+    max-height: calc(100vh - 70px);
+  }
+  
+  .section-content {
+    max-height: calc(100vh - 140px);
+  }
+}
+
+/* ===== 紧凑模式 ===== */
+@media (max-height: 800px) {
+  .section-header-text {
+    margin-bottom: var(--space-4);
+  }
+  
+  .unified-title {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-1);
+  }
+  
+  .unified-subtitle {
+    font-size: var(--text-xs);
+  }
+  
+  .unified-card {
+    padding: var(--space-4);
+  }
+  
+  .earnings-grid,
+  .stats-grid {
+    gap: var(--space-3);
+  }
+}
+
+@media (max-height: 700px) {
+  .jobs,
+  .growth,
+  .career {
+    padding-top: 60px;
+  }
+  
+  .unified-container {
+    max-height: calc(100vh - 60px);
+  }
+  
+  .section-header-text {
+    margin-bottom: var(--space-3);
+  }
+  
+  .unified-card {
+    padding: var(--space-3);
+  }
+}
+
+
+/* ===== 自动轮播容器 ===== */
+.auto-carousel {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 轮播项目网格 */
+.carousel-grid-container {
+  display: grid;
+  gap: var(--space-4);
+  height: 100%;
+  padding: var(--space-2);
+}
+
+/* 2列网格 */
+.carousel-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* 3列网格 */
+.carousel-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* 4列网格 */
+.carousel-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* ===== 智能分页 ===== */
+.paginated-content {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.page-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-items {
+  flex: 1;
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  padding: var(--space-2);
+}
+
+/* 元素少时居中显示 */
+.page-items.few-items {
+  align-content: center;
+  justify-content: center;
+  padding: var(--space-8);
+}
+
+.page-items.some-items {
+  align-content: center;
+  padding: var(--space-6);
+}
+
+/* ===== 分页导航 ===== */
+.pagination-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  flex-shrink: 0;
+}
+
+.pagination-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-lg);
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-semibold);
+  min-width: 80px;
+  text-align: center;
+}
+
+/* ===== 响应式分页 ===== */
+@media (max-width: 1024px) {
+  .carousel-grid-4,
+  .carousel-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-grid-4,
+  .carousel-grid-3,
+  .carousel-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .pagination-btn {
+    width: 32px;
+    height: 32px;
+    font-size: var(--text-base);
+  }
+}

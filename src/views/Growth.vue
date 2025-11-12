@@ -257,10 +257,13 @@ onUnmounted(() => {
 
 <style scoped>
 .growth {
-  padding: 100px var(--space-8) var(--space-8);
-  min-height: 100vh;
+  padding: 80px var(--space-6) var(--space-6);
+  height: 100vh;
   background: var(--immersive-bg-primary);
   position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .growth::before {
@@ -280,14 +283,21 @@ onUnmounted(() => {
 .unified-container {
   position: relative;
   z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .section-header-text {
-  margin-bottom: var(--space-12);
+  margin-bottom: var(--space-6);
+  flex-shrink: 0;
 }
 
 .completion-section {
-  margin-top: var(--space-8);
+  margin-top: var(--space-6);
+  flex-shrink: 0;
 }
 
 @keyframes pulse {
@@ -302,12 +312,31 @@ onUnmounted(() => {
 /* 响应式 */
 @media (max-width: 768px) {
   .growth {
-    padding: 80px var(--space-4) var(--space-4);
+    padding: 70px var(--space-4) var(--space-4);
+  }
+  
+  .section-header-text {
+    margin-bottom: var(--space-4);
+  }
+  
+  .completion-section {
+    margin-top: var(--space-4);
   }
   
   .completion-section .flex {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (max-height: 800px) {
+  .growth {
+    padding-top: 70px;
+    padding-bottom: var(--space-4);
+  }
+  
+  .section-header-text .unified-title {
+    font-size: 2rem;
   }
 }
 </style>

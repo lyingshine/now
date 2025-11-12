@@ -44,36 +44,52 @@ const progress = computed(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
 }
 
 .level {
   color: var(--rank-color, var(--color-primary));
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
 }
 
 .exp-text {
   color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
 }
 
 .exp-progress {
   height: 12px;
-  background: var(--bg-primary);
+  background: var(--bg-tertiary);
   border-radius: var(--radius-full);
   overflow: hidden;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-inner);
   position: relative;
 }
 
 .exp-fill {
   height: 100%;
-  background: var(--rank-color, var(--color-primary));
+  background: linear-gradient(90deg, var(--rank-color, var(--color-primary)) 0%, rgba(102, 126, 234, 0.8) 100%);
   border-radius: var(--radius-full);
-  transition: width 0.5s ease;
+  transition: width 0.6s var(--ease-out-expo);
   position: relative;
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
+}
+
+.exp-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
+  border-radius: var(--radius-full) var(--radius-full) 0 0;
 }
 
 .exp-fill::after {
@@ -83,11 +99,7 @@ const progress = computed(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.3) 50%, 
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
   animation: shimmer 2s infinite;
 }
 
@@ -95,29 +107,8 @@ const progress = computed(() => {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
-  position: relative;
-  overflow: hidden;
-}
 
-.exp-shine {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  animation: shine 2s infinite;
-}
-
-@keyframes shine {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 200%;
-  }
-}
-
+.dark .exp-progress,
 body.dark-mode .exp-progress {
   background: rgba(30, 41, 59, 0.5);
 }

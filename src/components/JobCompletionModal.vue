@@ -1,8 +1,8 @@
 <template>
   <Teleport to="body">
     <Transition name="modal">
-      <div v-if="isOpen" class="modal-overlay" @click="handleClose">
-        <div class="modal-container" @click.stop>
+      <div v-if="isOpen" class="unified-modal-overlay modal-overlay" @click="handleClose">
+        <div class="unified-modal modal-container" @click.stop>
           <div class="modal-content">
             <!-- 庆祝动画 -->
             <div class="celebration-header">
@@ -79,11 +79,11 @@
 
             <!-- 操作按钮 -->
             <div class="modal-actions">
-              <button @click="goToJobs" class="btn-secondary">
-                查看更多岗位
+              <button @click="goToJobs" class="unified-btn btn-secondary">
+                <span>查看更多岗位</span>
               </button>
-              <button @click="handleClose" class="btn-primary">
-                太棒了！
+              <button @click="handleClose" class="unified-btn unified-btn-primary btn-primary">
+                <span>太棒了！</span>
               </button>
             </div>
           </div>
@@ -151,87 +151,28 @@ const goToJobs = () => {
 </script>
 
 <style scoped>
+/* 使用统一设计系统的模态框样式 */
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 9999;
-  padding: 20px;
 }
 
 .modal-container {
-  background: var(--bg-primary);
-  border-radius: var(--radius-3xl);
   max-width: 600px;
   width: 100%;
   max-height: 85vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: modalSlideUp 0.4s ease-out;
-}
-
-.modal-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.modal-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.modal-container::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
-  border-radius: 4px;
-}
-
-body.dark-mode .modal-container::-webkit-scrollbar-thumb {
-  background: var(--color-gray-600);
-}
-
-@keyframes modalSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 .modal-content {
-  padding: 2.5rem;
+  padding: var(--space-10);
   overflow-y: auto;
   flex: 1;
 }
 
-.modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
-  border-radius: 3px;
-}
-
-body.dark-mode .modal-content::-webkit-scrollbar-thumb {
-  background: var(--color-gray-600);
-}
-
 .celebration-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-8);
 }
 
 .celebration-icon {
@@ -254,30 +195,32 @@ body.dark-mode .modal-content::-webkit-scrollbar-thumb {
 .celebration-title {
   font-size: 1.75rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, var(--rank-color, var(--neon-purple)) 0%, var(--color-success) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-top: 1rem;
+  margin-top: var(--space-4);
 }
 
 .job-info {
   text-align: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  padding: var(--space-8);
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, var(--rank-color, var(--neon-purple)) 10%, transparent),
+    color-mix(in srgb, var(--rank-color, var(--neon-purple)) 5%, transparent));
   border-radius: var(--radius-2xl);
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-8);
 }
 
 .job-badge {
   width: 80px;
   height: 80px;
-  margin: 0 auto 1rem;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  margin: 0 auto var(--space-4);
+  background: linear-gradient(135deg, var(--rank-color, var(--neon-purple)) 0%, var(--color-success) 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 40%, transparent);
 }
 
 .job-icon {
@@ -287,30 +230,30 @@ body.dark-mode .modal-content::-webkit-scrollbar-thumb {
 .job-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  color: var(--immersive-text-primary);
+  margin-bottom: var(--space-2);
 }
 
 .job-subtitle {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--immersive-text-secondary);
 }
 
 .rewards-section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
 }
 
 .reward-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--bg-secondary);
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--immersive-bg-secondary);
   border-radius: var(--radius-xl);
-  transition: transform 0.2s ease;
+  transition: transform var(--transition-fast);
 }
 
 .reward-item:hover {
@@ -320,8 +263,8 @@ body.dark-mode .modal-content::-webkit-scrollbar-thumb {
 .reward-icon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-  border-radius: 12px;
+  background: linear-gradient(135deg, var(--color-success) 0%, var(--rank-color, var(--neon-purple)) 100%);
+  border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,49 +278,49 @@ body.dark-mode .modal-content::-webkit-scrollbar-thumb {
 
 .reward-label {
   font-size: 0.75rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.25rem;
+  color: var(--immersive-text-secondary);
+  margin-bottom: var(--space-1);
 }
 
 .reward-value {
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--immersive-text-primary);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .old-value {
-  color: var(--text-secondary);
+  color: var(--immersive-text-tertiary);
   text-decoration: line-through;
   font-size: 0.875rem;
 }
 
 .arrow {
-  color: var(--text-secondary);
+  color: var(--immersive-text-tertiary);
 }
 
 .new-value {
-  color: var(--growth-primary);
+  color: var(--rank-color, var(--neon-purple));
   font-size: 1.25rem;
 }
 
 .growth {
-  color: var(--growth-primary);
+  color: var(--color-success);
   font-size: 0.875rem;
-  padding: 0.25rem 0.5rem;
-  background: rgba(16, 185, 129, 0.1);
-  border-radius: 6px;
+  padding: var(--space-1) var(--space-2);
+  background: color-mix(in srgb, var(--color-success) 10%, transparent);
+  border-radius: var(--radius-md);
 }
 
 .stats-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: var(--bg-secondary);
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+  padding: var(--space-6);
+  background: var(--immersive-bg-secondary);
   border-radius: var(--radius-xl);
 }
 
@@ -387,28 +330,30 @@ body.dark-mode .modal-content::-webkit-scrollbar-thumb {
 
 .stat-label {
   font-size: 0.75rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
+  color: var(--immersive-text-secondary);
+  margin-bottom: var(--space-2);
 }
 
 .stat-value {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--rank-color, var(--neon-purple));
 }
 
 .next-steps {
-  padding: 1.5rem;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+  padding: var(--space-6);
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, var(--color-warning) 10%, transparent),
+    color-mix(in srgb, var(--color-warning) 5%, transparent));
   border-radius: var(--radius-xl);
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-8);
 }
 
 .next-steps-title {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
+  color: var(--immersive-text-primary);
+  margin-bottom: var(--space-4);
 }
 
 .next-steps-list {
@@ -419,9 +364,9 @@ body.dark-mode .modal-content::-webkit-scrollbar-thumb {
 
 .next-steps-list li {
   font-size: 0.875rem;
-  color: var(--text-secondary);
-  padding: 0.5rem 0;
-  padding-left: 1.5rem;
+  color: var(--immersive-text-secondary);
+  padding: var(--space-2) 0;
+  padding-left: var(--space-6);
   position: relative;
 }
 
@@ -429,66 +374,34 @@ body.dark-mode .modal-content::-webkit-scrollbar-thumb {
   content: '✓';
   position: absolute;
   left: 0;
-  color: var(--growth-primary);
+  color: var(--color-success);
   font-weight: 700;
 }
 
 .modal-actions {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
-.btn-primary,
 .btn-secondary {
   flex: 1;
-  padding: 0.875rem 1.5rem;
-  border: none;
-  border-radius: var(--radius-xl);
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
-}
-
-.btn-secondary {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border: 2px solid var(--border-color);
+  background: var(--immersive-bg-secondary) !important;
+  color: var(--immersive-text-primary) !important;
+  border: 2px solid var(--immersive-border) !important;
 }
 
 .btn-secondary:hover {
-  background: var(--bg-tertiary);
-  transform: translateY(-2px);
+  background: var(--immersive-bg-tertiary) !important;
 }
 
-/* 暗色模式 */
-body.dark-mode .modal-container {
-  background: var(--bg-secondary);
-}
-
-body.dark-mode .job-info {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
-}
-
-body.dark-mode .next-steps {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(251, 191, 36, 0.15));
+.btn-primary {
+  flex: 1;
 }
 
 /* 过渡动画 */
 .modal-enter-active,
 .modal-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity var(--transition-fast);
 }
 
 .modal-enter-from,
@@ -499,7 +412,7 @@ body.dark-mode .next-steps {
 /* 响应式 */
 @media (max-width: 640px) {
   .modal-content {
-    padding: 1.5rem;
+    padding: var(--space-6);
   }
 
   .stats-section {

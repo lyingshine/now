@@ -32,99 +32,116 @@ defineProps({
 .lifestyle-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-6);
 }
 
-/* 第1行：收入储蓄 */
+/* 分类背景色 */
 .lifestyle-category.income {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
 }
 
-/* 第2行：基础开销 */
 .lifestyle-category.basic {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(99, 102, 241, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(99, 102, 241, 0.03) 100%);
 }
 
-/* 第3行：日常消费（含饮食）和大件消费 */
 .lifestyle-category.daily,
 .lifestyle-category.optional {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.03) 100%);
 }
 
-/* 第4行：整体满意度 */
 .lifestyle-category.summary {
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.03) 100%);
 }
 
 .lifestyle-category {
-  backdrop-filter: blur(10px);
-  border-radius: var(--radius-xl);
-  padding: var(--space-5);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-md);
+  transition: all var(--duration-normal) var(--ease-smooth);
   position: relative;
   overflow: visible;
 }
 
-.lifestyle-category:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateX(2px);
+.lifestyle-category::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.5) 50%, transparent 100%);
+  opacity: 0.5;
 }
 
+.lifestyle-category:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.dark .lifestyle-category,
 body.dark-mode .lifestyle-category {
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
 }
 
+.dark .lifestyle-category.income,
 body.dark-mode .lifestyle-category.income {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.08) 100%);
 }
 
+.dark .lifestyle-category.basic,
 body.dark-mode .lifestyle-category.basic {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.08) 100%);
 }
 
+.dark .lifestyle-category.daily,
+.dark .lifestyle-category.optional,
 body.dark-mode .lifestyle-category.daily,
 body.dark-mode .lifestyle-category.optional {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.08) 100%);
 }
 
+.dark .lifestyle-category.summary,
 body.dark-mode .lifestyle-category.summary {
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
 }
 
 .lifestyle-category-title {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-gray-900);
-  margin-bottom: var(--space-3);
-  padding-bottom: var(--space-2);
-  padding-left: var(--space-2);
-  border-bottom: 1px solid var(--color-gray-200);
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  padding-left: var(--space-3);
+  border-bottom: 1px solid var(--border-default);
   border-left: 3px solid;
+  letter-spacing: -0.01em;
 }
 
 .lifestyle-category.income .lifestyle-category-title {
-  border-left-color: #10b981;
+  border-left-color: var(--color-success);
 }
 
 .lifestyle-category.basic .lifestyle-category-title {
-  border-left-color: #6366f1;
+  border-left-color: var(--color-primary);
 }
 
 .lifestyle-category.daily .lifestyle-category-title,
 .lifestyle-category.optional .lifestyle-category-title {
-  border-left-color: #f59e0b;
+  border-left-color: var(--color-warning);
 }
 
 .lifestyle-category.summary .lifestyle-category-title {
   border-left-color: #ec4899;
 }
 
+.dark .lifestyle-category-title,
 body.dark-mode .lifestyle-category-title {
-  color: var(--color-gray-100);
-  border-bottom-color: var(--color-gray-700);
+  color: var(--text-primary);
+  border-bottom-color: var(--border-default);
 }
 
 .lifestyle-category-items {
@@ -156,12 +173,13 @@ body.dark-mode .lifestyle-category-title {
 }
 
 .lifestyle-item {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(5px);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  transition: all var(--duration-fast) var(--ease-smooth);
   display: flex;
   gap: var(--space-3);
   position: relative;
@@ -169,49 +187,73 @@ body.dark-mode .lifestyle-category-title {
   min-height: 80px;
 }
 
-.lifestyle-item:hover {
-  background: rgba(255, 255, 255, 0.9);
-  transform: translateX(4px);
-  box-shadow: var(--shadow-sm);
+.lifestyle-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+  pointer-events: none;
 }
 
+.lifestyle-item:hover {
+  background: var(--glass-bg-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.lifestyle-item:hover::before {
+  opacity: 1;
+}
+
+.dark .lifestyle-item,
 body.dark-mode .lifestyle-item {
   background: rgba(30, 41, 59, 0.6);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+.dark .lifestyle-item:hover,
 body.dark-mode .lifestyle-item:hover {
   background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .lifestyle-icon {
-  font-size: 1.5rem;
+  font-size: var(--text-2xl);
+  line-height: 1;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   flex-shrink: 0;
 }
 
 .lifestyle-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-gray-900);
-  margin-bottom: 4px;
-  line-height: 1.3;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+  line-height: var(--leading-tight);
   word-break: keep-all;
   white-space: nowrap;
 }
 
 .lifestyle-desc {
-  font-size: 0.8125rem;
-  color: var(--color-gray-600);
-  line-height: 1.5;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
   word-break: break-word;
 }
 
+.dark .lifestyle-title,
 body.dark-mode .lifestyle-title {
-  color: var(--color-gray-100);
+  color: var(--text-primary);
 }
 
+.dark .lifestyle-desc,
 body.dark-mode .lifestyle-desc {
-  color: var(--color-gray-400);
+  color: var(--text-secondary);
 }
 </style>

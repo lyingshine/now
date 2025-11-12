@@ -8,7 +8,7 @@
 
       <div class="settings-content">
         <!-- 基本信息 -->
-        <div class="unified-card unified-card-large mb-6">
+        <div class="unified-card">
           <h2 class="unified-section-title">👤 基本信息</h2>
           <div class="form-grid">
             <div class="form-group">
@@ -32,7 +32,7 @@
         </div>
 
         <!-- 工作信息 -->
-        <div class="unified-card unified-card-large mb-6">
+        <div class="unified-card">
           <h2 class="unified-section-title">💼 工作信息</h2>
           <div class="form-grid">
             <div class="form-group">
@@ -84,7 +84,7 @@
         </div>
 
         <!-- 生活信息 -->
-        <div class="unified-card unified-card-large mb-6">
+        <div class="unified-card">
           <h2 class="unified-section-title">🏠 生活信息</h2>
           <div class="form-grid">
             <div class="form-group">
@@ -222,10 +222,13 @@ onMounted(() => {
 
 <style scoped>
 .settings {
-  min-height: 100vh;
+  height: 100vh;
   background: var(--immersive-bg-primary);
-  padding: 100px var(--space-8) var(--space-8);
+  padding: 80px var(--space-6) var(--space-6);
   position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .settings::before {
@@ -245,20 +248,33 @@ onMounted(() => {
 .unified-container {
   position: relative;
   z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .section-header-text {
-  margin-bottom: var(--space-12);
+  margin-bottom: var(--space-6);
+  flex-shrink: 0;
 }
 
 .settings-content {
-  /* 移除宽度限制，与其他页面保持一致 */
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: var(--space-2);
+}
+
+.unified-card {
+  margin-bottom: var(--space-4);
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
 .form-group {
@@ -279,25 +295,56 @@ onMounted(() => {
   display: flex;
   gap: var(--space-4);
   justify-content: center;
-  margin-top: var(--space-8);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  flex-shrink: 0;
 }
 
 /* 响应式 */
 @media (max-width: 768px) {
   .settings {
-    padding: 80px var(--space-4) var(--space-4);
+    padding: 70px var(--space-4) var(--space-4);
+  }
+  
+  .section-header-text {
+    margin-bottom: var(--space-4);
+  }
+  
+  .unified-card {
+    margin-bottom: var(--space-3);
   }
   
   .form-grid {
     grid-template-columns: 1fr;
+    gap: var(--space-3);
   }
   
   .actions {
     flex-direction: column;
+    margin-top: var(--space-4);
   }
   
   .actions button {
     width: 100%;
+  }
+}
+
+@media (max-height: 800px) {
+  .settings {
+    padding-top: 70px;
+    padding-bottom: var(--space-4);
+  }
+  
+  .section-header-text .unified-title {
+    font-size: 2rem;
+  }
+  
+  .unified-card {
+    margin-bottom: var(--space-3);
+  }
+  
+  .form-grid {
+    gap: var(--space-3);
   }
 }
 </style>

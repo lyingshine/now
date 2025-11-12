@@ -1,0 +1,255 @@
+/* ============================================
+   NOW 职场成长平台 - 智能轮播系统
+   当内容超出单屏时自动轮播
+   ============================================ */
+
+/* ===== 轮播容器 ===== */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-wrapper {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== 轮播指示器 ===== */
+.carousel-indicators {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-2);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(var(--blur-md));
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+}
+
+.carousel-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.carousel-indicator:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.2);
+}
+
+.carousel-indicator.active {
+  background: var(--color-primary);
+  width: 24px;
+}
+
+/* ===== 轮播导航按钮 ===== */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(var(--blur-md));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  z-index: 10;
+  color: white;
+  font-size: var(--text-xl);
+  user-select: none;
+}
+
+.carousel-nav:hover {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-nav.prev {
+  left: var(--space-4);
+}
+
+.carousel-nav.next {
+  right: var(--space-4);
+}
+
+.carousel-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: translateY(-50%);
+}
+
+/* ===== 自动轮播进度条 ===== */
+.carousel-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 9;
+}
+
+.carousel-progress-bar {
+  height: 100%;
+  background: var(--color-primary);
+  transition: width 0.1s linear;
+}
+
+/* ===== 垂直轮播 ===== */
+.carousel-container.vertical .carousel-wrapper {
+  flex-direction: column;
+}
+
+.carousel-container.vertical .carousel-item {
+  flex: 0 0 100%;
+  height: 100%;
+}
+
+.carousel-container.vertical .carousel-nav.prev {
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.carousel-container.vertical .carousel-nav.next {
+  top: auto;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.carousel-container.vertical .carousel-nav:hover {
+  transform: translateX(-50%) scale(1.1);
+}
+
+.carousel-container.vertical .carousel-indicators {
+  right: var(--space-4);
+  left: auto;
+  bottom: 50%;
+  transform: translateY(50%);
+  flex-direction: column;
+}
+
+/* ===== 网格轮播（用于卡片列表） ===== */
+.carousel-grid {
+  display: grid;
+  gap: var(--space-4);
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-grid-item {
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+/* ===== 淡入淡出效果 ===== */
+.carousel-container.fade .carousel-wrapper {
+  transition: opacity 0.6s ease;
+}
+
+.carousel-container.fade .carousel-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.carousel-container.fade .carousel-item.active {
+  opacity: 1;
+  position: relative;
+}
+
+/* ===== 响应式优化 ===== */
+@media (max-width: 768px) {
+  .carousel-nav {
+    width: 36px;
+    height: 36px;
+    font-size: var(--text-lg);
+  }
+  
+  .carousel-nav.prev {
+    left: var(--space-2);
+  }
+  
+  .carousel-nav.next {
+    right: var(--space-2);
+  }
+  
+  .carousel-indicators {
+    bottom: var(--space-3);
+    padding: var(--space-1) var(--space-3);
+  }
+}
+
+/* ===== 触摸滑动支持 ===== */
+.carousel-container.touch-enabled {
+  touch-action: pan-y;
+}
+
+.carousel-container.touch-enabled .carousel-wrapper {
+  cursor: grab;
+}
+
+.carousel-container.touch-enabled .carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+/* ===== 无缝循环轮播 ===== */
+.carousel-container.loop .carousel-wrapper {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-container.loop .carousel-wrapper.no-transition {
+  transition: none;
+}
+
+/* ===== 轮播内容适配 ===== */
+.carousel-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== 小型轮播指示器（用于紧凑空间） ===== */
+.carousel-indicators.compact {
+  padding: var(--space-1) var(--space-2);
+  gap: var(--space-1);
+}
+
+.carousel-indicators.compact .carousel-indicator {
+  width: 6px;
+  height: 6px;
+}
+
+.carousel-indicators.compact .carousel-indicator.active {
+  width: 18px;
+}

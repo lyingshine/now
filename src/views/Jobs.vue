@@ -24,12 +24,12 @@
         <p class="unified-subtitle">
           {{ questStore.hasActiveQuest ? '完成当前任务后可接取新任务' : '接取任务，提升技能，升级你的职业生涯！' }}
         </p>
-        <div class="flex justify-center gap-6 mt-6">
-          <div class="unified-tag unified-tag-primary" style="padding: var(--space-3) var(--space-6); font-size: var(--text-sm);">
+        <div class="flex justify-center gap-4">
+          <div class="unified-tag unified-tag-primary" style="padding: var(--space-2) var(--space-4); font-size: var(--text-sm);">
             <span class="unified-icon-small">📋</span>
             <span>{{ jobsStore.jobs.length }} 个可用任务</span>
           </div>
-          <div class="unified-tag unified-tag-primary" style="padding: var(--space-3) var(--space-6); font-size: var(--text-sm);">
+          <div class="unified-tag unified-tag-primary" style="padding: var(--space-2) var(--space-4); font-size: var(--text-sm);">
             <span class="unified-icon-small">🎯</span>
             <span>{{ questStore.hasActiveQuest ? '1 个进行中' : '0 个进行中' }}</span>
           </div>
@@ -145,10 +145,13 @@ onUnmounted(() => {
 
 <style scoped>
 .jobs {
-  padding: 100px var(--space-8) var(--space-8);
-  min-height: 100vh;
+  padding: 80px var(--space-6) var(--space-6);
+  height: 100vh;
   background: var(--immersive-bg-primary);
   position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .jobs::before {
@@ -168,15 +171,32 @@ onUnmounted(() => {
 .unified-container {
   position: relative;
   z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .section-header-text {
-  margin-bottom: var(--space-12);
+  margin-bottom: var(--space-6);
+  flex-shrink: 0;
 }
+
+.section-header-text .unified-title {
+  margin-bottom: var(--space-2);
+}
+
+.section-header-text .unified-subtitle {
+  margin-bottom: var(--space-4);
+}
+
+
 
 /* 活跃任务警告 */
 .active-quest-warning {
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
+  flex-shrink: 0;
   animation: slideDown 0.3s ease-out;
 }
 
@@ -194,7 +214,15 @@ onUnmounted(() => {
 /* 响应式 */
 @media (max-width: 768px) {
   .jobs {
-    padding: 80px var(--space-4) var(--space-4);
+    padding: 70px var(--space-4) var(--space-4);
+  }
+  
+  .section-header-text {
+    margin-bottom: var(--space-4);
+  }
+  
+  .active-quest-warning {
+    margin-bottom: var(--space-4);
   }
   
   .active-quest-warning .flex {
@@ -204,6 +232,21 @@ onUnmounted(() => {
   
   .active-quest-warning .unified-btn {
     width: 100%;
+  }
+}
+
+@media (max-height: 800px) {
+  .jobs {
+    padding-top: 70px;
+    padding-bottom: var(--space-4);
+  }
+  
+  .section-header-text {
+    margin-bottom: var(--space-4);
+  }
+  
+  .section-header-text .unified-title {
+    font-size: 2rem;
   }
 }
 </style>

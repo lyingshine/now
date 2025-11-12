@@ -1,0 +1,234 @@
+/* ============================================
+   NOW 职场成长平台 - 响应式优化
+   移动端和平板适配
+   ============================================ */
+
+/* ===== 平板适配 (1024px以下) ===== */
+@media (max-width: 1024px) {
+  :root {
+    --space-12: 2.5rem;
+    --space-16: 3.5rem;
+  }
+  
+  .unified-container {
+    padding: 0 var(--space-6);
+  }
+  
+  .navbar-content {
+    padding: var(--space-4) var(--space-8);
+    gap: var(--space-8);
+  }
+}
+
+/* ===== 移动端适配 (768px以下) ===== */
+@media (max-width: 768px) {
+  :root {
+    --text-3xl: 1.5rem;
+    --text-4xl: 1.875rem;
+    --text-5xl: 2.25rem;
+    --text-6xl: 3rem;
+    --space-8: 1.5rem;
+    --space-10: 2rem;
+    --space-12: 2rem;
+    --space-16: 3rem;
+  }
+  
+  /* 容器 */
+  .unified-container {
+    padding: 0 var(--space-4);
+  }
+  
+  /* 导航栏 */
+  .navbar-content {
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-4);
+  }
+  
+  .navbar-logo {
+    font-size: var(--text-2xl);
+  }
+  
+  .navbar-menu {
+    gap: var(--space-1);
+    padding: var(--space-1);
+  }
+  
+  .nav-btn {
+    padding: var(--space-3);
+    min-width: auto;
+  }
+  
+  .nav-btn span:last-child {
+    display: none;
+  }
+  
+  /* 卡片 */
+  .unified-card {
+    padding: var(--space-4);
+  }
+  
+  .unified-card-large {
+    padding: var(--space-6);
+  }
+  
+  /* 按钮 */
+  .unified-btn-large {
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-base);
+  }
+  
+  /* 标题 */
+  .unified-title {
+    font-size: var(--text-2xl);
+  }
+  
+  .unified-section-title {
+    font-size: var(--text-xl);
+  }
+  
+  /* 模态框 */
+  .unified-modal-overlay {
+    padding: var(--space-4);
+  }
+  
+  .unified-modal {
+    max-width: 100%;
+  }
+  
+  .unified-modal-header,
+  .unified-modal-body,
+  .unified-modal-footer {
+    padding: var(--space-4);
+  }
+  
+  /* 网格 */
+  .unified-grid-2,
+  .unified-grid-3,
+  .unified-grid-4 {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
+  /* 生活方式分类 */
+  .lifestyle-category {
+    padding: var(--space-4);
+  }
+  
+  .lifestyle-category-items {
+    gap: var(--space-2);
+  }
+  
+  .lifestyle-category.basic .lifestyle-category-items,
+  .lifestyle-category.daily .lifestyle-category-items,
+  .lifestyle-category.optional .lifestyle-category-items {
+    grid-template-columns: 1fr;
+  }
+  
+  .lifestyle-item {
+    min-height: auto;
+    padding: var(--space-3);
+  }
+  
+  .lifestyle-icon {
+    font-size: var(--text-xl);
+  }
+  
+  /* 等级显示 */
+  .level-display {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .level-badge {
+    justify-content: center;
+  }
+}
+
+/* ===== 小屏手机适配 (480px以下) ===== */
+@media (max-width: 480px) {
+  :root {
+    --text-2xl: 1.25rem;
+    --text-3xl: 1.375rem;
+    --space-6: 1.25rem;
+    --space-8: 1.5rem;
+  }
+  
+  .unified-container {
+    padding: 0 var(--space-3);
+  }
+  
+  .navbar-content {
+    padding: var(--space-2) var(--space-3);
+  }
+  
+  .navbar-logo {
+    font-size: var(--text-xl);
+  }
+  
+  .unified-card {
+    padding: var(--space-3);
+    border-radius: var(--radius-xl);
+  }
+  
+  .unified-title {
+    font-size: var(--text-xl);
+  }
+  
+  .earnings-amount {
+    font-size: var(--text-4xl);
+  }
+}
+
+/* ===== 横屏适配 ===== */
+@media (max-height: 600px) and (orientation: landscape) {
+  .unified-modal {
+    max-height: 85vh;
+  }
+  
+  .fullpage-section {
+    padding-top: 60px;
+  }
+}
+
+/* ===== 触摸设备优化 ===== */
+@media (hover: none) and (pointer: coarse) {
+  /* 增大可点击区域 */
+  .btn,
+  .unified-btn,
+  .nav-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* 移除悬停效果 */
+  .card:hover,
+  .unified-card:hover,
+  .lifestyle-item:hover {
+    transform: none;
+  }
+  
+  /* 优化点击反馈 */
+  .btn:active,
+  .unified-btn:active,
+  .nav-btn:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
+
+/* ===== 高分辨率屏幕优化 ===== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* 优化文字渲染 */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* 优化边框 */
+  .card,
+  .unified-card,
+  .btn,
+  .unified-btn {
+    border-width: 1px;
+  }
+}
