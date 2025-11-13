@@ -1,0 +1,264 @@
+/* ============================================
+   NOW 职场成长平台 - 网格系统
+   
+   层级：第 2 层 - 网格布局
+   职责：定义灵活的网格系统
+   规则：使用 CSS Grid，支持响应式
+   ============================================ */
+
+/* ===== 基础网格 ===== */
+.grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* ===== 网格列数 ===== */
+.grid-cols-1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-cols-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.grid-cols-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+/* ===== 自动填充网格 ===== */
+.grid-auto-fit {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-auto-fill {
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+/* ===== 网格间距 ===== */
+.grid-gap-2 {
+  gap: var(--space-2);
+}
+
+.grid-gap-3 {
+  gap: var(--space-3);
+}
+
+.grid-gap-4 {
+  gap: var(--space-4);
+}
+
+.grid-gap-6 {
+  gap: var(--space-6);
+}
+
+.grid-gap-8 {
+  gap: var(--space-8);
+}
+
+/* ===== 特定网格布局 ===== */
+
+/* Jobs 网格 */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-4);
+  padding: var(--space-2);
+}
+
+/* 收益网格 */
+.earnings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+/* 统计网格 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+/* 职业网格 */
+.career-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-6);
+}
+
+/* ===== 轮播网格 ===== */
+.carousel-grid-container {
+  display: grid;
+  gap: var(--space-4);
+  height: 100%;
+  padding: var(--space-2);
+}
+
+.carousel-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.carousel-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.carousel-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* ===== 分页网格 ===== */
+.page-items {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  padding: var(--space-2);
+}
+
+/* 元素少时居中显示 */
+.page-items.few-items {
+  align-content: center;
+  justify-content: center;
+  padding: var(--space-8);
+}
+
+.page-items.some-items {
+  align-content: center;
+  padding: var(--space-6);
+}
+
+/* ===== 响应式网格 ===== */
+
+/* 大屏幕 (1280px+) */
+@media (min-width: 1280px) {
+  .grid-cols-xl-1 { grid-template-columns: repeat(1, 1fr); }
+  .grid-cols-xl-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-cols-xl-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-cols-xl-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-cols-xl-5 { grid-template-columns: repeat(5, 1fr); }
+  .grid-cols-xl-6 { grid-template-columns: repeat(6, 1fr); }
+}
+
+/* 中等屏幕 (1024px - 1279px) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .grid-cols-lg-1 { grid-template-columns: repeat(1, 1fr); }
+  .grid-cols-lg-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-cols-lg-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-cols-lg-4 { grid-template-columns: repeat(4, 1fr); }
+  
+  .carousel-grid-4,
+  .carousel-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 平板 (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-cols-md-1 { grid-template-columns: repeat(1, 1fr); }
+  .grid-cols-md-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-cols-md-3 { grid-template-columns: repeat(3, 1fr); }
+  
+  .grid-cols-3,
+  .grid-cols-4,
+  .grid-cols-5,
+  .grid-cols-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .carousel-grid-4,
+  .carousel-grid-3,
+  .carousel-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .jobs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 手机 (< 768px) */
+@media (max-width: 767px) {
+  .grid-cols-sm-1 { grid-template-columns: repeat(1, 1fr); }
+  .grid-cols-sm-2 { grid-template-columns: repeat(2, 1fr); }
+  
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4,
+  .grid-cols-5,
+  .grid-cols-6 {
+    grid-template-columns: 1fr;
+  }
+  
+  .carousel-grid-4,
+  .carousel-grid-3,
+  .carousel-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .jobs-grid,
+  .earnings-grid,
+  .stats-grid,
+  .career-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
+  .grid {
+    gap: var(--space-3);
+  }
+}
+
+/* ===== Flexbox 网格替代 ===== */
+/* 用于需要更灵活布局的场景 */
+.flex-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.flex-grid > * {
+  flex: 1 1 300px;
+}
+
+.flex-grid-sm > * {
+  flex: 1 1 200px;
+}
+
+.flex-grid-lg > * {
+  flex: 1 1 400px;
+}
+
+/* ===== 砌体布局 ===== */
+/* 用于不等高的卡片布局 */
+.masonry {
+  column-count: 3;
+  column-gap: var(--space-4);
+}
+
+.masonry > * {
+  break-inside: avoid;
+  margin-bottom: var(--space-4);
+}
+
+@media (max-width: 1024px) {
+  .masonry {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .masonry {
+    column-count: 1;
+  }
+}

@@ -1,0 +1,40 @@
+/* ============================================
+   NOW 职场成长平台 - 主样式文件
+   统一导入所有样式模块
+   ============================================ */
+
+/* 1. 设计令牌 - 所有设计变量 */
+@import './design-tokens.css';
+
+/* 2. 基础样式 - 全局重置和基础样式 */
+@import './base.css';
+
+/* 3. 组件样式 - 可复用组件 */
+@import './components.css';
+
+/* 4. 统一设计系统 - 高级组件和布局 */
+@import './unified-design.css';
+
+/* 5. 单屏布局优化 - 确保无滚动条 */
+@import './single-screen.css';
+
+/* 6. 智能轮播系统 - 内容超出时自动轮播 */
+@import './carousel.css';
+
+/* 7. 响应式优化 - 移动端和平板适配 */
+@import './responsive.css';
+
+/* 8. 日间模式增强 - 优化浅色主题体验 */
+@import './light-mode-enhanced.css';
+
+/* 9. 统一动画系统 - 高级非线性动画 */
+@import './animations.css';
+
+/* 10. 高级视觉效果 - 提升整体品质 */
+@import './premium-effects.css';
+
+/* 11. 暗黑模式增强 - 专属发光和视觉效果 */
+@import './dark-mode-enhanced.css';
+
+/* 12. 页面指示器日间模式优化 */
+@import './page-indicator-light.css';

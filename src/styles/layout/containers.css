@@ -1,0 +1,258 @@
+/* ============================================
+   NOW 职场成长平台 - 容器系统
+   
+   层级：第 2 层 - 布局容器
+   职责：定义页面容器和内容区域
+   规则：使用设计令牌，支持响应式
+   ============================================ */
+
+/* ===== 统一容器 ===== */
+.unified-container {
+  width: 100%;
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+/* 容器尺寸变体 */
+.unified-container-sm {
+  max-width: var(--container-sm);
+}
+
+.unified-container-md {
+  max-width: var(--container-md);
+}
+
+.unified-container-lg {
+  max-width: var(--container-lg);
+}
+
+.unified-container-xl {
+  max-width: var(--container-xl);
+}
+
+.unified-container-2xl {
+  max-width: var(--container-2xl);
+}
+
+.unified-container-full {
+  max-width: none;
+}
+
+/* ===== 单屏容器 ===== */
+/* 用于需要单屏显示的页面 */
+.fullpage-container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.fullpage-section {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== 页面容器 ===== */
+/* 用于主要页面布局 */
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px; /* 导航栏高度 */
+}
+
+/* 单屏页面容器 */
+.page-container-single {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px;
+  box-sizing: border-box;
+}
+
+/* ===== 内容区域 ===== */
+.content-wrapper {
+  flex: 1;
+  width: 100%;
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+/* 单屏内容区域 */
+.content-wrapper-single {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 80px);
+}
+
+/* ===== 区域容器 ===== */
+.section {
+  padding: var(--space-12) 0;
+}
+
+.section-sm {
+  padding: var(--space-8) 0;
+}
+
+.section-lg {
+  padding: var(--space-16) 0;
+}
+
+/* ===== 头部区域 ===== */
+.section-header {
+  margin-bottom: var(--space-8);
+  text-align: center;
+}
+
+.section-header-text {
+  flex-shrink: 0;
+  margin-bottom: var(--space-6);
+}
+
+/* ===== 卡片容器 ===== */
+.card-container {
+  padding: var(--space-6);
+}
+
+.card-container-sm {
+  padding: var(--space-4);
+}
+
+.card-container-lg {
+  padding: var(--space-8);
+}
+
+/* ===== 模态框容器 ===== */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  z-index: var(--z-modal);
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-2xl);
+}
+
+/* ===== 滚动容器 ===== */
+.scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scroll-container-x {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* 隐藏滚动条但保持功能 */
+.scroll-container-hidden::-webkit-scrollbar,
+.scroll-container-x-hidden::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scroll-container-hidden::-webkit-scrollbar-track,
+.scroll-container-x-hidden::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-container-hidden::-webkit-scrollbar-thumb,
+.scroll-container-x-hidden::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.scroll-container-hidden::-webkit-scrollbar-thumb:hover,
+.scroll-container-x-hidden::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== 响应式容器 ===== */
+@media (max-width: 1024px) {
+  .unified-container {
+    padding: 0 var(--space-4);
+  }
+  
+  .content-wrapper {
+    padding: var(--space-6) var(--space-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container,
+  .page-container-single {
+    padding-top: 70px;
+  }
+  
+  .content-wrapper-single {
+    max-height: calc(100vh - 70px);
+  }
+  
+  .unified-container {
+    padding: 0 var(--space-3);
+  }
+  
+  .content-wrapper {
+    padding: var(--space-4) var(--space-3);
+  }
+  
+  .section {
+    padding: var(--space-8) 0;
+  }
+  
+  .section-lg {
+    padding: var(--space-12) 0;
+  }
+  
+  .modal-container {
+    padding: var(--space-4);
+  }
+}
+
+/* ===== 紧凑模式（小屏幕高度） ===== */
+@media (max-height: 800px) {
+  .section-header-text {
+    margin-bottom: var(--space-4);
+  }
+  
+  .card-container {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-height: 700px) {
+  .page-container,
+  .page-container-single {
+    padding-top: 60px;
+  }
+  
+  .content-wrapper-single {
+    max-height: calc(100vh - 60px);
+  }
+  
+  .section-header-text {
+    margin-bottom: var(--space-3);
+  }
+  
+  .card-container {
+    padding: var(--space-3);
+  }
+}

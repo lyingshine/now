@@ -1,0 +1,332 @@
+/* ============================================
+   NOW 职场成长平台 - 过渡动画
+   
+   层级：第 6 层 - 动画系统
+   职责：定义过渡效果和悬停动画
+   规则：使用设计令牌中的缓动函数
+   ============================================ */
+
+/* ===== 基础过渡类 ===== */
+.transition-all {
+  transition: all var(--duration-normal) var(--ease-default);
+}
+
+.transition-fast {
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.transition-slow {
+  transition: all var(--duration-slow) var(--ease-default);
+}
+
+.transition-colors {
+  transition: color var(--duration-normal) var(--ease-default),
+              background-color var(--duration-normal) var(--ease-default),
+              border-color var(--duration-normal) var(--ease-default);
+}
+
+.transition-transform {
+  transition: transform var(--duration-normal) var(--ease-default);
+}
+
+.transition-opacity {
+  transition: opacity var(--duration-normal) var(--ease-default);
+}
+
+.transition-shadow {
+  transition: box-shadow var(--duration-normal) var(--ease-default);
+}
+
+/* ===== 悬停上升效果 ===== */
+.hover-lift {
+  transition: transform var(--duration-normal) var(--ease-hover);
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+.hover-lift-sm {
+  transition: transform var(--duration-fast) var(--ease-hover);
+}
+
+.hover-lift-sm:hover {
+  transform: translateY(-2px);
+}
+
+.hover-lift-lg {
+  transition: transform var(--duration-slow) var(--ease-hover);
+}
+
+.hover-lift-lg:hover {
+  transform: translateY(-4px);
+}
+
+/* ===== 悬停缩放效果 ===== */
+.hover-scale {
+  transition: transform var(--duration-normal) var(--ease-hover);
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-scale-sm {
+  transition: transform var(--duration-fast) var(--ease-hover);
+}
+
+.hover-scale-sm:hover {
+  transform: scale(1.01);
+}
+
+.hover-scale-lg {
+  transition: transform var(--duration-slow) var(--ease-hover);
+}
+
+.hover-scale-lg:hover {
+  transform: scale(1.03);
+}
+
+/* ===== 组合悬停效果 ===== */
+.hover-lift-scale {
+  transition: transform var(--duration-normal) var(--ease-hover);
+}
+
+.hover-lift-scale:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.hover-glow {
+  transition: box-shadow var(--duration-normal) var(--ease-hover);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
+}
+
+.hover-glow-success:hover {
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+}
+
+.hover-glow-warning:hover {
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+}
+
+.hover-glow-error:hover {
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+}
+
+/* ===== 悬停亮度效果 ===== */
+.hover-brighten {
+  transition: filter var(--duration-normal) var(--ease-hover);
+}
+
+.hover-brighten:hover {
+  filter: brightness(1.1);
+}
+
+.hover-darken {
+  transition: filter var(--duration-normal) var(--ease-hover);
+}
+
+.hover-darken:hover {
+  filter: brightness(0.9);
+}
+
+/* ===== 悬停模糊效果 ===== */
+.hover-blur {
+  transition: filter var(--duration-normal) var(--ease-hover);
+}
+
+.hover-blur:hover {
+  filter: blur(2px);
+}
+
+/* ===== 悬停旋转效果 ===== */
+.hover-rotate {
+  transition: transform var(--duration-normal) var(--ease-hover);
+}
+
+.hover-rotate:hover {
+  transform: rotate(5deg);
+}
+
+.hover-rotate-reverse:hover {
+  transform: rotate(-5deg);
+}
+
+/* ===== 悬停倾斜效果 ===== */
+.hover-skew {
+  transition: transform var(--duration-normal) var(--ease-hover);
+}
+
+.hover-skew:hover {
+  transform: skewX(-2deg);
+}
+
+/* ===== 悬停边框效果 ===== */
+.hover-border {
+  transition: border-color var(--duration-fast) var(--ease-default);
+}
+
+.hover-border:hover {
+  border-color: var(--color-primary);
+}
+
+/* ===== 悬停背景效果 ===== */
+.hover-bg {
+  transition: background-color var(--duration-fast) var(--ease-default);
+}
+
+.hover-bg:hover {
+  background-color: var(--bg-tertiary);
+}
+
+/* ===== 悬停文字效果 ===== */
+.hover-text-primary {
+  transition: color var(--duration-fast) var(--ease-default);
+}
+
+.hover-text-primary:hover {
+  color: var(--color-primary);
+}
+
+/* ===== 淡入淡出 ===== */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity var(--duration-normal) var(--ease-default);
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-default);
+}
+
+/* ===== 滑动过渡 ===== */
+.slide-enter {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.slide-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform var(--duration-slow) var(--ease-out-expo),
+              opacity var(--duration-slow) var(--ease-out-expo);
+}
+
+.slide-exit {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.slide-exit-active {
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: transform var(--duration-normal) var(--ease-in-quart),
+              opacity var(--duration-normal) var(--ease-in-quart);
+}
+
+/* ===== 缩放过渡 ===== */
+.scale-enter {
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+.scale-enter-active {
+  transform: scale(1);
+  opacity: 1;
+  transition: transform var(--duration-slow) var(--ease-out-back),
+              opacity var(--duration-slow) var(--ease-out-back);
+}
+
+.scale-exit {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.scale-exit-active {
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform var(--duration-normal) var(--ease-in-quart),
+              opacity var(--duration-normal) var(--ease-in-quart);
+}
+
+/* ===== 折叠过渡 ===== */
+.collapse-enter {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.collapse-enter-active {
+  max-height: 1000px;
+  opacity: 1;
+  transition: max-height var(--duration-slow) var(--ease-out-expo),
+              opacity var(--duration-slow) var(--ease-out-expo);
+}
+
+.collapse-exit {
+  max-height: 1000px;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.collapse-exit-active {
+  max-height: 0;
+  opacity: 0;
+  transition: max-height var(--duration-normal) var(--ease-in-quart),
+              opacity var(--duration-normal) var(--ease-in-quart);
+}
+
+/* ===== 性能优化 ===== */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-auto {
+  will-change: auto;
+}
+
+/* ===== GPU 加速 ===== */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* ===== 平滑滚动 ===== */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* ===== 减少动画（无障碍） ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+  
+  .transition-all,
+  .transition-fast,
+  .transition-slow,
+  .transition-colors,
+  .transition-transform,
+  .transition-opacity,
+  .transition-shadow {
+    transition: none !important;
+  }
+}

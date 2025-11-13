@@ -1,53 +1,136 @@
 /* ============================================
    NOW 职场成长平台 - 主题变量
    
-   层级：第 1 层 - 基础样式
-   职责：定义浅色和暗色模式的主题变量覆盖
-   规则：只覆盖语义化颜色变量，不包含组件样式
+   层级：第 1 层 - 主题定义
+   职责：定义浅色和暗色模式的语义化变量
+   规则：覆盖设计令牌中的语义化颜色
    ============================================ */
 
-/* ===== 浅色模式 (默认) ===== */
-/* 默认值已在 design-tokens.css 中定义 */
+/* ===== 浅色模式（默认） ===== */
+:root,
+html:not(.dark),
+body:not(.dark-mode) {
+  /* 背景色 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --bg-tertiary: #f5f5f5;
+  --bg-elevated: #ffffff;
+  
+  /* 文本色 */
+  --text-primary: #171717;
+  --text-secondary: #525252;
+  --text-tertiary: #a3a3a3;
+  --text-inverse: #ffffff;
+  
+  /* 边框色 */
+  --border-subtle: #f5f5f5;
+  --border-default: #e5e5e5;
+  --border-strong: #d4d4d4;
+  
+  /* 沉浸式变量（用于特殊场景） */
+  --immersive-bg-primary: #f8fafc;
+  --immersive-bg-secondary: #ffffff;
+  --immersive-bg-tertiary: #f1f5f9;
+  
+  --immersive-text-primary: #0f172a;
+  --immersive-text-secondary: #475569;
+  --immersive-text-tertiary: #64748b;
+  
+  --immersive-border: rgba(15, 23, 42, 0.12);
+  --immersive-border-strong: rgba(15, 23, 42, 0.2);
+  
+  /* 阴影 */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.15);
+  --shadow-2xl: 0 24px 64px rgba(0, 0, 0, 0.2);
+  
+  /* 玻璃态 */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg-strong: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.2);
+}
 
 /* ===== 暗色模式 ===== */
 .dark,
 body.dark-mode,
 html.dark {
-  /* 背景色 - Material Design 标准 */
-  --bg-primary: #121212;
-  --bg-secondary: #1e1e1e;
-  --bg-tertiary: #252525;
-  --bg-elevated: #2a2a2a;
+  /* 背景色 */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #141414;
+  --bg-tertiary: #1e1e1e;
+  --bg-elevated: #1e1e1e;
   
-  /* 文字色 - 高对比度 */
-  --text-primary: #ffffff;
-  --text-secondary: #b4b4b4;
-  --text-tertiary: #8a8a8a;
+  /* 文本色 */
+  --text-primary: #fafafa;
+  --text-secondary: #a3a3a3;
+  --text-tertiary: #737373;
   --text-inverse: #171717;
   
-  /* 边框色 - 增强可见性 */
-  --border-subtle: #2a2a2a;
-  --border-default: #3a3a3a;
-  --border-strong: #4a4a4a;
+  /* 边框色 */
+  --border-subtle: #262626;
+  --border-default: #404040;
+  --border-strong: #525252;
   
-  /* 玻璃态效果 - 暗色版本 */
-  --glass-bg: rgba(30, 30, 30, 0.7);
-  --glass-bg-strong: rgba(30, 30, 30, 0.9);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --glass-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.7);
+  /* 沉浸式变量（用于特殊场景） */
+  --immersive-bg-primary: #121212;
+  --immersive-bg-secondary: #1e1e1e;
+  --immersive-bg-tertiary: #252525;
   
-  /* 阴影系统 - 增强深度感 */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.7);
-  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.8);
-  --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.9);
+  --immersive-text-primary: #ffffff;
+  --immersive-text-secondary: #b4b4b4;
+  --immersive-text-tertiary: #8a8a8a;
   
-  /* 发光效果 - 暗色模式特有 */
-  --glow-primary: 0 0 24px rgba(102, 126, 234, 0.5);
-  --glow-success: 0 0 24px rgba(16, 185, 129, 0.5);
-  --glow-warning: 0 0 24px rgba(245, 158, 11, 0.5);
-  --glow-error: 0 0 24px rgba(239, 68, 68, 0.5);
+  --immersive-border: rgba(255, 255, 255, 0.12);
+  --immersive-border-strong: rgba(255, 255, 255, 0.24);
+  
+  /* 阴影（暗色模式下更柔和） */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.7);
+  --shadow-2xl: 0 24px 64px rgba(0, 0, 0, 0.8);
+  
+  /* 玻璃态 */
+  --glass-bg: rgba(20, 20, 20, 0.7);
+  --glass-bg-strong: rgba(20, 20, 20, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== 全局背景装饰 ===== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(118, 75, 162, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: backgroundPulse 20s ease-in-out infinite;
+}
+
+@keyframes backgroundPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* 暗色模式背景增强 */
+.dark body::before,
+body.dark-mode::before {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(102, 126, 234, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(118, 75, 162, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
 }
