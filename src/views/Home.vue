@@ -998,7 +998,7 @@ onUnmounted(() => {
 
 /* ===== 区块内容 ===== */
 .section-content {
-  max-width: 1400px;
+  max-width: var(--container-xl);
   width: 100%;
   height: 100%;
   display: flex;
@@ -1008,6 +1008,8 @@ onUnmounted(() => {
   overflow-x: hidden;
   justify-content: flex-start;
   gap: var(--space-6);
+  padding: 0 var(--space-8);
+  margin: 0 auto;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
 }
@@ -1061,6 +1063,9 @@ onUnmounted(() => {
   margin-bottom: var(--space-4);
   flex-shrink: 0;
   width: 100%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .rank-main-card {
@@ -1070,14 +1075,11 @@ onUnmounted(() => {
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   border-radius: var(--radius-3xl);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
   position: relative;
   overflow: hidden;
   width: 100%;
-  max-width: 1200px;
-  box-shadow: 
-    0 16px 48px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
   transition: all var(--duration-normal) var(--ease-hover);
   will-change: transform;
 }
@@ -1088,21 +1090,20 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   background: linear-gradient(90deg, 
     transparent 0%,
     var(--rank-color, var(--neon-purple)) 50%,
     transparent 100%
   );
-  box-shadow: 0 0 20px var(--rank-color, var(--neon-purple));
+  opacity: 0.6;
 }
 
 .rank-main-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow: 
-    0 24px 64px rgba(0, 0, 0, 0.3),
-    0 0 40px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 20%, transparent),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    0 20px 56px rgba(0, 0, 0, 0.25),
+    0 0 24px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 12%, transparent);
 }
 
 .rank-icon {
@@ -1361,8 +1362,6 @@ onUnmounted(() => {
   gap: var(--space-4);
   flex-shrink: 0;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   padding: var(--space-2) 0;
 }
 
@@ -1395,7 +1394,6 @@ onUnmounted(() => {
   );
   opacity: 0;
   transition: opacity var(--duration-normal) var(--ease-smooth);
-  box-shadow: 0 0 10px var(--rank-color, var(--neon-green));
 }
 
 .earning-card::after {
@@ -1414,11 +1412,11 @@ onUnmounted(() => {
 
 .earning-card:hover {
   background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-3px);
-  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
   box-shadow: 
-    0 12px 32px rgba(0, 0, 0, 0.25),
-    0 0 20px color-mix(in srgb, var(--rank-color, var(--neon-green)) 15%, transparent);
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    0 0 16px color-mix(in srgb, var(--rank-color, var(--neon-green)) 10%, transparent);
 }
 
 .earning-card:hover::before,
@@ -1509,9 +1507,6 @@ onUnmounted(() => {
   margin-bottom: var(--space-4);
   flex-shrink: 0;
   width: 100%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .summary-badge {
@@ -1557,8 +1552,6 @@ onUnmounted(() => {
   flex: 1;
   overflow: visible;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   padding: var(--space-2) 0;
 }
 
@@ -1816,8 +1809,6 @@ onUnmounted(() => {
   flex: 1;
   overflow: visible;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   padding: var(--space-2) 0;
 }
 

@@ -1,0 +1,286 @@
+/* ============================================
+   NOW 职场成长平台 - 暗黑模式增强
+   专为暗黑模式设计的特殊效果
+   注意：只添加暗黑模式特有的发光效果，不重复基础样式
+   ============================================ */
+
+/* ===== 核心发光效果 - 仅在暗黑模式下生效 ===== */
+
+/* 卡片悬停发光 - 微妙的边缘光晕 */
+.dark .unified-card:hover,
+.dark .job-card:hover,
+.dark .timeline-card:hover,
+.dark .stat-card:hover {
+  box-shadow: 
+    var(--glass-shadow-hover),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    0 0 24px rgba(102, 126, 234, 0.12);
+}
+
+/* 主要按钮发光 */
+.dark .unified-btn-primary,
+.dark .scroll-button {
+  box-shadow: 
+    var(--shadow-primary),
+    0 0 16px rgba(102, 126, 234, 0.25);
+}
+
+.dark .unified-btn-primary:hover,
+.dark .scroll-button:hover {
+  box-shadow: 
+    var(--shadow-primary),
+    0 0 28px rgba(102, 126, 234, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+}
+
+/* 输入框焦点发光 */
+.dark .unified-input:focus {
+  box-shadow: 
+    0 0 0 4px color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent),
+    0 0 16px color-mix(in srgb, var(--rank-color, var(--color-primary)) 15%, transparent),
+    var(--shadow-md);
+}
+
+/* 进度条发光 */
+.dark .unified-progress-bar,
+.dark .progress-fill {
+  box-shadow: 0 0 12px color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent);
+}
+
+/* ===== 标题微妙发光 ===== */
+.dark .unified-title {
+  filter: drop-shadow(0 2px 8px rgba(102, 126, 234, 0.3));
+}
+
+/* ===== 徽章和标签发光 ===== */
+.dark .unified-tag-primary,
+.dark .badge-primary {
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.25);
+}
+
+.dark .unified-tag-success,
+.dark .badge-success {
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
+}
+
+.dark .unified-tag-warning,
+.dark .badge-warning {
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
+}
+
+/* ===== 段位卡片发光 ===== */
+.dark .rank-main-card {
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.3),
+    0 0 20px color-mix(in srgb, var(--rank-color, var(--color-primary)) 10%, transparent);
+}
+
+.dark .rank-main-card:hover {
+  box-shadow: 
+    0 24px 64px rgba(0, 0, 0, 0.4),
+    0 0 32px color-mix(in srgb, var(--rank-color, var(--color-primary)) 15%, transparent);
+}
+
+/* ===== 收入卡片发光 ===== */
+.dark .earnings-display {
+  box-shadow: 
+    var(--shadow-lg),
+    0 0 32px rgba(102, 126, 234, 0.15);
+}
+
+.dark .earnings-display:hover {
+  box-shadow: 
+    var(--shadow-xl),
+    0 0 48px rgba(102, 126, 234, 0.25);
+}
+
+/* ===== 任务卡片边框发光 ===== */
+.dark .job-card::before {
+  box-shadow: 0 0 16px var(--rank-color, var(--neon-purple));
+}
+
+/* ===== 时间线发光 ===== */
+.dark .timeline::before {
+  box-shadow: 0 0 8px var(--rank-color, #667eea);
+}
+
+.dark .timeline-dot {
+  box-shadow: 0 0 16px rgba(102, 126, 234, 0.3);
+}
+
+.dark .timeline-dot.pulsing {
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.4);
+}
+
+/* ===== 模态框增强 ===== */
+.dark .unified-modal {
+  box-shadow: 
+    var(--shadow-2xl),
+    0 0 60px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+/* ===== 导航栏激活状态发光 ===== */
+.dark .nav-btn.active {
+  box-shadow: 
+    var(--shadow-primary),
+    0 0 16px rgba(102, 126, 234, 0.3);
+}
+
+/* ===== 选择文本发光 ===== */
+.dark ::selection {
+  background: rgba(102, 126, 234, 0.4);
+}
+
+/* ===== 焦点状态增强 ===== */
+.dark :focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+}
+
+/* ===== 成功状态发光 ===== */
+.dark .status-badge,
+.dark .requirement-card.checked {
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+}
+
+/* ===== 警告状态发光 ===== */
+.dark .active-quest-warning .unified-card {
+  box-shadow: 
+    var(--shadow-md),
+    0 0 24px rgba(245, 158, 11, 0.15);
+}
+
+/* ===== 数值微妙发光 ===== */
+.dark .job-salary,
+.dark .earning-value {
+  filter: drop-shadow(0 1px 4px currentColor);
+}
+
+/* ===== 文字对比度增强 ===== */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+/* ===== 表单元素增强 ===== */
+.dark select.unified-input:hover,
+.dark input.unified-input:hover {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+}
+
+/* ===== 生活方式类别卡片发光 ===== */
+.dark .lifestyle-category.income:hover {
+  box-shadow: 
+    var(--shadow-md),
+    0 0 16px rgba(16, 185, 129, 0.12);
+}
+
+.dark .lifestyle-category.basic:hover {
+  box-shadow: 
+    var(--shadow-md),
+    0 0 16px rgba(99, 102, 241, 0.12);
+}
+
+.dark .lifestyle-category.daily:hover,
+.dark .lifestyle-category.optional:hover {
+  box-shadow: 
+    var(--shadow-md),
+    0 0 16px rgba(245, 158, 11, 0.12);
+}
+
+.dark .lifestyle-category.summary:hover {
+  box-shadow: 
+    var(--shadow-md),
+    0 0 16px rgba(236, 72, 153, 0.12);
+}
+
+/* ===== 技能卡片发光 ===== */
+.dark .skill-card:hover {
+  box-shadow: 
+    var(--shadow-md),
+    0 0 20px rgba(102, 126, 234, 0.15);
+}
+
+/* ===== 历史记录完成状态发光 ===== */
+.dark .history-item.completed {
+  box-shadow: 
+    var(--shadow-sm),
+    0 0 16px rgba(16, 185, 129, 0.15);
+}
+
+/* ===== 提示卡片发光 ===== */
+.dark .tip-card:hover {
+  box-shadow: 
+    var(--shadow-sm),
+    0 0 16px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 15%, transparent);
+}
+
+/* ===== 对比卡片未来状态发光 ===== */
+.dark .comparison-card.future {
+  box-shadow: 
+    var(--shadow-md),
+    0 0 24px rgba(76, 175, 80, 0.15);
+}
+
+/* ===== 升级提示发光 ===== */
+.dark .upgrade-tip:hover {
+  box-shadow: 
+    var(--shadow-md),
+    0 0 16px rgba(99, 102, 241, 0.12);
+}
+
+/* ===== 向导进度步骤发光 ===== */
+.dark .progress-step.active .step-circle {
+  box-shadow: 
+    0 0 0 4px rgba(102, 126, 234, 0.2),
+    0 0 16px rgba(102, 126, 234, 0.3);
+}
+
+.dark .progress-step.completed .step-circle {
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.25);
+}
+
+/* ===== 头像选择器发光 ===== */
+.dark .avatar-option.selected,
+.dark .avatar-btn.selected {
+  box-shadow: 
+    0 0 0 3px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 15%, transparent),
+    0 0 16px color-mix(in srgb, var(--rank-color, var(--neon-purple)) 20%, transparent);
+}
+
+/* ===== 危险按钮发光 ===== */
+.dark .danger-btn {
+  box-shadow: 
+    var(--shadow-md),
+    0 0 16px rgba(239, 68, 68, 0.25);
+}
+
+.dark .danger-btn:hover {
+  box-shadow: 
+    var(--shadow-lg),
+    0 0 24px rgba(239, 68, 68, 0.35);
+}
+
+/* ===== 确认对话框发光 ===== */
+.dark .confirm-dialog {
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 60px rgba(239, 68, 68, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+/* ===== 减少动画（无障碍） ===== */
+@media (prefers-reduced-motion: reduce) {
+  .dark * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+}

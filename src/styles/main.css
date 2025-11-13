@@ -32,3 +32,9 @@
 
 /* 10. 高级视觉效果 - 提升整体品质 */
 @import './premium-effects.css';
+
+/* 11. 暗黑模式增强 - 专属发光和视觉效果 */
+@import './dark-mode-enhanced.css';
+
+/* 12. 页面指示器日间模式优化 */
+@import './page-indicator-light.css';

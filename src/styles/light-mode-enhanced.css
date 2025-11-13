@@ -1,341 +1,167 @@
 /* ============================================
-   日间模式增强样式
-   优化浅色主题的视觉体验和可读性
+   NOW 职场成长平台 - 日间模式优化
+   设计理念：清晰、简洁、专业、优雅
+   
+   与夜间模式的区别：
+   - 夜间：深邃、科技、霓虹、沉浸 → 适合专注工作
+   - 日间：明亮、清爽、商务、专业 → 适合日常浏览
    ============================================ */
 
-/* ===== 日间模式全局优化 ===== */
+/* ===== 日间模式核心理念 ===== */
 html:not(.dark),
 body:not(.dark-mode) {
-  /* 增强背景对比度 */
-  --immersive-bg-primary: #f8fafc;
-  --immersive-bg-secondary: #ffffff;
-  --immersive-bg-tertiary: #f1f5f9;
+  /* 背景系统 - 纯净简洁 */
+  --immersive-bg-primary: #ffffff;
+  --immersive-bg-secondary: #fafbfc;
+  --immersive-bg-tertiary: #f5f7fa;
+  --immersive-bg-elevated: #ffffff;
   
-  /* 增强文本对比度 */
+  /* 文本系统 - 高对比度 */
   --immersive-text-primary: #0f172a;
   --immersive-text-secondary: #475569;
-  --immersive-text-tertiary: #64748b;
+  --immersive-text-tertiary: #94a3b8;
+  --immersive-text-inverse: #ffffff;
   
-  /* 增强边框可见度 */
-  --immersive-border: rgba(15, 23, 42, 0.12);
-  --immersive-border-strong: rgba(15, 23, 42, 0.2);
+  /* 边框系统 - 清晰分隔 */
+  --immersive-border: #e2e8f0;
+  --immersive-border-strong: #cbd5e1;
+  --immersive-border-accent: rgba(102, 126, 234, 0.3);
   
-  /* 优化玻璃态效果 */
-  --glass-bg: rgba(255, 255, 255, 0.95);
-  --glass-bg-strong: rgba(255, 255, 255, 0.98);
-  --glass-border: rgba(15, 23, 42, 0.15);
+  /* 阴影系统 - 轻盈柔和 */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 8px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 8px 16px rgba(15, 23, 42, 0.1);
+  --shadow-xl: 0 12px 24px rgba(15, 23, 42, 0.12);
+  --shadow-2xl: 0 16px 32px rgba(15, 23, 42, 0.15);
   
-  /* 增强阴影效果 */
-  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.08);
-  --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.1);
-  --shadow-md: 0 4px 8px rgba(15, 23, 42, 0.12);
-  --shadow-lg: 0 8px 16px rgba(15, 23, 42, 0.15);
-  --shadow-xl: 0 12px 24px rgba(15, 23, 42, 0.18);
-  --shadow-2xl: 0 20px 40px rgba(15, 23, 42, 0.22);
+  /* 彩色阴影 - 微妙点缀 */
+  --shadow-primary: 0 4px 12px rgba(102, 126, 234, 0.15);
+  --shadow-success: 0 4px 12px rgba(16, 185, 129, 0.15);
+  --shadow-warning: 0 4px 12px rgba(245, 158, 11, 0.15);
 }
 
-/* ===== 卡片组件优化 ===== */
-html:not(.dark) .unified-card {
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 
-              0 1px 2px rgba(15, 23, 42, 0.04);
-}
-
-html:not(.dark) .unified-card:hover {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.2);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12), 
-              0 4px 8px rgba(15, 23, 42, 0.06);
-}
-
-/* ===== 按钮组件优化 ===== */
-html:not(.dark) .unified-btn {
-  background: #ffffff;
-  color: #0f172a;
-  border: 1px solid rgba(15, 23, 42, 0.15);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-}
-
-html:not(.dark) .unified-btn:hover {
-  background: #f8fafc;
-  border-color: rgba(15, 23, 42, 0.25);
-  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.08);
-}
-
-html:not(.dark) .unified-btn-primary {
-  background: linear-gradient(135deg, var(--rank-color, #667eea) 0%, var(--color-accent, #764ba2) 100%);
-  color: #ffffff;
-  border: none;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-html:not(.dark) .unified-btn-primary:hover {
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-/* ===== 输入框优化 ===== */
-html:not(.dark) .unified-input {
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.2);
-  color: #0f172a;
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
-}
-
-html:not(.dark) .unified-input:focus {
-  background: #ffffff;
-  border-color: var(--rank-color, #667eea);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15),
-              inset 0 1px 2px rgba(15, 23, 42, 0.05);
-}
-
-html:not(.dark) .unified-input::placeholder {
-  color: #94a3b8;
-}
-
-/* ===== 标签优化 ===== */
-html:not(.dark) .unified-tag {
-  background: #f1f5f9;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  color: #475569;
-}
-
-html:not(.dark) .unified-tag-primary {
-  background: rgba(102, 126, 234, 0.1);
-  border-color: rgba(102, 126, 234, 0.3);
-  color: #4f46e5;
-}
-
-html:not(.dark) .unified-tag-success {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.3);
-  color: #059669;
-}
-
-html:not(.dark) .unified-tag-warning {
-  background: rgba(245, 158, 11, 0.1);
-  border-color: rgba(245, 158, 11, 0.3);
-  color: #d97706;
-}
-
-/* ===== 模态框优化 ===== */
-html:not(.dark) .unified-modal-overlay {
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(8px);
-}
-
-html:not(.dark) .unified-modal {
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
-}
-
-html:not(.dark) .unified-modal-header {
-  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
-}
-
-html:not(.dark) .unified-modal-footer {
-  border-top: 1px solid rgba(15, 23, 42, 0.1);
-}
-
-/* ===== 页面背景优化 ===== */
+/* ===== 页面背景 - 纯净简洁 ===== */
 html:not(.dark) .jobs,
 html:not(.dark) .growth,
 html:not(.dark) .career,
 html:not(.dark) .growth-detail,
 html:not(.dark) .settings,
-html:not(.dark) .quest-history {
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+html:not(.dark) .quest-history,
+html:not(.dark) .fullpage-container {
+  background: var(--immersive-bg-secondary);
 }
 
+/* 微妙的装饰性渐变（可选） */
 html:not(.dark) .jobs::before,
 html:not(.dark) .growth::before,
-html:not(.dark) .career::before,
-html:not(.dark) .growth-detail::before,
-html:not(.dark) .settings::before,
-html:not(.dark) .quest-history::before {
-  background: 
-    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--rank-color, #667eea) 15%, transparent) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--rank-color, #667eea) 15%, transparent) 0%, transparent 50%);
+html:not(.dark) .career::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(102, 126, 234, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* ===== 任务卡片优化 ===== */
-html:not(.dark) .job-card {
+/* ===== 卡片组件 - 简洁清爽 ===== */
+html:not(.dark) .unified-card,
+html:not(.dark) .job-card,
+html:not(.dark) .timeline-card,
+html:not(.dark) .stat-card,
+html:not(.dark) .quest-progress-card,
+html:not(.dark) .rank-main-card,
+html:not(.dark) .lifestyle-summary,
+html:not(.dark) .lifestyle-category,
+html:not(.dark) .career-section,
+html:not(.dark) .earning-card {
   background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s var(--ease-out-quart);
 }
 
+html:not(.dark) .unified-card:hover,
+html:not(.dark) .job-card:hover,
+html:not(.dark) .timeline-card:hover,
+html:not(.dark) .stat-card:hover,
+html:not(.dark) .quest-progress-card:hover,
+html:not(.dark) .rank-main-card:hover,
+html:not(.dark) .lifestyle-category:hover,
+html:not(.dark) .career-section:hover,
+html:not(.dark) .earning-card:hover {
+  border-color: var(--immersive-border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* 特殊卡片 - 强调色边框 */
 html:not(.dark) .job-card:hover {
-  border-color: rgba(15, 23, 42, 0.2);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
-}
-
-html:not(.dark) .job-card::before {
-  opacity: 1;
-}
-
-html:not(.dark) .job-title {
-  color: #0f172a;
-}
-
-html:not(.dark) .job-salary {
-  color: var(--rank-color, #667eea);
-}
-
-html:not(.dark) .info-item {
-  color: #64748b;
-}
-
-html:not(.dark) .tag {
-  background: rgba(102, 126, 234, 0.1);
-  border-color: rgba(102, 126, 234, 0.3);
-  color: #4f46e5;
-}
-
-html:not(.dark) .job-requirements {
-  background: rgba(102, 126, 234, 0.08);
-  border-color: rgba(102, 126, 234, 0.2);
-}
-
-html:not(.dark) .req-count {
-  color: #0f172a;
-}
-
-html:not(.dark) .status-badge {
-  background: rgba(16, 185, 129, 0.15);
-  color: #059669;
-  border-color: rgba(16, 185, 129, 0.3);
-}
-
-/* ===== 时间线优化 ===== */
-html:not(.dark) .timeline::before {
-  background: linear-gradient(90deg, 
-    var(--rank-color, #667eea) 0%, 
-    rgba(102, 126, 234, 0.6) 100%);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-}
-
-html:not(.dark) .timeline-dot {
-  background: #ffffff;
-  border-color: var(--rank-color, #667eea);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-html:not(.dark) .timeline-card {
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-}
-
-html:not(.dark) .timeline-card:hover {
-  border-color: rgba(15, 23, 42, 0.2);
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+  border-color: var(--immersive-border-accent);
 }
 
 html:not(.dark) .active-card {
   border-color: var(--rank-color, #f59e0b);
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
 }
 
-html:not(.dark) .card-header h3 {
-  color: #0f172a;
-}
-
-html:not(.dark) .adventure-phase {
-  background: #f8fafc;
-  border-left-color: var(--rank-color, #6366f1);
-}
-
-html:not(.dark) .phase-title {
-  color: #0f172a;
-}
-
-html:not(.dark) .info-label {
-  color: #64748b;
-}
-
-html:not(.dark) .info-value {
-  color: #0f172a;
-}
-
-html:not(.dark) .info-value.success {
-  color: #059669;
-}
-
-html:not(.dark) .progress-bar {
-  background: #f1f5f9;
-}
-
-html:not(.dark) .progress-fill {
-  background: var(--rank-color, #10b981);
-}
-
-html:not(.dark) .job-title {
-  color: var(--rank-color, #667eea);
-}
-
-html:not(.dark) .job-salary {
-  color: #059669;
-}
-
-/* ===== 统计卡片优化 ===== */
-html:not(.dark) .stat-card {
+/* ===== 按钮组件 - 清晰明确 ===== */
+html:not(.dark) .unified-btn {
   background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  color: var(--immersive-text-primary);
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s var(--ease-out-quart);
 }
 
-html:not(.dark) .stat-card:hover {
-  border-color: rgba(15, 23, 42, 0.2);
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+html:not(.dark) .unified-btn:hover {
+  background: var(--immersive-bg-secondary);
+  border-color: var(--immersive-border-strong);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
-html:not(.dark) .stat-label {
-  color: #64748b;
-}
-
-html:not(.dark) .stat-value {
-  color: #0f172a;
-}
-
-/* ===== 分页导航优化 ===== */
-html:not(.dark) .pagination-btn {
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.15);
-  color: #0f172a;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-}
-
-html:not(.dark) .pagination-btn:hover:not(:disabled) {
-  background: #f8fafc;
-  border-color: rgba(15, 23, 42, 0.25);
-  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.08);
-}
-
-html:not(.dark) .pagination-btn:disabled {
-  background: #f1f5f9;
-  color: #cbd5e1;
-  border-color: rgba(15, 23, 42, 0.08);
-}
-
-html:not(.dark) .pagination-info {
-  color: #475569;
-}
-
-/* ===== 滚动按钮优化 ===== */
+html:not(.dark) .unified-btn-primary,
 html:not(.dark) .scroll-button {
-  background: linear-gradient(135deg, var(--rank-color, #667eea) 0%, var(--color-accent, #764ba2) 100%);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  background: var(--rank-color, #667eea);
+  color: #ffffff;
+  border: none;
+  box-shadow: var(--shadow-primary);
 }
 
+html:not(.dark) .unified-btn-primary:hover,
 html:not(.dark) .scroll-button:hover {
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  background: color-mix(in srgb, var(--rank-color, #667eea) 90%, black);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.25);
+  transform: translateY(-2px);
 }
 
-/* ===== 表单优化 ===== */
-html:not(.dark) .form-label {
-  color: #475569;
+/* ===== 输入框 - 清晰焦点 ===== */
+html:not(.dark) .unified-input,
+html:not(.dark) select.unified-input {
+  background: #ffffff;
+  border: 1px solid var(--immersive-border);
+  color: var(--immersive-text-primary);
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s var(--ease-out-quart);
+}
+
+html:not(.dark) .unified-input:hover {
+  border-color: var(--immersive-border-strong);
+}
+
+html:not(.dark) .unified-input:focus {
+  background: #ffffff;
+  border-color: var(--rank-color, #667eea);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  outline: none;
+}
+
+html:not(.dark) .unified-input::placeholder {
+  color: var(--immersive-text-tertiary);
 }
 
 html:not(.dark) select.unified-input {
@@ -344,67 +170,314 @@ html:not(.dark) select.unified-input {
   padding-right: 2.5rem;
 }
 
-/* ===== 空状态优化 ===== */
-html:not(.dark) .empty-state {
-  color: #475569;
+/* ===== 标签 - 清晰分类 ===== */
+html:not(.dark) .unified-tag,
+html:not(.dark) .tag {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+  color: var(--immersive-text-secondary);
+  transition: all 0.2s var(--ease-out-quart);
 }
 
-html:not(.dark) .empty-state h3 {
-  color: #0f172a;
+html:not(.dark) .unified-tag-primary,
+html:not(.dark) .tag {
+  background: rgba(102, 126, 234, 0.08);
+  border-color: rgba(102, 126, 234, 0.2);
+  color: #4f46e5;
 }
 
-html:not(.dark) .empty-state p {
-  color: #64748b;
+html:not(.dark) .unified-tag-success {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #059669;
 }
 
-/* ===== 历史记录优化 ===== */
+html:not(.dark) .unified-tag-warning {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.2);
+  color: #d97706;
+}
+
+html:not(.dark) .tag:hover {
+  background: rgba(102, 126, 234, 0.12);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+/* ===== 模态框 - 清晰层级 ===== */
+html:not(.dark) .unified-modal-overlay {
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+}
+
+html:not(.dark) .unified-modal {
+  background: #ffffff;
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-2xl);
+}
+
+html:not(.dark) .unified-modal-header {
+  border-bottom: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .unified-modal-footer {
+  border-top: 1px solid var(--immersive-border);
+}
+
+/* ===== 文本样式 ===== */
+html:not(.dark) h1,
+html:not(.dark) h2,
+html:not(.dark) h3,
+html:not(.dark) h4,
+html:not(.dark) h5,
+html:not(.dark) h6,
+html:not(.dark) .job-title,
+html:not(.dark) .card-header h3,
+html:not(.dark) .phase-title,
+html:not(.dark) .rank-name,
+html:not(.dark) .category-title,
+html:not(.dark) .career-section-title,
+html:not(.dark) .tip-title,
+html:not(.dark) .stat-label,
+html:not(.dark) .req-count {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) p,
+html:not(.dark) .info-item,
+html:not(.dark) .info-label,
+html:not(.dark) .rank-level,
+html:not(.dark) .summary-description,
+html:not(.dark) .item-description,
+html:not(.dark) .tip-description,
+html:not(.dark) .history-meta,
+html:not(.dark) .pagination-info,
+html:not(.dark) .form-label {
+  color: var(--immersive-text-secondary);
+}
+
+/* ===== 特殊颜色 ===== */
+html:not(.dark) .job-salary,
+html:not(.dark) .earning-value,
+html:not(.dark) .summary-level {
+  color: #10b981;
+  font-weight: 700;
+}
+
+html:not(.dark) .info-value,
+html:not(.dark) .stat-value {
+  color: var(--immersive-text-primary);
+  font-weight: 700;
+}
+
+html:not(.dark) .info-value.success {
+  color: #059669;
+}
+
+html:not(.dark) .rank-metric-value {
+  color: var(--immersive-text-primary);
+}
+
+/* ===== 徽章和状态 ===== */
+html:not(.dark) .status-badge {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+html:not(.dark) .rank-percentile,
+html:not(.dark) .summary-badge {
+  background: rgba(102, 126, 234, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  color: #4f46e5;
+}
+
+/* ===== 进度条 ===== */
+html:not(.dark) .progress-bar {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .progress-fill {
+  background: var(--rank-color, #10b981);
+}
+
+/* ===== 时间线 ===== */
+html:not(.dark) .timeline::before {
+  background: var(--rank-color, #667eea);
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+html:not(.dark) .timeline-dot {
+  background: #ffffff;
+  border: 3px solid var(--rank-color, #667eea);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+html:not(.dark) .timeline-dot.pulsing {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ===== 分隔线 ===== */
+html:not(.dark) .rank-metric-divider {
+  background: var(--immersive-border);
+}
+
+html:not(.dark) .adventure-phase {
+  background: var(--immersive-bg-tertiary);
+  border-left: 3px solid var(--rank-color, #6366f1);
+}
+
+/* ===== 其他组件 ===== */
+html:not(.dark) .job-requirements {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .stat-item {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+  transition: all 0.2s var(--ease-out-quart);
+}
+
+html:not(.dark) .stat-item:hover {
+  background: #ffffff;
+  border-color: var(--immersive-border-strong);
+}
+
+html:not(.dark) .lifestyle-item {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+  transition: all 0.2s var(--ease-out-quart);
+}
+
+html:not(.dark) .lifestyle-item::before {
+  background: var(--rank-color, var(--color-primary));
+}
+
+html:not(.dark) .lifestyle-item:hover {
+  background: #ffffff;
+  border-color: var(--immersive-border-strong);
+}
+
+html:not(.dark) .item-label {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .tip-card {
+  background: #ffffff;
+  border: 1px solid var(--immersive-border);
+  transition: all 0.2s var(--ease-out-quart);
+}
+
+html:not(.dark) .tip-card::before {
+  background: var(--rank-color, var(--neon-purple));
+}
+
+html:not(.dark) .tip-card:hover {
+  border-color: var(--immersive-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+html:not(.dark) .tip-number {
+  background: var(--rank-color, var(--neon-purple));
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+/* ===== 分页 ===== */
+html:not(.dark) .pagination-btn {
+  background: #ffffff;
+  border: 1px solid var(--immersive-border);
+  color: var(--immersive-text-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+html:not(.dark) .pagination-btn:hover:not(:disabled) {
+  background: var(--immersive-bg-secondary);
+  border-color: var(--immersive-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+html:not(.dark) .pagination-btn:disabled {
+  background: var(--immersive-bg-tertiary);
+  color: var(--immersive-text-tertiary);
+  border-color: var(--immersive-border);
+}
+
+/* ===== 历史记录 ===== */
 html:not(.dark) .history-item {
   background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-sm);
 }
 
 html:not(.dark) .history-item.completed {
   border-color: rgba(16, 185, 129, 0.3);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(52, 211, 153, 0.05));
+  background: rgba(16, 185, 129, 0.03);
 }
 
 html:not(.dark) .history-content h3 {
-  color: #0f172a;
+  color: var(--immersive-text-primary);
 }
 
-html:not(.dark) .history-meta {
-  color: #64748b;
-}
-
-/* ===== 技能卡片优化 ===== */
+/* ===== 技能卡片 ===== */
 html:not(.dark) .skill-card {
   background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-sm);
 }
 
 html:not(.dark) .skill-card:hover {
-  border-color: rgba(15, 23, 42, 0.2);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+  border-color: var(--immersive-border-strong);
+  box-shadow: var(--shadow-md);
 }
 
-/* ===== 进度卡片优化 ===== */
-html:not(.dark) .quest-progress-card {
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
-}
-
-/* ===== 警告提示优化 ===== */
+/* ===== 警告提示 ===== */
 html:not(.dark) .active-quest-warning .unified-card {
-  background: rgba(245, 158, 11, 0.1) !important;
+  background: rgba(245, 158, 11, 0.05) !important;
   border-color: rgba(245, 158, 11, 0.3) !important;
 }
 
 html:not(.dark) .completion-section .unified-card {
-  background: rgba(251, 191, 36, 0.1) !important;
+  background: rgba(251, 191, 36, 0.05) !important;
   border-color: rgba(251, 191, 36, 0.3) !important;
+}
+
+/* ===== 空状态 ===== */
+html:not(.dark) .empty-state {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .empty-state h3 {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .empty-state p {
+  color: var(--immersive-text-tertiary);
+}
+
+/* ===== 链接 ===== */
+html:not(.dark) a {
+  color: var(--rank-color, #667eea);
+  text-decoration: none;
+  transition: color 0.2s var(--ease-out-quart);
+}
+
+html:not(.dark) a:hover {
+  color: var(--color-accent, #764ba2);
+}
+
+/* ===== 导航栏 ===== */
+html:not(.dark) .nav-btn {
+  color: var(--immersive-text-secondary);
+  transition: all 0.2s var(--ease-out-quart);
+}
+
+html:not(.dark) .nav-btn:hover,
+html:not(.dark) .nav-btn.active {
+  color: var(--rank-color, #667eea);
+  background: rgba(102, 126, 234, 0.08);
 }
 
 /* ===== 文本可读性增强 ===== */
@@ -414,39 +487,724 @@ html:not(.dark) {
   text-rendering: optimizeLegibility;
 }
 
-html:not(.dark) h1,
-html:not(.dark) h2,
-html:not(.dark) h3,
-html:not(.dark) h4,
-html:not(.dark) h5,
-html:not(.dark) h6 {
-  color: #0f172a;
-  font-weight: 700;
+
+/* ============================================
+   导航栏优化 - 日间模式
+   ============================================ */
+html:not(.dark) .navbar::before {
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+  backdrop-filter: blur(8px);
 }
 
-html:not(.dark) p {
-  color: #475569;
-  line-height: 1.6;
+html:not(.dark) .navbar-menu {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-lg);
 }
 
-/* ===== 链接优化 ===== */
-html:not(.dark) a {
-  color: var(--rank-color, #667eea);
-  text-decoration: none;
-}
-
-html:not(.dark) a:hover {
-  color: var(--color-accent, #764ba2);
-  text-decoration: underline;
-}
-
-/* ===== 导航栏优化 ===== */
 html:not(.dark) .nav-btn {
-  color: #475569;
+  color: var(--immersive-text-secondary);
 }
 
-html:not(.dark) .nav-btn:hover,
+html:not(.dark) .nav-btn::before {
+  background: rgba(102, 126, 234, 0.08);
+}
+
+html:not(.dark) .nav-btn:hover {
+  background: var(--immersive-bg-tertiary);
+  color: var(--immersive-text-primary);
+}
+
 html:not(.dark) .nav-btn.active {
-  color: var(--rank-color, #667eea);
-  background: rgba(102, 126, 234, 0.1);
+  background: var(--rank-color, #667eea);
+  color: #ffffff;
+  box-shadow: var(--shadow-primary);
+}
+
+html:not(.dark) .nav-btn.active::after {
+  background: var(--rank-color, #667eea);
+  box-shadow: 0 0 8px var(--rank-color, #667eea);
+}
+
+html:not(.dark) .theme-toggle {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .theme-toggle:hover {
+  background: var(--immersive-bg-tertiary);
+  color: var(--immersive-text-primary);
+}
+
+/* ============================================
+   段位卡片优化 - 日间模式
+   ============================================ */
+html:not(.dark) .rank-display {
+  background: #ffffff;
+  backdrop-filter: none;
+  border: 2px solid currentColor;
+  box-shadow: var(--shadow-md);
+}
+
+html:not(.dark) .rank-display {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+html:not(.dark) .rank-display:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html:not(.dark) .rank-main-card {
+  background: #ffffff;
+  backdrop-filter: none;
+  border: 1px solid var(--immersive-border) !important;
+  box-shadow: var(--shadow-md) !important;
+  outline: none !important;
+}
+
+html:not(.dark) .rank-main-card::before {
+  display: none !important;
+}
+
+html:not(.dark) .rank-main-card:hover {
+  border-color: var(--immersive-border-strong) !important;
+  box-shadow: 
+    var(--shadow-lg),
+    0 0 20px rgba(102, 126, 234, 0.08) !important;
+}
+
+html:not(.dark) .rank-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+}
+
+html:not(.dark) .rank-desc {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .rank-percentage {
+  color: var(--immersive-text-tertiary);
+}
+
+html:not(.dark) .rank-lifestyle {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .lifestyle-level {
+  color: var(--color-accent);
+}
+
+html:not(.dark) .rank-progress-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .rank-progress-bar {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+}
+
+/* ============================================
+   收入卡片优化 - 日间模式
+   ============================================ */
+html:not(.dark) .earnings-display {
+  background: #ffffff;
+  background-image: 
+    linear-gradient(#ffffff, #ffffff),
+    linear-gradient(135deg, var(--color-accent), var(--color-primary), var(--color-success));
+  box-shadow: var(--shadow-md);
+  border: 2px solid transparent;
+}
+
+html:not(.dark) .earnings-display::before {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(102, 126, 234, 0.2) 50%, 
+    transparent 100%
+  );
+}
+
+html:not(.dark) .earnings-display:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+html:not(.dark) .earnings-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .earnings-amount {
+  filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.1));
+}
+
+html:not(.dark) .time-info {
+  color: var(--immersive-text-secondary);
+}
+
+/* ============================================
+   统计卡片优化 - 日间模式
+   ============================================ */
+html:not(.dark) .stat-card {
+  background: #ffffff;
+  backdrop-filter: none;
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-sm);
+}
+
+html:not(.dark) .stat-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--immersive-border-strong);
+}
+
+html:not(.dark) .stat-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .stat-value {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* ============================================
+   任务卡片优化 - 日间模式
+   ============================================ */
+html:not(.dark) .job-card {
+  background: #ffffff;
+  backdrop-filter: none;
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-sm);
+}
+
+html:not(.dark) .job-card::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--rank-color, var(--neon-purple)) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 10px var(--rank-color, var(--neon-purple));
+}
+
+html:not(.dark) .job-card::after {
+  background: linear-gradient(135deg,
+    rgba(102, 126, 234, 0.03) 0%,
+    transparent 50%
+  );
+}
+
+html:not(.dark) .job-card:hover {
+  border-color: var(--immersive-border-accent);
+  box-shadow: var(--shadow-md);
+}
+
+html:not(.dark) .job-header {
+  border-bottom: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .job-title {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .job-salary {
+  filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.1));
+}
+
+html:not(.dark) .info-item {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .job-card.disabled {
+  opacity: 0.6;
+  background: var(--immersive-bg-tertiary);
+}
+
+/* ============================================
+   任务模态框优化 - 日间模式
+   ============================================ */
+html:not(.dark) .modal-content {
+  background: #ffffff;
+  backdrop-filter: none;
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-2xl);
+}
+
+html:not(.dark) .close-btn {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .close-btn:hover {
+  background: var(--color-error);
+  color: #ffffff;
+  border-color: var(--color-error);
+}
+
+html:not(.dark) .modal-title {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .job-meta {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .salary-card {
+  background: rgba(102, 126, 234, 0.05);
+  border: 2px solid rgba(102, 126, 234, 0.15);
+}
+
+html:not(.dark) .salary-card::before {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(102, 126, 234, 0.2) 50%, 
+    transparent 100%
+  );
+}
+
+html:not(.dark) .salary-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .salary-annual {
+  color: var(--immersive-text-tertiary);
+}
+
+html:not(.dark) .progress-section {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .progress-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .progress-bar {
+  background: var(--immersive-bg-secondary);
+  border: 1px solid var(--immersive-border);
+  box-shadow: none;
+}
+
+html:not(.dark) .progress-fill {
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+}
+
+html:not(.dark) .progress-stats {
+  color: var(--immersive-text-tertiary);
+}
+
+html:not(.dark) .section-title {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .section-badge {
+  background: rgba(102, 126, 234, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  color: #4f46e5;
+}
+
+html:not(.dark) .requirement-card {
+  background: var(--immersive-bg-tertiary);
+  border: 2px solid var(--immersive-border);
+}
+
+html:not(.dark) .requirement-card:hover {
+  background: #ffffff;
+  border-color: var(--immersive-border-strong);
+}
+
+html:not(.dark) .requirement-card.checked {
+  background: rgba(16, 185, 129, 0.05);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+html:not(.dark) .requirement-text {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .requirement-number {
+  background: rgba(102, 126, 234, 0.08);
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  color: #4f46e5;
+}
+
+html:not(.dark) .requirement-card.checked .requirement-number {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: #ffffff;
+}
+
+html:not(.dark) .requirement-check {
+  border: 2px solid var(--immersive-border-strong);
+}
+
+html:not(.dark) .requirement-card.checked .requirement-check {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+html:not(.dark) .modal-footer {
+  background: #ffffff;
+  border-top: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .action-btn-primary {
+  background: var(--rank-color, #667eea);
+  box-shadow: var(--shadow-primary);
+}
+
+html:not(.dark) .action-btn-primary:hover {
+  background: color-mix(in srgb, var(--rank-color, #667eea) 90%, black);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* ============================================
+   任务进度卡片优化 - 日间模式
+   ============================================ */
+html:not(.dark) .quest-progress-card {
+  background: #ffffff;
+  backdrop-filter: none;
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-md);
+}
+
+html:not(.dark) .quest-progress-card::before {
+  box-shadow: 0 0 15px var(--rank-color, var(--color-primary));
+}
+
+html:not(.dark) .quest-progress-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--immersive-border-strong);
+}
+
+html:not(.dark) .card-header {
+  border-bottom: 2px solid var(--immersive-border);
+}
+
+html:not(.dark) .quest-title {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .salary-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .stat-item {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .stat-item:hover {
+  background: #ffffff;
+  border-color: var(--immersive-border-strong);
+}
+
+html:not(.dark) .stat-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .stat-bar {
+  background: var(--immersive-bg-secondary);
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .time-info {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .time-item {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .continue-button {
+  background: var(--rank-color, var(--color-primary));
+  box-shadow: var(--shadow-primary);
+}
+
+html:not(.dark) .continue-button:hover {
+  background: color-mix(in srgb, var(--rank-color, var(--color-primary)) 90%, black);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+}
+
+
+/* ============================================
+   生活方式组件优化 - 日间模式
+   ============================================ */
+html:not(.dark) .lifestyle-category {
+  backdrop-filter: none;
+  border: 1px solid var(--immersive-border);
+  box-shadow: var(--shadow-sm);
+}
+
+html:not(.dark) .lifestyle-category.income {
+  background: rgba(16, 185, 129, 0.05);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+html:not(.dark) .lifestyle-category.basic {
+  background: rgba(99, 102, 241, 0.05);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+html:not(.dark) .lifestyle-category.daily,
+html:not(.dark) .lifestyle-category.optional {
+  background: rgba(245, 158, 11, 0.05);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+html:not(.dark) .lifestyle-category.summary {
+  background: rgba(236, 72, 153, 0.05);
+  border-color: rgba(236, 72, 153, 0.2);
+}
+
+html:not(.dark) .lifestyle-category:hover {
+  box-shadow: var(--shadow-md);
+}
+
+html:not(.dark) .lifestyle-category-title {
+  color: var(--immersive-text-primary);
+  border-bottom-color: var(--immersive-border);
+}
+
+html:not(.dark) .lifestyle-item {
+  background: #ffffff;
+  backdrop-filter: none;
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .lifestyle-item:hover {
+  background: var(--immersive-bg-secondary);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--immersive-border-strong);
+}
+
+html:not(.dark) .lifestyle-title {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .lifestyle-desc {
+  color: var(--immersive-text-secondary);
+}
+
+/* ============================================
+   生活对比组件优化 - 日间模式
+   ============================================ */
+html:not(.dark) .lifestyle-comparison {
+  background: rgba(76, 175, 80, 0.05);
+  border: 2px solid rgba(76, 175, 80, 0.15);
+}
+
+html:not(.dark) .comparison-title {
+  color: var(--growth-primary);
+}
+
+html:not(.dark) .comparison-subtitle {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .comparison-card {
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+html:not(.dark) .comparison-card.current {
+  border: 2px solid var(--immersive-border-strong);
+}
+
+html:not(.dark) .comparison-card.future {
+  border: 2px solid var(--growth-primary);
+  background: linear-gradient(135deg, #ffffff 0%, rgba(76, 175, 80, 0.05) 100%);
+}
+
+html:not(.dark) .comparison-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+html:not(.dark) .comparison-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .comparison-salary {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .comparison-item {
+  color: var(--immersive-text-secondary);
+  background: var(--immersive-bg-tertiary);
+}
+
+html:not(.dark) .arrow-icon,
+html:not(.dark) .arrow-text {
+  color: var(--growth-primary);
+}
+
+html:not(.dark) .comparison-highlights {
+  background: #ffffff;
+  border-left: 4px solid var(--growth-primary);
+}
+
+html:not(.dark) .highlight-title {
+  color: var(--growth-primary);
+}
+
+html:not(.dark) .highlight-item {
+  color: var(--immersive-text-secondary);
+  background: rgba(76, 175, 80, 0.08);
+}
+
+/* ============================================
+   升级提示组件优化 - 日间模式
+   ============================================ */
+html:not(.dark) .section-title {
+  color: var(--immersive-text-primary);
+  border-bottom-color: var(--immersive-border);
+}
+
+html:not(.dark) .upgrade-tip {
+  background: rgba(99, 102, 241, 0.05);
+  backdrop-filter: none;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-left: 4px solid var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+html:not(.dark) .upgrade-tip:hover {
+  box-shadow: var(--shadow-md);
+}
+
+html:not(.dark) .upgrade-tip-title {
+  color: var(--color-primary);
+}
+
+html:not(.dark) .upgrade-tip-content {
+  color: var(--immersive-text-secondary);
+}
+
+/* ============================================
+   欢迎向导优化 - 日间模式
+   ============================================ */
+html:not(.dark) .wizard-container {
+  background: #ffffff !important;
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .progress-bar {
+  background: var(--immersive-bg-secondary);
+  border-bottom: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .progress-step:not(:last-child)::after {
+  background: var(--immersive-border);
+}
+
+html:not(.dark) .step-circle {
+  background: var(--immersive-bg-tertiary);
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .progress-step.active .step-circle {
+  background: var(--rank-color, var(--neon-purple));
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+}
+
+html:not(.dark) .progress-step.completed .step-circle {
+  background: var(--rank-color, var(--neon-purple));
+  color: #ffffff;
+}
+
+html:not(.dark) .step-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .progress-step.active .step-label {
+  color: var(--rank-color, var(--neon-purple));
+}
+
+html:not(.dark) .step-content h2 {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .step-desc {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .welcome-text {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .feature-item {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) label {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .avatar-btn {
+  border: 2px solid var(--immersive-border);
+  background: var(--immersive-bg-secondary);
+}
+
+html:not(.dark) .avatar-btn:hover {
+  border-color: var(--rank-color, var(--neon-purple));
+}
+
+html:not(.dark) .avatar-btn.selected {
+  border-color: var(--rank-color, var(--neon-purple));
+  background: rgba(102, 126, 234, 0.08);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+html:not(.dark) .info-box {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .info-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .info-value {
+  color: var(--rank-color, var(--neon-purple));
+}
+
+html:not(.dark) .summary-card {
+  background: var(--immersive-bg-tertiary);
+  border: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .summary-item {
+  border-bottom: 1px solid var(--immersive-border);
+}
+
+html:not(.dark) .summary-label {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .summary-value {
+  color: var(--immersive-text-primary);
+}
+
+html:not(.dark) .wizard-footer {
+  border-top: 1px solid var(--immersive-border);
+  background: var(--immersive-bg-secondary);
+}
+
+html:not(.dark) .btn-secondary {
+  background: #ffffff !important;
+  color: var(--immersive-text-primary) !important;
+  border: 2px solid var(--immersive-border) !important;
+}
+
+html:not(.dark) .btn-secondary:hover {
+  background: var(--immersive-bg-tertiary) !important;
+  border-color: var(--immersive-border-strong) !important;
 }

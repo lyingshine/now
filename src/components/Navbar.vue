@@ -139,6 +139,7 @@ const toggleTheme = () => {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-full);
   padding: var(--space-2);
+  padding-left: var(--space-6);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
               0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 }
@@ -163,6 +164,8 @@ const toggleTheme = () => {
   min-width: 100px;
   flex-shrink: 0;
 }
+
+/* 第一个按钮的额外左侧间距已通过 navbar-menu 的 padding-left 实现 */
 
 .nav-btn::before {
   content: '';

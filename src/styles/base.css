@@ -57,13 +57,13 @@ body::before {
   }
 }
 
-/* 暗色模式背景增强 */
+/* 暗色模式背景增强 - 更明显的氛围光 */
 .dark body::before,
 body.dark-mode::before {
   background: 
-    radial-gradient(circle at 10% 20%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 90% 80%, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+    radial-gradient(circle at 10% 20%, rgba(102, 126, 234, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(118, 75, 162, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
 }
 
 /* ===== 日间模式默认变量 ===== */
@@ -81,20 +81,20 @@ body:not(.dark-mode) {
   --immersive-border-strong: rgba(15, 23, 42, 0.2);
 }
 
-/* ===== 暗色模式变量 ===== */
+/* ===== 暗色模式变量 - 优化版 ===== */
 .dark,
 body.dark-mode,
 html.dark {
-  --immersive-bg-primary: #0a0a0a;
-  --immersive-bg-secondary: #141414;
-  --immersive-bg-tertiary: #1a1a1a;
+  --immersive-bg-primary: #121212;
+  --immersive-bg-secondary: #1e1e1e;
+  --immersive-bg-tertiary: #252525;
   
-  --immersive-text-primary: #fafafa;
-  --immersive-text-secondary: #a3a3a3;
-  --immersive-text-tertiary: #737373;
+  --immersive-text-primary: #ffffff;
+  --immersive-text-secondary: #b4b4b4;
+  --immersive-text-tertiary: #8a8a8a;
   
-  --immersive-border: rgba(255, 255, 255, 0.1);
-  --immersive-border-strong: rgba(255, 255, 255, 0.2);
+  --immersive-border: rgba(255, 255, 255, 0.12);
+  --immersive-border-strong: rgba(255, 255, 255, 0.24);
 }
 
 /* ===== 滚动条美化 ===== */

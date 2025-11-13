@@ -50,19 +50,7 @@
   animation: floatEnhanced 4s ease-in-out infinite;
 }
 
-/* ===== 脉冲发光 ===== */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
-  }
-}
-
-.pulse-glow {
-  animation: pulseGlow 2s ease-in-out infinite;
-}
+/* ===== 脉冲发光 - 已移至 animations.css ===== */
 
 /* ===== 渐变动画 ===== */
 @keyframes gradientShift {
@@ -97,8 +85,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .dark .glass-premium,
@@ -106,8 +93,7 @@ body.dark-mode .glass-premium {
   background: rgba(0, 0, 0, 0.3);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* ===== 光晕边框 ===== */
@@ -182,28 +168,9 @@ body.dark-mode .glass-premium {
   animation: particleFloat 10s ease-in-out infinite reverse;
 }
 
-/* ===== 文字发光效果 ===== */
+/* ===== 文字发光效果 - 仅用于特殊场景 ===== */
 .text-glow {
-  text-shadow: 
-    0 0 10px rgba(102, 126, 234, 0.5),
-    0 0 20px rgba(102, 126, 234, 0.3),
-    0 0 30px rgba(102, 126, 234, 0.2);
-  animation: textGlowPulse 3s ease-in-out infinite;
-}
-
-@keyframes textGlowPulse {
-  0%, 100% {
-    text-shadow: 
-      0 0 10px rgba(102, 126, 234, 0.5),
-      0 0 20px rgba(102, 126, 234, 0.3),
-      0 0 30px rgba(102, 126, 234, 0.2);
-  }
-  50% {
-    text-shadow: 
-      0 0 20px rgba(102, 126, 234, 0.8),
-      0 0 30px rgba(102, 126, 234, 0.5),
-      0 0 40px rgba(102, 126, 234, 0.3);
-  }
+  text-shadow: 0 0 12px rgba(102, 126, 234, 0.4);
 }
 
 /* ===== 平滑缩放 ===== */
@@ -409,6 +376,4 @@ body.dark-mode .glass-premium {
   transform: scale(1.05);
 }
 
-.hover-glow:hover {
-  box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
-}
+/* hover-glow 已移至 dark-mode-enhanced.css */

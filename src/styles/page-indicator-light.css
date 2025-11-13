@@ -1,0 +1,83 @@
+/* ============================================
+   页面指示器 - 日间模式优化
+   ============================================ */
+
+html:not(.dark) .page-indicator {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--immersive-border);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+}
+
+html:not(.dark) .page-indicator:hover {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.95) inset;
+  border-color: var(--immersive-border-strong);
+}
+
+/* 箭头按钮 - 日间模式 */
+html:not(.dark) .indicator-arrow {
+  color: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .indicator-arrow::before {
+  background: var(--rank-color, var(--color-primary));
+}
+
+html:not(.dark) .indicator-arrow:hover {
+  color: var(--rank-color, var(--color-primary));
+  background: rgba(102, 126, 234, 0.08);
+}
+
+html:not(.dark) .indicator-arrow:hover::before {
+  opacity: 0.15;
+}
+
+/* 指示点 - 日间模式 */
+html:not(.dark) .indicator-dot {
+  background: var(--immersive-border-strong);
+}
+
+html:not(.dark) .indicator-dot:hover {
+  background: var(--immersive-text-secondary);
+}
+
+html:not(.dark) .indicator-dot.active {
+  background: var(--rank-color, var(--color-primary));
+  box-shadow: 
+    0 0 12px color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent),
+    0 0 20px color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent);
+}
+
+@keyframes dotPulseLight {
+  0%, 100% {
+    box-shadow: 
+      0 0 12px color-mix(in srgb, var(--rank-color, var(--color-primary)) 40%, transparent),
+      0 0 20px color-mix(in srgb, var(--rank-color, var(--color-primary)) 20%, transparent);
+    transform: scale(1.5);
+  }
+  50% {
+    box-shadow: 
+      0 0 16px color-mix(in srgb, var(--rank-color, var(--color-primary)) 50%, transparent),
+      0 0 28px color-mix(in srgb, var(--rank-color, var(--color-primary)) 30%, transparent);
+    transform: scale(1.6);
+  }
+}
+
+html:not(.dark) .indicator-dot.active {
+  animation: dotPulseLight 2.5s var(--ease-in-out-quad) infinite;
+}
+
+/* 标签 - 日间模式 */
+html:not(.dark) .indicator-label {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--immersive-border);
+  color: var(--immersive-text-primary);
+  box-shadow: var(--shadow-md);
+}

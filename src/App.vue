@@ -129,6 +129,6 @@ function performDataMigration() {
   min-height: 100vh;
   background: var(--bg-primary);
   color: var(--text-primary);
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.2s ease-out, color 0.2s ease-out;
 }
 </style>
