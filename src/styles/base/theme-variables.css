@@ -1,0 +1,53 @@
+/* ============================================
+   NOW 职场成长平台 - 主题变量
+   
+   层级：第 1 层 - 基础样式
+   职责：定义浅色和暗色模式的主题变量覆盖
+   规则：只覆盖语义化颜色变量，不包含组件样式
+   ============================================ */
+
+/* ===== 浅色模式 (默认) ===== */
+/* 默认值已在 design-tokens.css 中定义 */
+
+/* ===== 暗色模式 ===== */
+.dark,
+body.dark-mode,
+html.dark {
+  /* 背景色 - Material Design 标准 */
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #252525;
+  --bg-elevated: #2a2a2a;
+  
+  /* 文字色 - 高对比度 */
+  --text-primary: #ffffff;
+  --text-secondary: #b4b4b4;
+  --text-tertiary: #8a8a8a;
+  --text-inverse: #171717;
+  
+  /* 边框色 - 增强可见性 */
+  --border-subtle: #2a2a2a;
+  --border-default: #3a3a3a;
+  --border-strong: #4a4a4a;
+  
+  /* 玻璃态效果 - 暗色版本 */
+  --glass-bg: rgba(30, 30, 30, 0.7);
+  --glass-bg-strong: rgba(30, 30, 30, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --glass-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.7);
+  
+  /* 阴影系统 - 增强深度感 */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.8);
+  --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.9);
+  
+  /* 发光效果 - 暗色模式特有 */
+  --glow-primary: 0 0 24px rgba(102, 126, 234, 0.5);
+  --glow-success: 0 0 24px rgba(16, 185, 129, 0.5);
+  --glow-warning: 0 0 24px rgba(245, 158, 11, 0.5);
+  --glow-error: 0 0 24px rgba(239, 68, 68, 0.5);
+}
